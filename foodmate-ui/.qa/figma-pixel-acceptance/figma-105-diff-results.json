@@ -29,10 +29,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 116873,
-      "differentRatio": 0.07925957573784723,
-      "meanAbsoluteError": 2.544205729166667,
-      "rmse": 16.83367254840767,
+      "differentPixels": 116543,
+      "differentRatio": 0.07903578016493056,
+      "meanAbsoluteError": 2.529741414388021,
+      "rmse": 16.802579356796674,
       "maxChannelDelta": 219
     },
     "intake-analysis-v2": {
@@ -40,10 +40,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 111226,
-      "differentRatio": 0.07542995876736111,
-      "meanAbsoluteError": 2.0041883680555554,
-      "rmse": 14.243365849764997,
+      "differentPixels": 110884,
+      "differentRatio": 0.07519802517361111,
+      "meanAbsoluteError": 1.9903662787543404,
+      "rmse": 14.208777850852108,
       "maxChannelDelta": 211
     },
     "meal-planning-v2": {
@@ -51,10 +51,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 160454,
-      "differentRatio": 0.10881483289930556,
-      "meanAbsoluteError": 1.9396082560221355,
-      "rmse": 12.962410174093016,
+      "differentPixels": 160141,
+      "differentRatio": 0.10860256618923611,
+      "meanAbsoluteError": 1.925624254014757,
+      "rmse": 12.92416736340171,
       "maxChannelDelta": 204
     },
     "login-v2": {

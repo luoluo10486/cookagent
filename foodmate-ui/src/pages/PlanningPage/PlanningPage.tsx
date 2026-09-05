@@ -667,6 +667,7 @@ export function PlanningPage() {
   return (
     <WorkspaceLayout
       activeModule="planning"
+      fixtureVariant={isFigmaFixture ? 'planning' : undefined}
       rightRail={
         view === 'default' && (!isRealMode || selectedPlan) ? (
           <PlanSidebar

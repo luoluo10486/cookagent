@@ -51,6 +51,7 @@ describe('PlanningPage', () => {
     expect(screen.getByRole('button', { name: '下一页' })).toBeInTheDocument();
     expect(document.querySelector('img[src="/assets/figma/workspace/home-sidebar-avatar.png"]')).toBeInTheDocument();
     expect(document.querySelector('img[src="/assets/figma/workspace/home-topbar-avatar.png"]')).toBeInTheDocument();
+    expect(document.querySelector('img[src="/assets/figma/workspace/planning/meal-planning.svg"]')).toBeInTheDocument();
     expect(screen.getByLabelText('餐食规划')).toHaveAttribute('data-figma-node-id', '640:974');
   });
 

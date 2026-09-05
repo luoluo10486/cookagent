@@ -76,7 +76,7 @@
         "height": 1024
       },
       "recapture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-budget-limit-browser-2026-09-05.png"
@@ -253,10 +253,10 @@
         "height": 1024
       },
       "recapture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
-        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-intake-analysis-v2-browser-2026-09-05.png"
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-intake-analysis-v2-browser-2026-09-06.png"
       }
     },
     "agent-tool-failed-retryable": {
@@ -1811,10 +1811,10 @@
         "height": 1024
       },
       "recapture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
-        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-v2-browser-2026-09-05.png"
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-v2-browser-2026-09-06.png"
       }
     },
     "agent-chat-viewport-1366x768": {
@@ -2349,7 +2349,13 @@
     },
     "meal-planning-v2": {
       "artboardName": "meal-planning-v2",
-      "recapturedAt": "2026-08-31",
+      "recapturedAt": "2026-09-06",
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-meal-planning-v2-browser-2026-09-06.png"
+      },
       "body": {
         "clientHeight": 1024,
         "clientWidth": 1440,
@@ -2387,7 +2393,7 @@
       "rootOverflow": false,
       "trafficLightColors": 0,
       "textOverflow": [],
-      "url": "/planning?state=v2",
+      "url": "http://127.0.0.1:5174/planning?state=v2&visual-qa=1",
       "viewport": {
         "height": 1024,
         "width": 1440

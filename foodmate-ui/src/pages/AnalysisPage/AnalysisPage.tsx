@@ -269,6 +269,7 @@ export function AnalysisPage() {
   return (
     <WorkspaceLayout
       activeModule="analysis"
+      fixtureVariant={isFigmaFixture ? 'analysis' : undefined}
       displayNameOverride={isFigmaFixture ? 'Anddy' : undefined}
       profileIdOverride={isFigmaFixture ? '1234567' : undefined}
       sidebarAvatarSrc={isFigmaFixture ? FIGMA_WORKSPACE_AVATARS.sidebar : undefined}

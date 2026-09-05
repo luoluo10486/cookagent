@@ -2136,3 +2136,19 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] 本次审计没有新增 iconfont 字体、虚构 glyph 或 Unicode 映射；标准命令图标继续使用 Lucide，真实模式请求、权限判断、操作确认和审计写入逻辑保持不变。
 - [ ] Admin 已登记画板的自动 diff 仍为非零差异，视觉 Token、布局差异和人工复核仍需继续；控件迁移审计通过不等于像素级 `PASS`。
 - [ ] iconfont 实体资源仍为 `BLOCKED`；本节不改变 105 张画板的全量状态，也不宣称 Admin 页面已完成像素级验收。
+
+## 32. 2026-09-06 Diet Records、Intake Analysis、Meal Planning 资源证据更新
+
+本节只记录三个饮食业务主画板的最新资源映射和浏览器证据，不重新执行 105 个画板的全量截图或人工验收。Figma 节点为 `640:588`、`640:773` 和 `640:901`，设计稿保持只读。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---:|---:|---:|---:|---|
+| Diet Records | `640:588` | `/analysis?view=records&state=v2` | `dpr1-diet-records-v2-browser-2026-09-06.png` | `7.9036%` | `2.529741` | `16.802579` | `219` | `DIFF_REVIEW` |
+| Intake Analysis | `640:773` | `/analysis?state=v2` | `dpr1-intake-analysis-v2-browser-2026-09-06.png` | `7.5198%` | `1.990366` | `14.208778` | `211` | `DIFF_REVIEW` |
+| Meal Planning | `640:901` | `/planning?state=v2` | `dpr1-meal-planning-v2-browser-2026-09-06.png` | `10.8603%` | `1.925624` | `12.924167` | `204` | `DIFF_REVIEW` |
+
+- [x] 三页工作区壳层已使用各自目录下的真实 Figma SVG 资源，并同步 `figma-105-mapping.json`、`figma-105-diff-results.json` 和 `figma-105-runtime-checks.json`。
+- [x] 三页截图条件统一为 Chrome `152.0.7977.77`、`1440×1024`、DPR `1`、字体 `loaded` 和无横向溢出；三项 PNG 尺寸均为 `1440×1024`。
+- [ ] 三项自动 diff 均为非零差异，不能标记像素级 `PASS`；本节不改变其他画板的历史证据，也不代表 105 张画板完成全量人工验收。
+- [x] 本批次集中执行三页定向测试：4 个测试文件、28 个用例通过；`npm run format:check`、`npm run lint`、`npm run typecheck`、`npm run build`、`npm run qa:figma:validate`、JSON 解析和 `git diff --check` 均通过。`qa:figma:validate` 返回 `structuralPass=true`、`strictDprPass=true`、`errors=[]`，但全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍未提供，资源登记继续保持 `BLOCKED`。
