@@ -2109,3 +2109,14 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] Profile 头像上传的原生 file input 处于隐藏状态，仅连接文件选择 API；所有可见交互入口继续使用 shadcn Button。
 - [x] 两页没有 `AdminPrimitives` 直接引用，也没有新增 iconfont 字体或虚构 Unicode 映射；真实模式服务逻辑未因审计改变。
 - [ ] Knowledge 与 Profile 当前 diff 仍为非零，人工视觉复核仍需继续；控件迁移审计通过不等于页面或 105 画板像素级 `PASS`。
+
+## 31. 2026-09-06 Admin 页面组 shadcn 控件迁移审计
+
+本节记录 Admin 概览、工具注册表、删除资源、知识库、用户详情、Run/Tool/SQL/Trace、模型治理、用量和操作审计页面的控件基础设施审计。不重新采集 105 个画板，也不替换已有 Admin Figma、浏览器 PNG 和 diff JSON 证据。
+
+- [x] Admin 页面及各 Tab 已统一从 `src/components/ui` 使用 shadcn/Radix 基础组件：`Button`、`Input`、`Select`、`Card`、`Table`、`DataTable`、`Tabs`、`DropdownMenu`、`Dialog`、`Alert`、`Textarea`、`Sheet`、`Badge` 和 `Progress`。
+- [x] 概览筛选、工具注册表操作、删除资源恢复、用户详情 Tab、治理详情面板、知识库上传状态、模型治理和用量筛选均通过共享 UI 组件实现；当前 Admin 目录未发现 `AdminPrimitives` 直接引用。
+- [x] `KnowledgeTab` 中唯一的原生 `file input` 被设置为 `1px`、透明和不可交互，仅承担文件选择/拖拽 API 入口；页面可见操作仍使用 shadcn Button、Dialog、Textarea 和状态组件。
+- [x] 本次审计没有新增 iconfont 字体、虚构 glyph 或 Unicode 映射；标准命令图标继续使用 Lucide，真实模式请求、权限判断、操作确认和审计写入逻辑保持不变。
+- [ ] Admin 已登记画板的自动 diff 仍为非零差异，视觉 Token、布局差异和人工复核仍需继续；控件迁移审计通过不等于像素级 `PASS`。
+- [ ] iconfont 实体资源仍为 `BLOCKED`；本节不改变 105 张画板的全量状态，也不宣称 Admin 页面已完成像素级验收。
