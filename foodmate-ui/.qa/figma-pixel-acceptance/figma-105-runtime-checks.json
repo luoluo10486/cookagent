@@ -79,7 +79,7 @@
         "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
-        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-budget-limit-browser-2026-09-05.png"
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-budget-limit-browser-2026-09-06.png"
       }
     },
     "admin-op-no-permission": {
@@ -294,7 +294,7 @@
         "capturedAt": "2026-09-05",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
-        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-tool-failed-retryable-browser-2026-09-05.png"
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-tool-failed-retryable-browser-2026-09-06.png"
       }
     },
     "profile-security-password-success": {
@@ -1015,7 +1015,7 @@
         "capturedAt": "2026-09-05",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
-        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-safety-degraded-browser-2026-09-05.png"
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-safety-degraded-browser-2026-09-06.png"
       }
     },
     "admin-op-submitting": {
@@ -2569,12 +2569,18 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/chat?state=sse-reconnecting",
+      "url": "http://127.0.0.1:5174/chat?state=sse-reconnecting&visual-qa=1",
       "viewport": {
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-sse-reconnecting-browser-2026-09-06.png"
+      }
     },
     "agent-user-cancelled": {
       "artboardName": "agent-user-cancelled",
@@ -2593,12 +2599,18 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/chat?state=user-cancelled",
+      "url": "http://127.0.0.1:5174/chat?state=user-cancelled&visual-qa=1",
       "viewport": {
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-user-cancelled-browser-2026-09-06.png"
+      }
     },
     "admin-overview": {
       "artboardName": "admin-overview",
@@ -2885,12 +2897,18 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/chat?state=write-confirmation",
+      "url": "http://127.0.0.1:5174/chat?state=write-confirmation&visual-qa=1",
       "viewport": {
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-write-confirmation-browser-2026-09-06.png"
+      }
     },
     "meal-plan-generating": {
       "artboardName": "meal-plan-generating",

@@ -2224,3 +2224,23 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 两项自动 diff 均为非零，且仍存在字体、头像、图标和局部组合差异；不能以结构校验、构建通过或截图存在替代像素级 `PASS`。
 - [ ] 本批次只复核 Workspace Home 与 Agent Chat，不代表其余 103 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [ ] iconfont 实体字体包、完整 CSS/Unicode 映射、来源和许可证尚未提供，继续保持 `BLOCKED`；标准命令图标继续使用 Lucide 或已登记的 Figma SVG 资源。
+
+## 36. 2026-09-06 Agent 六个状态 DPR1 增量验收
+
+本节记录 Agent 六个状态的最新浏览器截图和同尺寸 PNG diff。Figma 文件保持只读；本批次只重新采集六个受影响画板，不重新验收其余画板。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Agent Write Confirmation | `687:773` | `/chat?state=write-confirmation` | `dpr1-agent-write-confirmation-browser-2026-09-06.png` | `1440×1024 / 1` | 10.0311% | 2.024202 | 14.170644 | 251 | `DIFF_REVIEW` |
+| Agent Budget Limit | `687:918` | `/chat?state=budget-limit` | `dpr1-agent-budget-limit-browser-2026-09-06.png` | `1440×1024 / 1` | 11.7330% | 3.070085 | 18.411157 | 255 | `DIFF_REVIEW` |
+| Agent Tool Failed Retryable | `687:1439` | `/chat?state=tool-failed-retryable` | `dpr1-agent-tool-failed-retryable-browser-2026-09-06.png` | `1440×1024 / 1` | 14.3805% | 2.825468 | 17.330696 | 254 | `DIFF_REVIEW` |
+| Agent Safety Degraded | `687:1563` | `/chat?state=safety-degraded` | `dpr1-agent-safety-degraded-browser-2026-09-06.png` | `1440×1024 / 1` | 15.4136% | 3.030788 | 17.578041 | 255 | `DIFF_REVIEW` |
+| Agent User Cancelled | `687:1684` | `/chat?state=user-cancelled` | `dpr1-agent-user-cancelled-browser-2026-09-06.png` | `1440×1024 / 1` | 10.5565% | 2.181197 | 15.279190 | 250 | `DIFF_REVIEW` |
+| Agent SSE Reconnecting | `687:1803` | `/chat?state=sse-reconnecting` | `dpr1-agent-sse-reconnecting-browser-2026-09-06.png` | `1440×1024 / 1` | 15.1592% | 2.427713 | 16.289603 | 255 | `DIFF_REVIEW` |
+
+- [x] 六项截图均由 Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体 `loaded` 和页面无横向溢出条件下采集；映射、运行时检查和 diff JSON 已同步到 `2026-09-06`。
+- [x] 写入确认、预算追加、失败重试/跳过、安全降级追问、取消态重新开始和重连提示的 fixture 交互边界均已复核；真实模式仍只等待后端确认或运行事件，不把 HTTP 接受响应当作终态。
+- [x] 六项均为同尺寸 `COMPARED`，自动 diff 结果可复现；结构校验和严格 DPR 校验不替代人工视觉复核。
+- [ ] 六项自动 diff 均为非零，人工复核仍确认共享工作台、头像、图标和字体光栅化差异，全部继续保持 `DIFF_REVIEW`，不能标记为像素级 `PASS`。
+- [ ] 本节只复核六个 Agent 状态，不代表其他画板重新采集或完成 105 项全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] iconfont 实体字体包、完整 CSS/Unicode 映射、来源和许可证仍缺失，继续保持 `BLOCKED`；标准命令图标继续使用 Lucide 或已登记的 Figma SVG 资源。
