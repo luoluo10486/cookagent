@@ -44,7 +44,7 @@ FoodMate 是面向饮食记录、营养分析与备餐规划的任务型 Agent �
 | M1-5 写确认 | `meal_plan.save_plan` 和 `food_log_writer` 的 create/update/delete/restore 已完成 Proposal -> Confirm -> Execute；reject、failed、superseded、revision 冲突、失败回滚/审计和幂等重放已通过真实 PostgreSQL HTTP/RocketMQ 回归。 |
 | Agent、Eval 与 RAG | `run.eval_decided`、预算、checkpoint、continuation、追问和安全降级已进入运行路径；公共知识库已完成批量上传、异步索引、发布可见性和 `public_published` 安全引用。默认仍是 `deterministic:local`；2026-09-06 的 D134 已用当前配置完成一次 Docker 真实 Embedding + Milvus + Chat AgentRun 引用闭环。D114 的 HTTP 401 是历史凭据边界，不再代表当前凭据；两个 profile 仍使用独立 Milvus collection，长稳、正式价格审计和生产 RAG 治理仍未完成。 |
 | 恢复与 M1-6 本地门禁 | 已验证 Runtime readiness、Redis AOF 探针恢复、RocketMQ 重启/Topic 初始化、双 JVM 有界读取和 Java 重启回读；完整 PostgreSQL/Outbox/Inbox/SSE 故障矩阵仍未完成。 |
-| 前端 | G1-G6 页面代码边界、追问/确认/失败/取消/SSE 状态、真实管理查询和知识库批次/RAG 引用接入已完成；真实聊天历史会话现在会恢复最近 Run 并回放终态引用，新增定向测试通过。2026-09-02 当前工作区 typecheck/build 通过；D137 对 `RunsTab` 两个测试文件执行定向验证，4/4 通过。完整 Vitest 套件未在本轮重跑。 |
+| 前端 | G1-G6 页面代码边界、追问/确认/失败/取消/SSE 状态、真实管理查询和知识库批次/RAG 引用接入已完成；真实聊天历史会话现在会恢复最近 Run 并回放终态引用，新增定向测试通过。2026-09-06 G0 复核中 `ChatPage.test.tsx` 32/32、typecheck 和 build 通过；D137 对 `RunsTab` 两个测试文件定向验证为 4/4 通过。完整 Vitest 套件未在本轮重跑。 |
 | Java 回归 | 当前 Java 全量业务门禁、Spotless、ArchUnit 和 Alibaba 可执行规范子集均通过；HTTP 与 RocketMQ `food_log_writer` 回归各 11/11，包含官方 foodPortions 换算 matched/pending 数据库断言。具体运行批次和跳过项以 [`EXECUTION_RECORD.md`](./script/sql/FoodMate/EXECUTION_RECORD.md) 为准。 |
 | 本轮容器复核 | 2026-09-06 使用 `.env` 成功构建并启动 `foodmate` 镜像；容器 readiness 为 healthy，`admin@foodmate.local` 登录返回 admin 会话；数据库只读复核确认探针账号为 0、管理员密码哈希为 BCrypt，现有营养目录和知识库记录仍保留。 |
 

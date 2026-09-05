@@ -2164,3 +2164,15 @@
 | 代码与计划 | 中文代码注释门禁已写入《秋招真实业务闭环执行计划》和《M2剩余功能执行计划》；本轮没有新增 Java/Python 业务代码，因此没有进行无关的全仓库注释翻译。 |
 | 暂缓范围 | 未执行性能压测、真实 Agent 流量统计、组件重启矩阵、ACK 丢失/重复投递故障注入、SSE 断线专项、备份恢复、生产操作或发布回滚。 |
 | 结论 | 本轮确认 Docker 应用镜像可构建、容器可启动、管理员认证可用且数据库清理范围受控；该结果只补充本地启动和账号复核证据，不将暂缓的 M1-6 故障/性能内容标记为完成。 |
+
+## D139 G0 前端业务质量门禁复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate\\foodmate-ui`；使用仓库现有 Node 依赖，不启动 Java、Docker 或真实云服务。 |
+| 执行命令 | `npm.cmd run typecheck`；`npm.cmd test -- --run src/pages/ChatPage/ChatPage.test.tsx`；`npm.cmd run build`。 |
+| 测试结果 | `ChatPage.test.tsx` 1 个测试文件、32/32 通过；TypeScript 检查通过；Vite 生产构建成功，2,015 个模块完成转换。 |
+| 计划对照 | G0 要求的 `renderState` 测试装配当前已存在，未发现该计划项仍有代码阻塞；本轮未重复修改用户已有 Admin UI/Figma 改动。 |
+| 数据与费用边界 | 未访问 Java API，未调用 Chat/Embedding，未写入 PostgreSQL、Redis、Milvus 或 RocketMQ，未生成业务测试数据。 |
+| 注释门禁 | 本轮没有修改业务代码；涉及的现有测试注释保持中文，未进行无关的全仓库翻译。 |
+| 结论 | G0 前端业务构建门禁在当前工作区复核通过，可进入 K1/K2 知识索引契约复核；完整 Vitest 套件不作为本轮必要重复测试。 |
