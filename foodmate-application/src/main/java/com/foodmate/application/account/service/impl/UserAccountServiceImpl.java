@@ -45,19 +45,22 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /** P1-1 账户、会话和消息用例。生产持久化通过端口访问，local-stub 显式使用内存。 */
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
-    private static final int PASSWORD_ITERATIONS = 120_000;
     private static final long AUTH_SESSION_SECONDS = 1_800;
     private static final long REFRESH_TOKEN_SECONDS = 604_800;
 
     private final UserAccountRepository store;
     private final IdGenerator ids;
     private final OperationAuditService audit;
+    // 新密码使用 BCrypt；校验方法继续兼容已有 PBKDF2 哈希，避免升级时强制重置账号。
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final SecureRandom random = new SecureRandom();
     private final Map<Long, UserRecord> users = new HashMap<>();
@@ -952,22 +955,17 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     private String hashPassword(String password) {
-        try {
-            byte[] salt = new byte[16];
-            random.nextBytes(salt);
-            byte[] hash = pbkdf2(password.toCharArray(), salt, PASSWORD_ITERATIONS);
-            return "pbkdf2$"
-                    + PASSWORD_ITERATIONS
-                    + "$"
-                    + Base64.getEncoder().encodeToString(salt)
-                    + "$"
-                    + Base64.getEncoder().encodeToString(hash);
-        } catch (GeneralSecurityException exception) {
-            throw new IllegalStateException("unable to hash password", exception);
-        }
+        return passwordEncoder.encode(password);
     }
 
     private boolean verifyPassword(String password, String encoded) {
+        if (encoded != null && encoded.startsWith("$2")) {
+            try {
+                return passwordEncoder.matches(password, encoded);
+            } catch (IllegalArgumentException exception) {
+                return false;
+            }
+        }
         try {
             String[] parts = encoded.split("\\$");
             if (parts.length != 4) return false;

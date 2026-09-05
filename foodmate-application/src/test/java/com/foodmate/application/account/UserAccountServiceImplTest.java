@@ -1,6 +1,8 @@
 package com.foodmate.application.account;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -18,7 +20,9 @@ import com.foodmate.shared.error.BusinessException;
 import com.foodmate.shared.error.ErrorCode;
 import com.foodmate.shared.id.IdGenerator;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 class UserAccountServiceImplTest {
     @Test
@@ -175,6 +179,28 @@ class UserAccountServiceImplTest {
                         isNull(),
                         isNull(),
                         any());
+    }
+
+    @Test
+    void registrationStoresBcryptHashForNewPassword() {
+        UserAccountRepository repository = mock(UserAccountRepository.class);
+        OperationAuditService audit = mock(OperationAuditService.class);
+        when(repository.userExists("new-user", "new@example.com")).thenReturn(false);
+        UserAccountServiceImpl service = service(repository, audit);
+
+        service.register("new-user", "new@example.com", "password123", "New");
+
+        ArgumentCaptor<String> passwordHash = forClass(String.class);
+        verify(repository)
+                .insertUser(
+                        anyLong(),
+                        anyString(),
+                        anyString(),
+                        anyString(),
+                        passwordHash.capture(),
+                        any());
+        assertTrue(passwordHash.getValue().startsWith("$2"));
+        assertTrue(new BCryptPasswordEncoder().matches("password123", passwordHash.getValue()));
     }
 
     private UserAccountServiceImpl service(
