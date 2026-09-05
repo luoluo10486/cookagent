@@ -2190,3 +2190,17 @@
 | 数据与费用边界 | 未执行迁移、truncate、删除、备份恢复或真实云调用；未写入 PostgreSQL、Redis、Milvus 或 RocketMQ 业务数据。 |
 | 注释门禁 | 新增 SQL 注释使用中文；未翻译与本切片无关的已有注释或用户改动。 |
 | 结论 | K1/K3 的知识索引契约、双模式业务测试和当前数据库只读校验已完成；V29 尚未应用的本地状态被明确区分，不误报为数据损坏。 |
+
+## D141 秋招真实业务闭环计划启动复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行范围 | 按《秋招真实业务闭环执行计划》复核 R1 公共知识库、R2 饮食记录、R3 餐食计划和 R4 只读 SQL Agent 的可执行入口；本轮只做配置预检和业务门禁，不重复消耗付费额度。 |
+| 无付费预检 | `real-rag-e2e.ps1`、`real-food-log-e2e.ps1`、`real-meal-plan-e2e.ps1`、`real-sql-agent-e2e.ps1` 无参数执行均返回 `status=preflight_passed`；路由确认包含真实 Chat `cloud_primary/deepseek-ai/DeepSeek-V4-Flash`、真实 Embedding `openai-compatible/Qwen/Qwen3-Embedding-0.6B` 和已配置 Milvus collection，未登录、未创建 Run、未上传文档、未调用 Chat/Embedding。 |
+| Java 业务门禁 | `mvnw.cmd -pl foodmate-application,foodmate-infra,foodmate-api -am test` 定向执行知识库、Tool Gateway、SQL Guard、饮食记录、餐食计划、审批和 Run/SSE 测试：Application `113/113`、Infrastructure `2/2`、API `9/9`，合计 `124/124`，无失败。 |
+| Python 业务门禁 | 使用项目 `.venv` 执行 RAG Worker、知识检索、Runtime 环境、Compose、模型适配、Runtime Server、SQL Planner、Tool Protocol 和 MQ 测试：`198 passed`、`6` 个子断言通过；使用 `-B -p no:cacheprovider`，未生成 Python 缓存，未调用真实云服务。 |
+| 前端业务门禁 | 管理端、知识库、聊天、引用和相关服务共 `10` 个测试文件、`71/71` 通过；`npm.cmd run typecheck` 通过。未启动真实业务请求，未写入数据库或消息系统。 |
+| 脚本注释门禁 | 付费预检、Embedding profile 切换、Docker Chat smoke 和 Docker Embedding smoke 的自然语言注释已统一为中文；R1/R2/R3/R4 及 Embedding smoke 契约测试 `5/5` 通过，改动已提交为 `de3fec18`。 |
+| 命令修正 | 首次 Python 测试命令错误引用不存在的 `test_recovery_protocol.py`，随后按实际测试清单修正；该问题是命令路径错误，不是业务代码失败。 |
+| 数据与费用边界 | 未执行迁移、truncate、删除、备份恢复、性能压测、组件重启、ACK/重复投递故障注入或真实付费业务；未输出或记录任何 API Key、密码、Prompt、完整回答、原文或对象存储地址。 |
+| 结论 | 当前计划范围内的真实业务实现和业务门禁已有历史直接证据，本轮复核与历史证据一致；下一步不重复付费执行，继续保持性能、故障矩阵、生产部署和备份恢复后置。 |
