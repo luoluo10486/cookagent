@@ -5741,7 +5741,7 @@
         "viewport": "1440x1024",
         "fonts": "loaded",
         "bodyOverflow": false,
-        "url": "http://127.0.0.1:5174/admin/usage?null&visual-qa=1"
+        "url": "http://127.0.0.1:5174/admin/usage?visual-qa=1"
       }
     },
     {
