@@ -2069,3 +2069,15 @@
 | 业务写入与终态 | Java 执行生成 `food_log_id=354580501375225856`，查询回读 revision `1`、2 条明细、其中 1 条营养匹配、餐次为 `lunch`；执行后的终态 SSE 为唯一 `run.completed`，并校验返回的饮食记录 ID 与 Java 执行结果一致。 |
 | 数据清理 | 验收脚本默认清理成功：本轮饮食记录软删除、Session 软删除，未执行迁移、truncate、备份恢复、性能压测、组件重启或 ACK/重复投递故障注入。 |
 | 结论 | 真实 SiliconFlow Chat -> `food_log_writer` Proposal -> Java Approval confirm/execute -> PostgreSQL 饮食记录与营养匹配 -> `run.completed`/SSE 的 R2 业务闭环已取得直接证据；拒绝/重复确认等分支继续由既有业务回归覆盖。 |
+
+## D131 M1-5 真实 USDA 营养目录重建（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 数据来源 | 使用 USDA FoodData Central SR Legacy CSV 数据集生成 V33；manifest 记录源压缩包 SHA-256、候选数量、筛选数量、分类分布和版本快照，原始压缩包未提交到仓库。 |
+| 结构与导入 | 已在本地 Docker PostgreSQL `FoodMate` 执行 V32 结构契约和 V33 seed；活动目录为 `1,000` 条 `approved/official` 食材，活动 USDA `foodPortion` 换算为 `1,518` 条。 |
+| 去重与校验 | 活动规范键 `1,000/1,000`、来源食材 ID `1,000/1,000`、食材/单位换算 `1,518/1,518`；非法目录值、重复活动规范键、非法换算值和食材外键不匹配均为 `0`。 |
+| 历史数据边界 | 重新筛选后不再入选的旧生成记录只做软删除，食材 `9` 条、换算 `12` 条；V33 rollback 前置检查暂无饮食明细引用，未执行 `TRUNCATE` 或宽泛删除。 |
+| 代码与测试 | `script/data/nutrition/build_usda_catalog.py` 支持稳定外部 ID、中文别名、食材形态、foodPortion 去重和 SQL 转义；营养目录生成器契约测试 `4 passed`，PowerShell 清理脚本语法检查和 `git diff --check` 通过。 |
+| 运行边界 | 本轮未调用真实 Chat/Embedding、未写入 Milvus、未修改 RAG 发布状态；只清理了本轮可确认的原始压缩包和 Python 缓存，无法确认归属的临时目录保留待人工判断。 |
+| 结论 | 本轮完成真实 USDA 营养目录基线，可供后续饮食匹配使用；营养学人工复核、复合菜配方和生产级目录治理不在本轮完成口径内。 |

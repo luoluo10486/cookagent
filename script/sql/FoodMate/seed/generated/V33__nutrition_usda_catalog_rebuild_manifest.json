@@ -1,0 +1,33 @@
+{
+  "source_name": "USDA FoodData Central",
+  "catalog_version": "USDA-SR-Legacy-2019-04-01-FoodMate-1",
+  "source_archive_sha256": "b80817294b8850530aaedf2e515c02593b1824f763a0ff356e5c2081643e6fd0",
+  "candidate_rows": 4160,
+  "excluded_rows": 3633,
+  "selected_rows": 1000,
+  "deduplicated_rows": 0,
+  "limit_truncated_rows": 3160,
+  "translated_rows": 851,
+  "untranslated_rows": 149,
+  "categories": {
+    "dairy": 148,
+    "egg": 24,
+    "fish": 111,
+    "fruit": 128,
+    "grain": 102,
+    "legume": 140,
+    "meat": 154,
+    "nut": 19,
+    "oil": 19,
+    "spice": 1,
+    "vegetable": 154
+  },
+  "food_forms": {
+    "canned": 32,
+    "cooked": 200,
+    "frozen": 30,
+    "raw": 471,
+    "unspecified": 267
+  },
+  "conversion_rows": 1518
+}
