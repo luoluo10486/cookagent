@@ -2100,3 +2100,12 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] Meal Planning 与 `MealPlanningFlow` 使用 shadcn `Button`、`Checkbox`、`Input`、`RadioGroup`、`Select`；共享餐食表格使用 shadcn Table，购物清单保留共享 UI 组件。
 - [x] 三页相关代码未发现 `AdminPrimitives` 直接引用或虚构 iconfont 映射；真实模式服务边界和 Figma fixture 状态未因审计改变。
 - [ ] 三页当前自动 diff 仍为非零差异，结论继续保持 `DIFF_REVIEW`；控件审计通过不等于页面像素级 `PASS`，布局 Token 和人工复核仍需继续。
+
+## 30. 2026-09-06 Knowledge 与 Profile shadcn 控件迁移审计
+
+本节记录 Knowledge、Profile 和共享状态操作的控件基础设施审计，不重新采集 105 个画板，也不替换已登记的 Knowledge/Profile 浏览器证据。
+
+- [x] Knowledge 使用 shadcn `Input`、`Button`、`Card`、`Badge`；Profile 使用 shadcn `Button`、`Card`、`Dialog`、`Input`、`Progress`、`Select`、`Textarea`、`Tooltip`。
+- [x] Profile 头像上传的原生 file input 处于隐藏状态，仅连接文件选择 API；所有可见交互入口继续使用 shadcn Button。
+- [x] 两页没有 `AdminPrimitives` 直接引用，也没有新增 iconfont 字体或虚构 Unicode 映射；真实模式服务逻辑未因审计改变。
+- [ ] Knowledge 与 Profile 当前 diff 仍为非零，人工视觉复核仍需继续；控件迁移审计通过不等于页面或 105 画板像素级 `PASS`。
