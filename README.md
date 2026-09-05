@@ -110,7 +110,7 @@ npm run dev
 - D114（2026-09-02）使用当前本地凭据复验两个 Docker Embedding profile，供应商均返回 HTTP 401 `Unauthorized`，响应摘要为 `Api key is invalid`。Runtime、配置和 readiness 正常，但当前密钥需要在 SiliconFlow 控制台确认有效性或轮换后再复验；未自动换回旧密钥，也未继续重复请求。
 - D109-D111 已确认 Docker Python 入口为 `python runtime_server.py`，容器 Python 为 `3.12.14`，宿主端口为 `9002 -> 9000`，live/readiness 均返回 HTTP 200；安全扫描和显式 `-EnvFile .env` 预检通过。当前本地 JWT 服务开关关闭，JWT 重叠轮换检查按脚本规则跳过。
 - Docker `agent-runtime` 支持通过 `FOODMATE_DOCKER_HTTP_PROXY`、`FOODMATE_DOCKER_HTTPS_PROXY` 显式配置外部代理，并用 `FOODMATE_DOCKER_NO_PROXY` 隔离 Compose 内部服务；默认不启用代理，未配置可用出站路径时真实请求保持 fail-closed。
-- M1-5 的饮食记录、营养分析、餐食计划、购物清单和写确认核心范围已进入真实 Java/SQL/API 链路；`food_log_writer` 已覆盖 create/update/delete/restore，并完成 HTTP 与 RocketMQ 各 11/11 跨进程回归；当前本地目录含 60 条 approved 食材、60 条官方 foodPortions 换算和 75 条精确质量换算规则。
+- M1-5 的饮食记录、营养分析、餐食计划、购物清单和写确认核心范围已进入真实 Java/SQL/API 链路；`food_log_writer` 已覆盖 create/update/delete/restore，并完成 HTTP 与 RocketMQ 各 11/11 跨进程回归；当前本地目录含 1,000 条 approved/official USDA 食材和 1,518 条 approved foodPortions 换算规则，V32/V33 validation 已通过。
 - Agent 运行路径已支持 `run.eval_decided`、预算、checkpoint、continuation、追问和审批确认；写入仍由 Java 授权和执行，Python/模型不直连业务库。
 - M1-6 已完成本地 Actuator/metrics 配置回归、Runtime readiness、Redis AOF 探针恢复、RocketMQ 重启恢复、双 JVM 有界读取和 Java 重启回读；生产故障矩阵和容量门禁仍待目标环境执行。
 - M2-1 已在 Docker 应用容器中复验 `local-stub` Redis 索引和 local deterministic Milvus 路径，覆盖批次上传、RocketMQ 索引、结果回写、显式发布/下线/恢复、用户检索、AgentRun 引用和批次 SSE；D112 保留历史凭据下两个真实 SiliconFlow Embedding profile 的单次 Docker 协议证据，D114 已记录当前凭据 401 边界。

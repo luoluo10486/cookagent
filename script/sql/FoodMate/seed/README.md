@@ -2,7 +2,15 @@
 
 本目录存放人工评审后的营养目录数据，不由 Java 启动自动执行，也不由 Flyway 自动执行。
 
-截至 2026-09-02，当前本地数据库已通过 validation 核验 60 条 `approved` 食材、60 条 USDA `foodPortions` 食材级换算规则，以及 75 条 `kg/mg/lb -> g` 精确质量换算；active conversion 合计 135 条。下面的 V1/V2/V4/V5/V6/V7/V8 说明分别对应各自 seed 的增量范围，不应将单个脚本的行数误读为当前目录总量。
+截至 2026-09-06，当前本地数据库已通过 validation 核验 1,000 条 `approved/official` USDA 食材和 1,518 条 USDA `foodPortion` 食材级换算规则；历史目录中的 75 条 `kg/mg/lb -> g` 精确质量换算仍按既有规则保留。下面的 V1/V2/V4/V5/V6/V7/V8 说明分别对应各自 seed 的历史增量范围，V33 是当前重建基线，不应将单个脚本的行数误读为当前目录总量。
+
+## V32/V33 当前重建基线
+
+`migration/V32__nutrition_catalog_rebuild_contract.sql` 补齐当前目录重建所需的来源、版本、规范键、食材形态和数据类型约束；它只增加结构和索引，不删除业务数据。
+
+`seed/generated/V33__nutrition_usda_catalog_rebuild_seed.sql` 由 `script/data/nutrition/build_usda_catalog.py` 根据 USDA FoodData Central SR Legacy CSV 生成，当前包含 1,000 条唯一规范键的 `approved/official` 食材和 1,518 条去重后的 `foodPortion` 换算。每条记录保留 USDA FDC 标识、来源版本和安全别名；重复执行使用稳定 ID 幂等更新，不使用 `MAX(id)+1`。
+
+执行 V33 前必须先确认 V32 结构和 `seed/generated/V33__nutrition_usda_catalog_rebuild_manifest.json`，再执行 `validation/V32__nutrition_catalog_rebuild_contract_validation.sql` 与 `validation/V33__nutrition_usda_catalog_rebuild_seed_validation.sql`。V33 的 rollback 文件只是只读前置检查，不执行删除；重新筛选淘汰的旧生成记录只能在确认无业务引用后按软删除处理。
 
 ## V1
 
@@ -70,5 +78,9 @@ The read-only checks are in `validation/V8__nutrition_usda_directory_expansion_v
 
 10. 如需导入官方目录扩展，人工执行 `V7__nutrition_usda_directory_expansion_seed.sql`，再执行 `validation/V7__nutrition_usda_directory_expansion_validation.sql`，确认 23 条食材和 23 条换算均为 `approved`、来源版本包含 FDC ID/portion 序号、关联食材无缺失且规则形状错误为 `0`。V7 覆盖水果、蔬菜、谷物、坚果、鱼肉和禽畜肉等常用食材，所有份量均来自对应 USDA `food_portion` 记录；3 oz 规则仅按原始 85 g 归一化为每 oz 28.3333 g。
 11. 如需导入 V8 官方目录扩展，人工执行 `V8__nutrition_usda_directory_expansion_seed.sql`，再执行 `validation/V8__nutrition_usda_directory_expansion_validation.sql`，确认 12 条食材和 12 条换算均为 `approved`、来源版本包含 FDC ID/portion 序号、关联食材无缺失且规则形状错误为 `0`；重复执行必须保持幂等。
+
+12. 当前目录重建时，确认本地数据库和备份状态后人工执行 `migration/V32__nutrition_catalog_rebuild_contract.sql`，再执行 `validation/V32__nutrition_catalog_rebuild_contract_validation.sql`。
+13. 读取 V33 manifest 后人工执行 `seed/generated/V33__nutrition_usda_catalog_rebuild_seed.sql`，再执行 `validation/V33__nutrition_usda_catalog_rebuild_seed_validation.sql`；确认活动食材为 1,000 条、活动 foodPortion 换算为 1,518 条、重复规范键和非法值均为 `0`。
+14. 如需重新筛选 V33，先执行 `rollback/R33__nutrition_usda_catalog_rebuild_seed_precheck.sql` 并核对 `food_log_items` 引用，再由管理员确认软删除范围；禁止使用 `TRUNCATE` 或无条件删除。
 
 seed 可重复执行：相同 `nutrition_food_id` 会被跳过；如果同一标准名称已被其他 ID 占用，SQL 会失败，必须先做数据评审，不得静默覆盖目录。

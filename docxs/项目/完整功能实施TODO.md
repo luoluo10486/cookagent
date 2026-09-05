@@ -207,7 +207,7 @@ M1-4 的上述治理项均属于最小真实模型闭环的完成门槛，不得
 
 - [x] V13/V14/V15 结构已落地并经本地只读校验确认：`food_logs`、`food_log_items`、`nutrition_foods`、`nutrition_unit_conversions`、`approval_requests`、计划生命周期字段，以及 `operation_audits` 幂等字段和索引。
 - [x] 实现饮食记录创建、查询、编辑、删除、恢复与幂等键；编辑/删除/恢复使用 `revision`，编辑采用整条内容替换并重新生成明细营养快照。
-- [x] 实现 today/7d/30d 营养分析、覆盖率、不完整提示和非医疗免责声明；60 条 USDA seed、60 条 USDA foodPortions 单位换算和 75 条精确质量换算已导入并通过本地 validation，已有 matched/pending 分支保护。
+- [x] 实现 today/7d/30d 营养分析、覆盖率、不完整提示和非医疗免责声明；V33 已导入 1,000 条 approved/official USDA 食材和 1,518 条 USDA foodPortions 单位换算，并通过 V32/V33 本地 validation，已有 matched/pending 分支保护。
 - [x] 实现餐食计划创建、查询、修改、校验、保存、软删除、恢复和购物清单生成；V15 `revision`/幂等迁移及本地 HTTP 回归已通过。
 - [x] 实现 `meal_plan.save_plan` 的 Proposal -> Confirm -> Execute、过期/参数摘要校验、CAS 执行和审计重放。
 - [x] 实现 `food_log_writer` 的本地写入能力：确认绑定、AgentRun/用户归属、幂等/摘要校验、复用 `FoodLogService` create/update/delete/restore、资源 ID 回填和重放保护。
