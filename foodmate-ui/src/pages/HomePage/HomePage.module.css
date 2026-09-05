@@ -41,6 +41,12 @@
   height: 16px;
 }
 
+.figmaHomePage .sendButton > img {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
 .figmaHomePage .quickButton {
   width: 100px;
   min-width: 100px;
@@ -82,6 +88,32 @@
   font-family: var(--fm-font);
   font-size: 14px;
   line-height: 1;
+}
+
+.figmaMetricRing {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.figmaActivityDot,
+.figmaArrow {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.figmaActivityDot {
+  width: 10px;
+  height: 10px;
+}
+
+.figmaArrow {
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
 }
 
 .figmaHomePage .progress {
@@ -319,6 +351,14 @@
   place-items: center;
   border-radius: 50%;
   background: conic-gradient(var(--progress-color) calc(var(--progress) * 1%), var(--progress-track) 0);
+}
+
+.figmaHomePage .progress {
+  background: var(--progress-track);
+}
+
+.figmaHomePage .progress::after {
+  display: none;
 }
 
 .progress::after {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05",
+  "generatedAt": "2026-09-06",
   "tool": "scripts/png-diff.mjs",
   "results": {
     "workspace-home-v2": {
@@ -7,10 +7,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 360115,
-      "differentRatio": 0.24421861436631945,
-      "meanAbsoluteError": 3.798675367567274,
-      "rmse": 19.280954993388825,
+      "differentPixels": 358326,
+      "differentRatio": 0.24300537109375,
+      "meanAbsoluteError": 3.684536573621962,
+      "rmse": 18.97108161641473,
       "maxChannelDelta": 248
     },
     "agent-chat-v2": {
@@ -18,10 +18,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 172783,
-      "differentRatio": 0.11717597113715278,
-      "meanAbsoluteError": 2.9060902913411457,
-      "rmse": 17.24656855903898,
+      "differentPixels": 172788,
+      "differentRatio": 0.11717936197916666,
+      "meanAbsoluteError": 2.922777303059896,
+      "rmse": 17.35840802090394,
       "maxChannelDelta": 211
     },
     "diet-records-v2": {

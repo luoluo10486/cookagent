@@ -216,6 +216,7 @@ type ChatSurfaceProps = {
   profileIdOverride?: string;
   showKnowledgeTopNav?: boolean;
   designChat?: boolean;
+  fixtureVariant?: 'chat';
   pageVariant?: 'completed-citations' | 'figma-default';
   statusForStrip?: AgentDisplayStatus;
   statusVisualState?: 'user-cancelled';
@@ -246,6 +247,7 @@ function ChatSurface({
   profileIdOverride,
   showKnowledgeTopNav,
   designChat,
+  fixtureVariant,
   pageVariant,
   statusForStrip,
   statusVisualState,
@@ -257,6 +259,7 @@ function ChatSurface({
       activeModule="chat"
       avatarSrc={avatarSrc}
       designChat={designChat}
+      fixtureVariant={fixtureVariant}
       displayNameOverride={displayNameOverride}
       profileIdOverride={profileIdOverride}
       pageOverlay={pageOverlay}
@@ -290,6 +293,7 @@ function ChatSurface({
           onChange={onChange}
           onSend={onSend}
           onStop={onStop}
+          fixtureVariant={fixtureVariant}
         />
       </div>
     </WorkspaceLayout>
@@ -2031,6 +2035,7 @@ function MockChatPage() {
       input={agent.input}
       running={agent.running}
       designChat={isFigmaFixture}
+      fixtureVariant={isFigmaFixture ? 'chat' : undefined}
       displayNameOverride={isFigmaFixture ? 'Anddy' : undefined}
       profileIdOverride={isFigmaFixture ? '1234567' : undefined}
       showKnowledgeTopNav={!isFigmaFixture}

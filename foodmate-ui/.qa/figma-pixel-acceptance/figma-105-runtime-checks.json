@@ -1303,8 +1303,8 @@
       },
       "textOverflow": [],
       "url": "/chat?state=figma-v2",
-      "windowControls": 0,
-      "trafficLightColors": 0,
+      "windowControls": 1,
+      "trafficLightColors": 3,
       "assistantGeometry": {
         "assistantBody": "x=340,y=237,width=780,height=254",
         "messageText": "x=356,y=253,width=764,height=21",
@@ -1314,6 +1314,13 @@
       "viewport": {
         "height": 1024,
         "width": 1440
+      },
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-chat-v2-browser-2026-09-06.png"
       }
     },
     "profile-security-password-submitting": {
@@ -2204,12 +2211,12 @@
       "textOverflow": [],
       "url": "http://127.0.0.1:5174/?state=figma-v2&visual-qa=1",
       "figmaSidebar": {
-        "sessionSearch": false,
-        "sessionItems": 0,
-        "sessionPagination": false,
+        "sessionSearch": true,
+        "sessionItems": 9,
+        "sessionPagination": true,
         "agentConversationLink": true,
-        "windowControls": false,
-        "trafficLightColors": 0
+        "windowControls": true,
+        "trafficLightColors": 3
       },
       "viewport": {
         "width": 1440,
@@ -2217,10 +2224,10 @@
       },
       "dprPass": true,
       "recapture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
-        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-workspace-home-v2-browser-2026-09-05.png"
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-workspace-home-v2-browser-2026-09-06.png"
       }
     },
     "profile-privacy-export-expired": {
@@ -2452,8 +2459,8 @@
       },
       "textOverflow": [],
       "url": "/chat?state=planning",
-      "windowControls": 0,
-      "trafficLightColors": 0,
+      "windowControls": 1,
+      "trafficLightColors": 3,
       "planningGeometry": {
         "userMessage": "x=292,y=145,width=1116,height=68",
         "userBubble": "x=1132,y=145,width=228,height=49",

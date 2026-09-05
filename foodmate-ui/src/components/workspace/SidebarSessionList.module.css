@@ -83,6 +83,13 @@
   border-radius: 50%;
   background: var(--fm-muted);
 }
+
+.figmaSessionDot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+}
 .active .dot {
   background: var(--fm-green);
 }
@@ -146,6 +153,17 @@
 .pagination svg {
   width: 14px;
   height: 14px;
+}
+
+.paginationGlyph {
+  display: block;
+  width: 8px;
+  color: inherit;
+  font-family: var(--fm-font);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
 }
 
 .moreButton {

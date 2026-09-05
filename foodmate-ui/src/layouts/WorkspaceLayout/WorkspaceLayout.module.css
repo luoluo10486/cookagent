@@ -38,6 +38,27 @@
   height: 12px;
 }
 
+/* Figma fixture 使用导出的 SVG，避免浏览器重新绘制造成图标轮廓差异。 */
+.newButton > img,
+.sideLink > img,
+.sideButton > img,
+.sidebar-session-section-title > img {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.newButton > img {
+  width: 14px;
+  height: 14px;
+}
+
+.sideLink > img,
+.sideButton > img,
+.sidebar-session-section-title > img {
+  width: 16px;
+  height: 16px;
+}
+
 /* Figma 节点 640:428 使用独立的中性导航和会话选中表面。 */
 .designChat {
   --fm-fixture-sidebar-active-surface: #fbf7f2;
@@ -368,6 +389,13 @@
   background: var(--fm-green);
 }
 
+.statusPill > img {
+  display: block;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+}
+
 .profile {
   display: flex;
   align-items: center;
@@ -559,6 +587,16 @@
   transform: translateY(-50%);
 }
 
+.workspaceSearch > img {
+  position: absolute;
+  top: 50%;
+  left: 13px;
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+}
+
 .iconButton,
 .userButton {
   display: inline-flex;
@@ -583,6 +621,12 @@
 .iconButton svg {
   width: 18px;
   height: 18px;
+}
+
+.iconButton > img {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 .userButton {
   gap: 8px;

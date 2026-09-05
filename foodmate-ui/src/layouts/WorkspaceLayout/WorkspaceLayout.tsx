@@ -36,6 +36,11 @@ import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DEFAULT_AVATARS, resolveAvatarUrl } from '../../lib/avatar';
 import { SidebarSessionList, type SessionAction } from '../../components/workspace/SidebarSessionList';
+import {
+  FigmaWorkspaceAsset,
+  type FigmaWorkspaceAssetName,
+  type WorkspaceFixtureVariant,
+} from '../../components/workspace/FigmaWorkspaceAsset';
 import type { SessionSummary } from '../../types/session';
 import { BrandLogo } from '../../components/brand/BrandLogo';
 import { ROUTES, buildChatPath } from '../../constants/routes';
@@ -70,6 +75,7 @@ type WorkspaceLayoutProps = {
   topbarShowMarkLetter?: boolean;
   showWindowControls?: boolean;
   designChat?: boolean;
+  fixtureVariant?: WorkspaceFixtureVariant;
   topbarVariant?: 'planning-list';
   hideSessionHistory?: boolean;
   sidebarFixture?: {
@@ -99,6 +105,7 @@ export function WorkspaceLayout({
   topbarShowMarkLetter = true,
   showWindowControls,
   designChat = false,
+  fixtureVariant,
   topbarVariant,
   hideSessionHistory = false,
   sidebarFixture,
@@ -133,6 +140,8 @@ export function WorkspaceLayout({
   const showFixtureWindowControls =
     showWindowControls ?? (designChat || Boolean(sidebarFixture && !showKnowledgeTopNav));
   const isFigmaSidebarFixture = Boolean(sidebarFixture && (!showKnowledgeTopNav || showWindowControls));
+  const renderWorkspaceIcon = (name: FigmaWorkspaceAssetName, fallback: React.ReactNode) =>
+    fixtureVariant ? <FigmaWorkspaceAsset variant={fixtureVariant} name={name} /> : fallback;
 
   useEffect(() => {
     if (!realMode) return;
@@ -237,7 +246,11 @@ export function WorkspaceLayout({
         <aside className={`${styles.sidebar} ${sidebarFixture?.showTopStatus ? styles.profileFixture : ''}`}>
           {showFixtureWindowControls ? (
             <div className={styles.windowControls} data-name="window-controls" aria-hidden="true">
-              <img src="/assets/figma/workspace/window-controls.svg" alt="" />
+              {fixtureVariant ? (
+                <FigmaWorkspaceAsset variant={fixtureVariant} name="windowControls" />
+              ) : (
+                <img src="/assets/figma/workspace/window-controls.svg" alt="" />
+              )}
             </div>
           ) : null}
           <div className={styles.sidebarBrand}>
@@ -245,12 +258,16 @@ export function WorkspaceLayout({
           </div>
           {sidebarFixture?.showTopStatus ? <div className={styles.fixtureOnlineStatus}>在线代理</div> : null}
           <Button className={styles.newButton} onClick={createNewSession}>
-            <Plus aria-hidden="true" />
+            {renderWorkspaceIcon('newTask', <Plus aria-hidden="true" />)}
             <span>新建任务</span>
           </Button>
           {!hideSessionHistory && !sidebarFixture?.hideSessionSearch ? (
             <div className={styles.searchWrap}>
-              <Search className={styles.searchIcon} aria-hidden="true" />
+              {fixtureVariant ? (
+                <FigmaWorkspaceAsset variant={fixtureVariant} name="sessionSearch" className={styles.searchIcon} />
+              ) : (
+                <Search className={styles.searchIcon} aria-hidden="true" />
+              )}
               <Input
                 className={styles.search}
                 placeholder="搜索会话..."
@@ -274,12 +291,13 @@ export function WorkspaceLayout({
           <div className={styles.sessionTools}>
             <nav className={styles.primarySideNav} aria-label="工作区导航">
               <NavLink className={sideLink} to={ROUTES.HOME} end>
-                <Home aria-hidden="true" />
+                {renderWorkspaceIcon('home', <Home aria-hidden="true" />)}
                 <span>工作台</span>
               </NavLink>
             </nav>
             <SidebarSessionList
               currentPage={sidebarFixture?.currentPage}
+              fixtureVariant={fixtureVariant}
               sessions={displayedSessions}
               showHistory={!hideSessionHistory}
               onAction={sidebarFixture ? undefined : handleSessionAction}
@@ -292,19 +310,19 @@ export function WorkspaceLayout({
           </div>
           <nav className={styles.secondarySideNav} aria-label="饮食工具">
             <NavLink className={fixedSideLink(activeModule === 'records')} to={`${ROUTES.ANALYSIS}?view=records`}>
-              <Table2 aria-hidden="true" />
+              {renderWorkspaceIcon('dietRecords', <Table2 aria-hidden="true" />)}
               <span>饮食记录</span>
             </NavLink>
             <NavLink className={fixedSideLink(activeModule === 'analysis')} to={ROUTES.ANALYSIS} end>
-              <ChartColumn aria-hidden="true" />
+              {renderWorkspaceIcon('intakeAnalysis', <ChartColumn aria-hidden="true" />)}
               <span>摄入分析</span>
             </NavLink>
             <NavLink className={sideLink} to={ROUTES.PLANNING}>
-              <CalendarDays aria-hidden="true" />
+              {renderWorkspaceIcon('mealPlanning', <CalendarDays aria-hidden="true" />)}
               <span>餐食规划</span>
             </NavLink>
             <NavLink className={sideLink} to={ROUTES.KNOWLEDGE}>
-              <BookOpen aria-hidden="true" />
+              {renderWorkspaceIcon('knowledge', <BookOpen aria-hidden="true" />)}
               <span>知识库</span>
             </NavLink>
             <Button
@@ -313,7 +331,7 @@ export function WorkspaceLayout({
               type="button"
               onClick={() => announce('设置入口将在设置页面完成后启用。')}
             >
-              <Settings aria-hidden="true" />
+              {renderWorkspaceIcon('settings', <Settings aria-hidden="true" />)}
               <span>设置</span>
             </Button>
           </nav>
@@ -330,7 +348,7 @@ export function WorkspaceLayout({
               </Button>
             ) : null}
             <div className={styles.statusPill}>
-              <span />
+              {fixtureVariant ? <FigmaWorkspaceAsset variant={fixtureVariant} name="statusDot" /> : <span />}
               <span>就绪 (Fustat-v2)</span>
             </div>
             <Link className={styles.profile} to={isAuthenticated ? ROUTES.PROFILE : ROUTES.LOGIN}>
@@ -421,7 +439,7 @@ export function WorkspaceLayout({
             </nav>
             <div className={styles.userActions}>
               <div className={styles.workspaceSearch}>
-                <Search aria-hidden="true" />
+                {renderWorkspaceIcon('topbarSearch', <Search aria-hidden="true" />)}
                 <Input placeholder="搜索工作区..." aria-label="搜索工作区" />
               </div>
               <Tooltip>
@@ -434,7 +452,7 @@ export function WorkspaceLayout({
                     aria-label="通知"
                     onClick={() => announce('暂无新的工作区通知。')}
                   >
-                    <Bell aria-hidden="true" />
+                    {renderWorkspaceIcon('notification', <Bell aria-hidden="true" />)}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>通知</TooltipContent>

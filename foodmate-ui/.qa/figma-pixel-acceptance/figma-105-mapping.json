@@ -45,7 +45,7 @@
       "queryState": "state=figma-v2",
       "browserViewport": "1440x1024",
       "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/workspace-home-v2-figma-2026-09-05.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-workspace-home-v2-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-workspace-home-v2-browser-2026-09-06.png",
       "browserCapture": ".qa/figma-pixel-acceptance/recaptured/workspace-home-v2-sidebar-status-followup-2026-08-30.jpg",
       "mobileBrowserJpg": ".qa/figma-pixel-acceptance/recaptured/workspace-home-v2-sidebar-pruned-browser-390x844-2026-08-30.jpg",
       "mobileBrowserViewport": "390x844",
@@ -77,11 +77,11 @@
       "manualReview": {
         "status": "MINOR_RENDERING_DIFF_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-09-05",
-        "conclusion": "实时 Figma 节点 640:256 的窗口控制点、会话搜索、Agent 会话列表、分页、任务入口与状态面板已与当前浏览器证据复核；1440×1024 页面无溢出，图标、字体光栅化和其它局部渲染差异仍存在，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "实时 Figma 节点 640:256 的窗口控制点、会话搜索、导航 SVG、Agent 会话列表、分页、营养环、输入器和状态面板已与 1440×1024、DPR 1 浏览器证据复核；页面无溢出，文字和局部布局仍存在可见差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -102,7 +102,7 @@
       "queryState": "state=figma-v2",
       "browserViewport": "1440x1024",
       "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/agent-chat-v2-figma-2026-09-05.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-chat-v2-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-chat-v2-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#agent-chat-v2",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -131,11 +131,11 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-09-05",
-        "conclusion": "实时 Figma 节点 640:428 的助手正文、内嵌写入确认卡和 983:3 消息操作说明面板已与当前浏览器证据复核；侧栏、顶栏和用户消息头像使用已登记资源，1440×1024 页面无溢出，图标、字体光栅化和其它局部渲染差异仍存在，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "实时 Figma 节点 640:428 的助手正文、内嵌写入确认卡和 983:3 消息操作说明面板已与 1440×1024、DPR 1 浏览器证据复核；侧栏、顶栏、会话状态点和 Composer 已使用对应 Chat SVG 资源，页面无溢出，文字和局部布局仍存在可见差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,

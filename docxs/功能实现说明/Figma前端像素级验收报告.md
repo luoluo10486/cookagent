@@ -1,6 +1,6 @@
 # FoodMate Figma 前端像素级验收报告
 
-更新时间：2026-09-05
+更新时间：2026-09-06
 
 ## 1. 结论
 
@@ -10,6 +10,22 @@
 2. 前端代码与 Figma 画板的自动化像素差异已覆盖 105 个已建立映射的页面/状态，105 个结果均为 `DIFF_REVIEW`，不能标记为像素级通过。
 
 因此当前不能宣称“Figma 105 张画板已全部像素级通过”。已经完成的是可复核的 Figma 全量结构验收、105 个画板的路由/状态映射、差异证据收集，以及运行时几何、可见文字、DPR 和 105/105 人工视觉复核登记；由于仍存在可见差异，结果继续保留为 `DIFF_REVIEW`。
+
+## 1.1 2026-09-06 Workspace/Home 与 Agent Chat 资源收口
+
+本批次只针对 Workspace/Home 与 Agent Chat 的共享壳层和 Figma fixture 资源进行实现与证据更新，没有重新采集或重新判定全部 105 个画板。
+
+| 画板 | Figma 节点 | 浏览器视口 / DPR | 最新浏览器证据 | diff 比例 | MAE | RMSE | 结论 |
+|---|---|---|---|---:|---:|---:|---|
+| Workspace Home | `640:256` | `1440×1024 / 1` | `recaptured/dpr1-workspace-home-v2-browser-2026-09-06.png` | `24.3005%` | `3.684536` | `18.971082` | `DIFF_REVIEW` |
+| Agent Chat | `640:428` | `1440×1024 / 1` | `recaptured/dpr1-agent-chat-v2-browser-2026-09-06.png` | `11.7179%` | `2.922777` | `17.358408` | `DIFF_REVIEW` |
+
+- [x] 两页的运行时几何、DPR、字体加载和文字边界检查通过；页面无横向溢出。
+- [x] `figma-105-mapping.json`、`figma-105-diff-results.json` 和 `figma-105-runtime-checks.json` 已同步本批次两项最新证据。
+- [x] 本批次代码门禁通过：5 个相关测试文件 55/55、`typecheck`、`lint`、`format:check`、`build`、`qa:figma:validate` 和 `git diff --check`。
+- [ ] 本批次没有重新验收其余画板；105 项汇总仍不能被解释为本次全量重采集结果。
+- [ ] 两页仍存在可见的字体、局部布局、内容密度和图标光栅化差异，因此保持 `DIFF_REVIEW`，没有标记 `PASS`。
+- [ ] iconfont 仍为 `BLOCKED`，本批次继续使用真实已登记 SVG 和 Lucide fallback。
 
 ## 2. Figma 文件内部验收
 

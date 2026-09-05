@@ -1,6 +1,7 @@
 import { SendHorizontal, Square } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FigmaWorkspaceAsset, type WorkspaceFixtureVariant } from './FigmaWorkspaceAsset';
 import styles from './Composer.module.css';
 
 type ComposerProps = {
@@ -11,6 +12,7 @@ type ComposerProps = {
   onChange?: (value: string) => void;
   onSend?: () => void;
   onStop?: () => void;
+  fixtureVariant?: WorkspaceFixtureVariant;
 };
 
 export function Composer({
@@ -21,6 +23,7 @@ export function Composer({
   onChange,
   onSend,
   onStop,
+  fixtureVariant,
 }: ComposerProps) {
   const handleSubmit = () => {
     if (running) {
@@ -57,7 +60,13 @@ export function Composer({
           data-state={running ? 'running' : 'idle'}
           onClick={handleSubmit}
         >
-          {running ? <Square /> : <SendHorizontal />}
+          {running ? (
+            <Square />
+          ) : fixtureVariant ? (
+            <FigmaWorkspaceAsset variant={fixtureVariant} name="send" />
+          ) : (
+            <SendHorizontal />
+          )}
         </Button>
       </div>
     </footer>

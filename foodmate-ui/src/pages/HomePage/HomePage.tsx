@@ -15,6 +15,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
+import { FigmaWorkspaceAsset } from '../../components/workspace/FigmaWorkspaceAsset';
 import { WorkspaceLayout } from '../../layouts/WorkspaceLayout/WorkspaceLayout';
 import { getAuthUser } from '../../services/authService';
 import { getHomeSessions, getRecommendedPrompts, getTaskCards } from '../../services/sessionService';
@@ -22,10 +23,10 @@ import type { SessionSummary } from '../../types/session';
 import styles from './HomePage.module.css';
 
 const metricCards = [
-  { label: '热量', value: '1,850', unit: '千卡', progress: '74', tone: 'green' },
-  { label: '蛋白质', value: '120', unit: 'g', progress: '80', tone: 'purple' },
-  { label: '碳水', value: '210', unit: 'g', progress: '65', tone: 'orange' },
-  { label: '脂肪', value: '58', unit: 'g', progress: '55', tone: 'red' },
+  { label: '热量', value: '1,850', unit: '千卡', progress: '74', tone: 'green', figmaAsset: 'metricEnergy' },
+  { label: '蛋白质', value: '120', unit: 'g', progress: '80', tone: 'purple', figmaAsset: 'metricProtein' },
+  { label: '碳水', value: '210', unit: 'g', progress: '65', tone: 'orange', figmaAsset: 'metricCarbs' },
+  { label: '脂肪', value: '58', unit: 'g', progress: '55', tone: 'red', figmaAsset: 'metricFat' },
 ] as const;
 
 const pendingItems = [
@@ -187,6 +188,7 @@ export function HomePage() {
     <WorkspaceLayout
       activeModule="home"
       displayNameOverride={isFigmaFixture ? 'Anddy' : undefined}
+      fixtureVariant={isFigmaFixture ? 'home' : undefined}
       profileIdOverride={isFigmaFixture ? '1234567' : undefined}
       sidebarAvatarSrc={isFigmaFixture ? FIGMA_HOME_SIDEBAR_AVATAR : undefined}
       topAvatarSrc={isFigmaFixture ? FIGMA_HOME_TOPBAR_AVATAR : undefined}
@@ -210,7 +212,11 @@ export function HomePage() {
             aria-label="添加附件"
             onClick={() => attachmentInputRef.current?.click()}
           >
-            <Paperclip aria-hidden="true" />
+            {isFigmaFixture ? (
+              <FigmaWorkspaceAsset variant="home" name="attachment" />
+            ) : (
+              <Paperclip aria-hidden="true" />
+            )}
           </Button>
           <input
             ref={attachmentInputRef}
@@ -241,7 +247,11 @@ export function HomePage() {
             disabled={!prompt.trim()}
             onClick={() => startPrompt(prompt)}
           >
-            <SendHorizontal aria-hidden="true" />
+            {isFigmaFixture ? (
+              <FigmaWorkspaceAsset variant="home" name="send" />
+            ) : (
+              <SendHorizontal aria-hidden="true" />
+            )}
           </Button>
         </section>
 
@@ -288,6 +298,9 @@ export function HomePage() {
                   <span
                     className={`${styles.progress} ${styles[`progress${metric.tone[0].toUpperCase()}${metric.tone.slice(1)}`]}`}
                   >
+                    {isFigmaFixture ? (
+                      <FigmaWorkspaceAsset className={styles.figmaMetricRing} variant="home" name={metric.figmaAsset} />
+                    ) : null}
                     <span>{metric.progress}%</span>
                   </span>
                 </article>
@@ -308,12 +321,26 @@ export function HomePage() {
                       type="button"
                       onClick={() => navigate(`/chat/${session.id}`)}
                     >
-                      <span className={`${styles.sessionDot} ${styles[`dot${index}`]}`} aria-hidden="true" />
+                      {isFigmaFixture ? (
+                        <FigmaWorkspaceAsset
+                          className={styles.figmaActivityDot}
+                          variant="home"
+                          name={
+                            index === 0 ? 'activityDotGreen' : index === 1 ? 'activityDotYellow' : 'activityDotBlue'
+                          }
+                        />
+                      ) : (
+                        <span className={`${styles.sessionDot} ${styles[`dot${index}`]}`} aria-hidden="true" />
+                      )}
                       <span>
                         <strong>{session.title}</strong>
                         <small>{session.subtitle}</small>
                       </span>
-                      <ArrowRight aria-hidden="true" />
+                      {isFigmaFixture ? (
+                        <FigmaWorkspaceAsset className={styles.figmaArrow} variant="home" name="arrowRight" />
+                      ) : (
+                        <ArrowRight aria-hidden="true" />
+                      )}
                     </Button>
                   ))}
                 </div>
