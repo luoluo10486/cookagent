@@ -1,17 +1,17 @@
 .shell {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-columns: var(--fm-figma-workspace-sidebar-width) minmax(0, 1fr);
   width: 100%;
   height: 100dvh;
   overflow: hidden;
-  background: var(--fm-bg);
+  background: var(--fm-figma-workspace-bg);
 }
 
 /* Figma fixture 只覆盖设计稿专属的表面颜色。 */
 .figmaFixture {
-  --fm-fixture-sidebar-active-surface: #fdf6ef;
-  --fm-fixture-session-active-surface: #fffdf5;
-  --fm-fixture-top-nav-active-surface: #fffefc;
+  --fm-fixture-sidebar-active-surface: var(--fm-figma-workspace-sidebar-active);
+  --fm-fixture-session-active-surface: var(--fm-figma-workspace-session-active);
+  --fm-fixture-top-nav-active-surface: var(--fm-figma-workspace-top-nav-active);
 }
 
 /* Figma fixture 右侧轨道保持 340px 画板边界，分隔线不额外占用布局宽度。 */
@@ -61,9 +61,9 @@
 
 /* Figma 节点 640:428 使用独立的中性导航和会话选中表面。 */
 .designChat {
-  --fm-fixture-sidebar-active-surface: #fbf7f2;
-  --fm-fixture-session-active-surface: #fffcf9;
-  --fm-fixture-top-nav-active-surface: #fffefc;
+  --fm-fixture-sidebar-active-surface: var(--fm-figma-workspace-sidebar-active);
+  --fm-fixture-session-active-surface: var(--fm-figma-workspace-session-active);
+  --fm-fixture-top-nav-active-surface: var(--fm-figma-workspace-top-nav-active);
 }
 
 .figmaFixture .primarySideNav {
@@ -124,11 +124,14 @@
 }
 
 .withRail {
-  grid-template-columns: 260px minmax(0, 1fr) 320px;
+  grid-template-columns: var(--fm-figma-workspace-sidebar-width) minmax(0, 1fr) var(--fm-figma-workspace-rail-width);
 }
 
 .withWideRail {
-  grid-template-columns: 260px minmax(0, 1fr) 340px;
+  grid-template-columns:
+    var(--fm-figma-workspace-sidebar-width)
+    minmax(0, 1fr)
+    var(--fm-figma-workspace-wide-rail-width);
 }
 
 .rightRail {
@@ -136,8 +139,8 @@
   min-height: 0;
   height: 100dvh;
   overflow: hidden;
-  background: var(--fm-surface);
-  border-left: 1px solid var(--fm-border);
+  background: var(--fm-figma-workspace-surface);
+  border-left: 1px solid var(--fm-figma-workspace-border);
 }
 
 .sidebar {
@@ -146,10 +149,10 @@
   gap: 16px;
   min-height: 0;
   height: 100dvh;
-  padding: 24px;
+  padding: var(--fm-figma-workspace-padding);
   overflow: hidden;
-  background: var(--fm-surface);
-  border-right: 1px solid var(--fm-border);
+  background: var(--fm-figma-workspace-surface);
+  border-right: 1px solid var(--fm-figma-workspace-border);
 }
 
 .profileFixture {
@@ -461,7 +464,7 @@
 
 .main {
   display: grid;
-  grid-template-rows: 68px minmax(0, 1fr);
+  grid-template-rows: var(--fm-figma-workspace-topbar-height) minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
   height: 100dvh;
@@ -474,9 +477,9 @@
   min-width: 0;
   align-items: center;
   gap: 24px;
-  padding: 0 24px;
-  background: var(--fm-surface);
-  border-bottom: 1px solid var(--fm-border);
+  padding: 0 var(--fm-figma-workspace-padding);
+  background: var(--fm-figma-workspace-surface);
+  border-bottom: 1px solid var(--fm-figma-workspace-border);
 }
 
 .planningListTopbar .iconButton {

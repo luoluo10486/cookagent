@@ -144,7 +144,7 @@ describe('ChatPage Figma 默认状态', () => {
     const stylesheet = readFileSync(resolve(process.cwd(), 'src/pages/ChatPage/ChatPage.module.css'), 'utf8');
 
     expect(stylesheet).toContain('.designChatPage .assistant .messageBubble');
-    expect(stylesheet).toContain('--fm-fixture-assistant-surface: #f4f6f5;');
+    expect(stylesheet).toContain('--fm-fixture-assistant-surface: var(--fm-fixture-chat-control-surface);');
   });
 
   it('uses the Figma surface for the Composer input row in the fixture', () => {
@@ -154,7 +154,7 @@ describe('ChatPage Figma 默认状态', () => {
       'utf8',
     );
 
-    expect(pageStylesheet).toContain('--fm-fixture-composer-input-surface: #fcfcfc;');
+    expect(pageStylesheet).toContain('--fm-fixture-composer-input-surface: var(--fm-fixture-chat-bg);');
     expect(composerStylesheet).toContain('background: var(--fm-fixture-composer-input-surface, var(--fm-bg-soft));');
   });
 

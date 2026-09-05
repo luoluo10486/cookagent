@@ -7,12 +7,26 @@
 }
 
 /* Home Figma fixture 的内部尺寸只作用于设计稿复核，不改变真实首页的交互尺寸。 */
+.figmaHomePage {
+  /* 设计稿中的工作区表面集中映射到共享 Figma Token，避免页面各自漂移。 */
+  --fm-fixture-home-bg: var(--fm-figma-workspace-bg);
+  --fm-fixture-home-surface: var(--fm-figma-workspace-surface);
+  --fm-fixture-home-border: var(--fm-figma-workspace-border);
+  --fm-fixture-home-control-surface: var(--fm-figma-workspace-control-surface);
+  background: var(--fm-fixture-home-bg);
+}
+
 .figmaHomePage .taskComposer {
   grid-template-columns: 20px minmax(0, 1fr) 40px;
+  height: 80px;
+  min-height: 80px;
   gap: 16px;
   padding: 20px;
+  box-sizing: border-box;
+  border-color: var(--fm-fixture-home-border);
   border-radius: 100px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  background: var(--fm-fixture-home-surface);
+  box-shadow: 0 4px 6px rgba(51, 51, 51, 0.04);
 }
 
 .figmaHomePage .attachmentButton {
@@ -48,6 +62,7 @@
 }
 
 .figmaHomePage .quickButton {
+  height: 36px;
   width: 100px;
   min-width: 100px;
   justify-content: center;
@@ -123,6 +138,34 @@
 
 .figmaHomePage .progress::after {
   inset: 8px;
+}
+
+.figmaHomePage .metricCard {
+  height: 88px;
+  box-sizing: border-box;
+  border-color: var(--fm-fixture-home-border);
+  border-radius: 16px;
+  background: var(--fm-fixture-home-surface);
+}
+
+.figmaHomePage .panel {
+  border-color: var(--fm-fixture-home-border);
+  border-radius: 20px;
+  background: var(--fm-fixture-home-surface);
+}
+
+.figmaHomePage .sessionCard,
+.figmaHomePage .pendingCard {
+  background: var(--fm-fixture-home-control-surface);
+}
+
+.figmaHomePage .statusPanel {
+  min-height: 150px;
+  height: 150px;
+  box-sizing: border-box;
+  border-color: #e3ede3;
+  border-radius: 14px;
+  background: #fcfcfa;
 }
 
 .intro {

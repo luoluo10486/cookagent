@@ -2207,3 +2207,20 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] Admin 定向测试、`npm run typecheck`、`npm run build`、`npm run lint`、`npm run format:check`、`npm run qa:figma:validate` 和 `git diff --check` 已在本批次代码完成后通过；结构校验为 `structuralPass=true`、`strictDprPass=true`、`errors=[]`。
 - [ ] 六项自动 diff 均为非零差异，底层工作区壳层仍存在字体光栅化、导航图标、头像和局部内容差异；未完成逐项像素级 `PASS`，继续保持 `DIFF_REVIEW`。
 - [ ] 本节只更新六个受影响画板的增量证据，不改变全量聚合 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`；shadcn 全页面视觉迁移和 iconfont 资源登记仍未完成，iconfont 继续为 `BLOCKED`。
+
+## 35. 2026-09-06 Workspace Home 与 Agent Chat 共享壳层增量验收
+
+本节只记录实时 Figma 节点 `640:256`（Workspace Home）和 `640:428`（Agent Chat）的共享视觉基线收口。Figma 文件保持只读；本批次只重新采集两个受影响画板，不重新验收其余 103 个画板。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Workspace Home | `640:256` | `/?state=figma-v2` | `dpr1-workspace-home-v2-browser-2026-09-06.png` | `1440×1024 / 1` | 11.8524% | 2.977588 | 17.700409 | 244 | `DIFF_REVIEW` |
+| Agent Chat | `640:428` | `/chat?state=figma-v2` | `dpr1-agent-chat-v2-browser-2026-09-06.png` | `1440×1024 / 1` | 12.0520% | 2.929536 | 17.357318 | 211 | `DIFF_REVIEW` |
+
+- [x] Workspace Figma fixture 已集中使用背景、表面、控件表面、边框、侧栏 `260px`、顶栏 `68px`、右侧轨道 `320px/340px` 和内边距 `24px` 语义 Token；真实模式不读取 fixture 专属 Token。
+- [x] Home 的任务输入器 `80px`、指标卡 `88px`、面板圆角和表面，以及 Chat 的消息区、助手消息、确认卡、Composer 和 Trace rail 表面已按当前 Figma 节点完成增量校正。
+- [x] 两项浏览器证据均由 Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体 `loaded` 和页面无横向溢出条件下采集；映射和 diff JSON 已同步到 `2026-09-06`。
+- [x] 本批次集中验证 40 个前端测试文件、`249/249` 个用例通过；`npm run lint`、`npm run format:check`、`npm run typecheck`、`npm run build`、`npm run qa:figma:validate` 和 `git diff --check` 均通过。
+- [ ] 两项自动 diff 均为非零，且仍存在字体、头像、图标和局部组合差异；不能以结构校验、构建通过或截图存在替代像素级 `PASS`。
+- [ ] 本批次只复核 Workspace Home 与 Agent Chat，不代表其余 103 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] iconfont 实体字体包、完整 CSS/Unicode 映射、来源和许可证尚未提供，继续保持 `BLOCKED`；标准命令图标继续使用 Lucide 或已登记的 Figma SVG 资源。

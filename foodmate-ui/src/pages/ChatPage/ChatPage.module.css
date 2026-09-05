@@ -632,12 +632,27 @@
 }
 
 .designChatPage {
-  --fm-fixture-assistant-surface: #f4f6f5;
-  --fm-fixture-composer-input-surface: #fcfcfc;
+  /* Figma Chat 画板使用与工作区壳层相同的中性表面，真实模式不读取这些变量。 */
+  --fm-fixture-chat-bg: var(--fm-figma-workspace-bg);
+  --fm-fixture-chat-surface: var(--fm-figma-workspace-surface);
+  --fm-fixture-chat-border: var(--fm-figma-workspace-border);
+  --fm-fixture-chat-control-surface: var(--fm-figma-workspace-control-surface);
+  --fm-fixture-assistant-surface: var(--fm-fixture-chat-control-surface);
+  --fm-fixture-composer-input-surface: var(--fm-fixture-chat-bg);
+  background: var(--fm-fixture-chat-bg);
 }
 
 .designChatPage .assistant .messageBubble {
   background: var(--fm-fixture-assistant-surface);
+}
+
+.designChatPage .messages {
+  background: var(--fm-fixture-chat-bg);
+}
+
+.designChatPage .inlineConfirmation {
+  border-color: var(--fm-fixture-chat-border);
+  background: var(--fm-fixture-chat-surface);
 }
 
 .assistant .messageText {
@@ -907,7 +922,11 @@
   flex-direction: column;
   padding: 20px;
   overflow: hidden;
-  background: var(--fm-surface);
+  background: var(--fm-fixture-chat-surface, var(--fm-surface));
+}
+
+.designChatPage .tracePanel {
+  border-color: var(--fm-fixture-chat-border);
 }
 
 .traceTitle {

@@ -52,7 +52,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#workspace-home-v2",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "MINOR_RENDERING_DIFF_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "evidenceNote": "2026-09-06 Workspace Figma Token 基线已同步；自动 diff 仍存在，查看人工视觉复核结论",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -78,7 +78,7 @@
         "status": "MINOR_RENDERING_DIFF_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "实时 Figma 节点 640:256 的窗口控制点、会话搜索、导航 SVG、Agent 会话列表、分页、营养环、输入器和状态面板已与 1440×1024、DPR 1 浏览器证据复核；页面无溢出，文字和局部布局仍存在可见差异，保留 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 640:256 的窗口控制点、会话搜索、导航 SVG、Agent 会话列表、分页、营养环、输入器和状态面板已与 1440×1024、DPR 1 浏览器证据复核；本轮同步共享工作区 Token 后页面无溢出，文字和局部布局仍存在可见差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -106,7 +106,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#agent-chat-v2",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "evidenceNote": "2026-09-06 Workspace Figma Token 基线已同步；自动 diff 仍存在，查看人工视觉复核结论",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -132,7 +132,7 @@
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "实时 Figma 节点 640:428 的助手正文、内嵌写入确认卡和 983:3 消息操作说明面板已与 1440×1024、DPR 1 浏览器证据复核；侧栏、顶栏、会话状态点和 Composer 已使用对应 Chat SVG 资源，页面无溢出，文字和局部布局仍存在可见差异，保留 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 640:428 的助手正文、内嵌写入确认卡和 983:3 消息操作说明面板已与 1440×1024、DPR 1 浏览器证据复核；本轮同步共享工作区 Token，侧栏、顶栏、会话状态点和 Composer 继续使用对应 Chat SVG 资源，页面无溢出，文字和局部布局仍存在可见差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
