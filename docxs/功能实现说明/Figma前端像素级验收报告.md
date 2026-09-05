@@ -2091,3 +2091,12 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] `ChatPage` 使用 shadcn `Tabs`、`Card`、`Alert`、`RadioGroup` 和 `Button`；Agent 卡片及会话列表的操作入口均通过共享 UI 组件承载。
 - [x] 当前代码中 Workspace/Home 与 Agent Chat 相关目录没有 `AdminPrimitives` 直接引用，且没有新增 iconfont 字体或虚构 Unicode 映射。
 - [ ] Workspace Home 与 Agent Chat 仍存在整页自动 diff 和待人工复核项，控件迁移审计通过不等于像素级 `PASS`；页面视觉 Token 和布局差异仍需后续处理。
+
+## 29. 2026-09-06 Diet Records、Intake Analysis、Meal Planning shadcn 控件迁移审计
+
+本节记录 Diet Records、Intake Analysis、Meal Planning 及其共享规划组件的控件基础设施审计，不重新采集 105 个画板，也不替换既有饮食业务 Figma 与浏览器证据。
+
+- [x] Diet Records 的记录、编辑、添加食物和状态操作使用 shadcn `Button`、`Dialog`、`Input`；Intake Analysis 的操作和加载状态使用 shadcn `Button`、`Skeleton`。
+- [x] Meal Planning 与 `MealPlanningFlow` 使用 shadcn `Button`、`Checkbox`、`Input`、`RadioGroup`、`Select`；共享餐食表格使用 shadcn Table，购物清单保留共享 UI 组件。
+- [x] 三页相关代码未发现 `AdminPrimitives` 直接引用或虚构 iconfont 映射；真实模式服务边界和 Figma fixture 状态未因审计改变。
+- [ ] 三页当前自动 diff 仍为非零差异，结论继续保持 `DIFF_REVIEW`；控件审计通过不等于页面像素级 `PASS`，布局 Token 和人工复核仍需继续。
