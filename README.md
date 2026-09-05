@@ -44,7 +44,7 @@ FoodMate 是面向饮食记录、营养分析与备餐规划的任务型 Agent �
 | M1-5 写确认 | `meal_plan.save_plan` 和 `food_log_writer` 的 create/update/delete/restore 已完成 Proposal -> Confirm -> Execute；reject、failed、superseded、revision 冲突、失败回滚/审计和幂等重放已通过真实 PostgreSQL HTTP/RocketMQ 回归。 |
 | Agent、Eval 与 RAG | `run.eval_decided`、预算、checkpoint、continuation、追问和安全降级已进入运行路径；公共知识库已完成批量上传、异步索引、发布可见性和 `public_published` 安全引用。默认仍是 `deterministic:local`；2026-09-06 的 D134 已用当前配置完成一次 Docker 真实 Embedding + Milvus + Chat AgentRun 引用闭环。D114 的 HTTP 401 是历史凭据边界，不再代表当前凭据；两个 profile 仍使用独立 Milvus collection，长稳、正式价格审计和生产 RAG 治理仍未完成。 |
 | 恢复与 M1-6 本地门禁 | 已验证 Runtime readiness、Redis AOF 探针恢复、RocketMQ 重启/Topic 初始化、双 JVM 有界读取和 Java 重启回读；完整 PostgreSQL/Outbox/Inbox/SSE 故障矩阵仍未完成。 |
-| 前端 | G1-G6 页面代码边界、追问/确认/失败/取消/SSE 状态、真实管理查询和知识库批次/RAG 引用接入已完成；真实聊天历史会话现在会恢复最近 Run 并回放终态引用，新增定向测试通过。2026-09-02 当前工作区 typecheck/build 通过，Vitest 为 38 个测试文件、236/237 通过，`RunsTab` 详情加载测试仍有 1 项失败。 |
+| 前端 | G1-G6 页面代码边界、追问/确认/失败/取消/SSE 状态、真实管理查询和知识库批次/RAG 引用接入已完成；真实聊天历史会话现在会恢复最近 Run 并回放终态引用，新增定向测试通过。2026-09-02 当前工作区 typecheck/build 通过；D137 对 `RunsTab` 两个测试文件执行定向验证，4/4 通过。完整 Vitest 套件未在本轮重跑。 |
 | Java 回归 | 当前 Java 全量业务门禁、Spotless、ArchUnit 和 Alibaba 可执行规范子集均通过；HTTP 与 RocketMQ `food_log_writer` 回归各 11/11，包含官方 foodPortions 换算 matched/pending 数据库断言。具体运行批次和跳过项以 [`EXECUTION_RECORD.md`](./script/sql/FoodMate/EXECUTION_RECORD.md) 为准。 |
 
 当前不能宣称完成的内容：
@@ -114,7 +114,7 @@ npm run dev
 - Agent 运行路径已支持 `run.eval_decided`、预算、checkpoint、continuation、追问和审批确认；写入仍由 Java 授权和执行，Python/模型不直连业务库。
 - M1-6 已完成本地 Actuator/metrics 配置回归、Runtime readiness、Redis AOF 探针恢复、RocketMQ 重启恢复、双 JVM 有界读取和 Java 重启回读；生产故障矩阵和容量门禁仍待目标环境执行。
 - M2-1 已在 Docker 应用容器中复验 `local-stub` Redis 索引和 local deterministic Milvus 路径，并于 D134 完成当前配置下真实 Embedding + Milvus + Chat 的单次业务闭环，覆盖批次上传、RocketMQ 索引、结果回写、显式发布/下线/恢复、用户检索、AgentRun 引用和批次 SSE；D112/D114 保留历史凭据的协议证据与 401 边界。
-- Python 使用项目 `agent-runtime/.venv` 的全量 pytest 为 `189 passed、2 skipped、6 subtests passed`；前端当前工作区为 `38` 个测试文件、`236/237` 通过，另有 1 项 `RunsTab` 详情加载测试失败，typecheck/build 通过。local RAG Worker 启动前会等待 Milvus `/healthz`，stub 模式不会探测 Milvus；这些结果不等于生产人工校准、统一指标系统或长期稳定性结论。
+- Python 使用项目 `agent-runtime/.venv` 的全量 pytest 为 `189 passed、2 skipped、6 subtests passed`；前端此前记录为 `38` 个测试文件、`236/237` 通过，D137 对 `RunsTab` 两个测试文件定向验证为 `4/4` 通过，完整 Vitest 套件未在本轮重跑，typecheck/build 通过。local RAG Worker 启动前会等待 Milvus `/healthz`，stub 模式不会探测 Milvus；这些结果不等于生产人工校准、统一指标系统或长期稳定性结论。
 - 营养目录 V8 已新增 USDA 食材 `12/12` 和 `foodPortions` 规则 `12/12`；V8 validation 的无效食材、无效规则、食材外键不匹配和规则形状错误均为 `0`。当前本地目录为 `60` 条 approved 食材、`60` 条 approved USDA foodPortion 规则、`75` 条精确质量换算，active conversion 合计 `135` 条；V8 定向 Java 测试为 `2/2` 通过。
 
 ## 2026-09-06 真实营养目录基线

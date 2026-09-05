@@ -2140,3 +2140,14 @@
 | 证据边界 | 测试验证历史消息 -> Run 恢复 -> SSE `run.completed` -> 引用展示和答案唯一性；真实云闭环证据仍以 D134、D130、D128、D129 为准。 |
 | 注释与提交 | 新增实现注释使用中文；未混入用户已有 Java、Admin UI、Figma QA 或资源改动。 |
 | 结论 | 前端刷新/重新进入历史会话时可以恢复终态引用，且不会产生重复助手回答；本轮未新增付费请求、数据库写入或临时数据。 |
+
+## D137 RunsTab 定向业务测试复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；使用 `foodmate-ui` 当前项目依赖和 Vitest，不启动后端、Docker 或真实云服务。 |
+| 执行命令 | `cd foodmate-ui; npm.cmd test -- --run src/pages/AdminPage/tabs/RunsTab.test.tsx src/pages/AdminPage/tabs/RunsTab.real.test.tsx` |
+| 测试结果 | 2 个测试文件通过，4/4 个测试通过，退出码 `0`；验证包含 RunsTab 详情加载路径。 |
+| 付费与数据边界 | 未调用 Chat/Embedding，未访问 Java API，未写入 PostgreSQL、Redis、Milvus 或 RocketMQ，未生成测试数据。 |
+| 范围说明 | 本轮只复核此前记录的已知定向失败，不重新运行完整 Vitest 套件；README 和测试策略已同步更新，避免把定向结果误写成完整套件结果。 |
+| 结论 | `RunsTab` 已知定向测试问题当前不可复现且本次验证通过；完整前端测试套件仍需在后续大功能点按计划集中执行。 |
