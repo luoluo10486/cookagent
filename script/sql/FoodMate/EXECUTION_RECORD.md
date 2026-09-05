@@ -2092,3 +2092,16 @@
 | 业务测试 | 项目 `.venv` 执行 `agent-runtime/.venv/Scripts/python.exe -B -m pytest -q -p no:cacheprovider agent-runtime/tests/test_public_knowledge_manifest.py`：`2 passed`；未生成 Python 缓存。 |
 | Embedding 边界 | manifest 明确记录 `embedding_status=未构建向量`；本轮未上传管理员 API、未调用真实 Embedding、未写入 Redis/Milvus、未发布 RAG 文档，也未改变现有知识库状态。 |
 | 结论 | 公共知识库真实资料准备和来源可追溯校验已完成；待后续确认后，才执行批量上传、真实 Embedding、Milvus 索引和显式发布。 |
+
+## D133 真实业务入口兼容性修复与无付费预检（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 修复范围 | 修正 `real-food-log-e2e.ps1`、`real-meal-plan-e2e.ps1` 和 `real-sql-agent-e2e.ps1` 的 PowerShell 参数调用方式；修复 R2/R3 错误摘要脱敏正则；触及的英文代码注释改为中文。 |
+| 编码兼容 | 三个入口统一保存为 UTF-8 BOM，Windows PowerShell 5.1 和 PowerShell 7 的语法解析均通过。 |
+| 契约测试 | `real-food-log-e2e.tests.ps1`、`real-meal-plan-e2e.tests.ps1`、`real-sql-agent-e2e.tests.ps1` 均通过。 |
+| 无付费预检 | R2、R3、R4 无参数执行均返回 `status=preflight_passed`；Chat 路由为 `cloud_primary/deepseek-ai/DeepSeek-V4-Flash`，R4 的 SQL Planner 为 `local`，价格审计为 `true`；未创建 Run、未登录、未调用付费服务。 |
+| 运行环境 | Docker Compose 配置校验通过；Java、Python Runtime、PostgreSQL、Redis、RocketMQ、MinIO 和 Milvus 当前均为 healthy。 |
+| 数据与安全边界 | 未修改数据库、未上传资料、未构建向量；未输出或提交任何 API Key、密码、Prompt、完整模型响应或临时测试数据。 |
+| 暂缓范围 | 未执行真实付费业务、性能压测、组件重启、ACK/重复投递故障注入、备份恢复、生产操作或发布回滚。 |
+| 结论 | 真实业务入口已具备可执行且跨 PowerShell 版本的预检条件；本轮仅完成工具修复和无付费配置门禁，不将真实云闭环新增标记为完成。 |

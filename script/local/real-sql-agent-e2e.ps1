@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [string]$JavaBaseUrl = "http://127.0.0.1:8080",
     [int]$RunTimeoutSeconds = 300,
@@ -147,7 +147,7 @@ function Invoke-Login([object]$ApiContext) {
     if ([string]::IsNullOrWhiteSpace($AdminUsername) -or [string]::IsNullOrWhiteSpace($AdminPassword)) {
         throw "FOODMATE_E2E_ADMIN_USERNAME and FOODMATE_E2E_ADMIN_PASSWORD are required with -ExecutePaid"
     }
-    [void](Invoke-Api $ApiContext "POST" "$JavaBaseUrl/api/auth/login" @{ username_or_email = $AdminUsername; password = $AdminPassword })
+    [void](Invoke-Api -ApiContext $ApiContext -Method "POST" -Url "$JavaBaseUrl/api/auth/login" -Payload (@{ username_or_email = $AdminUsername; password = $AdminPassword }))
     return Get-Csrf $ApiContext
 }
 
@@ -391,7 +391,7 @@ try {
         $context = New-ApiContext
         $csrf = Invoke-Login $context
         $prompt = "请分析我最近 7 天按餐次的蛋白质和热量摄入，只查询我已保存的饮食记录。只读查询，不要修改记录，也不要编造数据。"
-        $runResponse = Invoke-Api -ApiContext $context -Method "POST" -Url "$JavaBaseUrl/api/chat/runs" -Payload @{ prompt = $prompt } -Headers @{ "X-CSRF-Token" = $csrf }
+        $runResponse = Invoke-Api -ApiContext $context -Method "POST" -Url "$JavaBaseUrl/api/chat/runs" -Payload (@{ prompt = $prompt }) -Headers (@{ "X-CSRF-Token" = $csrf })
         $runData = Get-Field $runResponse @("data")
         $report.run_id = [string](Get-Field $runData @("run_id", "runId"))
         $report.session_id = [string](Get-Field $runData @("session_id", "sessionId"))
@@ -449,7 +449,7 @@ try {
         try { $csrfForCleanup = Get-Csrf $context } catch { $csrfForCleanup = $null }
         if (-not [string]::IsNullOrWhiteSpace([string]$report.session_id) -and $null -ne $csrfForCleanup) {
             try {
-                [void](Invoke-Api -ApiContext $context -Method "DELETE" -Url "$JavaBaseUrl/api/sessions/$($report.session_id)" -Headers @{ "X-CSRF-Token" = $csrfForCleanup })
+                [void](Invoke-Api -ApiContext $context -Method "DELETE" -Url "$JavaBaseUrl/api/sessions/$($report.session_id)" -Headers (@{ "X-CSRF-Token" = $csrfForCleanup }))
                 $report.cleanup.session_soft_deleted = $true
             } catch { Add-CleanupError "session cleanup failed" }
         }

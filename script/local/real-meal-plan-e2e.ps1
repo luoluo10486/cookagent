@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [string]$JavaBaseUrl = "http://127.0.0.1:8080",
     [int]$RunTimeoutSeconds = 240,
@@ -66,9 +66,9 @@ function Get-SafeSummary([object]$ErrorRecord) {
     $message = if ($null -ne $exception) { [string]$exception.Message } else { "unknown error" }
     if (-not [string]::IsNullOrWhiteSpace($AdminPassword)) { $message = $message.Replace($AdminPassword, "[redacted]") }
     if (-not [string]::IsNullOrWhiteSpace($AdminUsername)) { $message = $message.Replace($AdminUsername, "[redacted]") }
-    $message = [regex]::Replace($message, "(?i)(api[_ -]?key|authorization|bearer|password|token)s*[:=]s*S+", '$1=[redacted]')
-    $message = [regex]::Replace($message, "(?i)https?://[^s]+", "[url]")
-    $message = [regex]::Replace($message, "s+", " ").Trim()
+    $message = [regex]::Replace($message, '(?i)(api[_ -]?key|authorization|bearer|password|token)s*[:=]\s*\S+', '$1=[redacted]')
+    $message = [regex]::Replace($message, '(?i)https?://\S+', "[url]")
+    $message = [regex]::Replace($message, '\s+', " ").Trim()
     if ([string]::IsNullOrWhiteSpace($message)) { $message = "unknown error" }
     if ($message.Length -gt 256) { $message = $message.Substring(0, 256) }
     return $message
@@ -153,7 +153,7 @@ function Invoke-Login([object]$ApiContext) {
     if ([string]::IsNullOrWhiteSpace($AdminUsername) -or [string]::IsNullOrWhiteSpace($AdminPassword)) {
         throw "FOODMATE_E2E_ADMIN_USERNAME and FOODMATE_E2E_ADMIN_PASSWORD are required with -ExecutePaid"
     }
-    [void](Invoke-Api $ApiContext "POST" "$JavaBaseUrl/api/auth/login" @{ username_or_email = $AdminUsername; password = $AdminPassword })
+    [void](Invoke-Api -ApiContext $ApiContext -Method "POST" -Url "$JavaBaseUrl/api/auth/login" -Payload (@{ username_or_email = $AdminUsername; password = $AdminPassword }))
     return Get-Csrf $ApiContext
 }
 
@@ -388,14 +388,12 @@ try {
             throw "paid execution gate is not fail-closed for meal-plan"
         }
 
-        # The SSE request lives for the whole AgentRun. Cloud proposal generation
-        # may exceed the short timeout used by ordinary control-plane requests.
+        # SSE 请求会持续整个 AgentRun，云端 Proposal 生成可能超过普通控制面请求的短超时。
         $context = New-ApiContext ($RunTimeoutSeconds + 30)
         $csrf = Invoke-Login $context
-        # Keep the paid acceptance payload small enough for the configured model
-        # output budget while still exercising the complete plan workflow.
+        # 控制付费验收请求体大小，避免超过模型输出预算，同时覆盖完整计划流程。
         $prompt = "请为我生成一个1天的家庭餐食计划，2人，当日预算不超过200元，目标是均衡蛋白质和蔬菜；必须给出早餐、午餐、晚餐及各自食材，生成候选后等待我确认保存。"
-        $runResponse = Invoke-Api $context "POST" "$JavaBaseUrl/api/chat/runs" @{ prompt = $prompt } $null @{ "X-CSRF-Token" = $csrf }
+        $runResponse = Invoke-Api -ApiContext $context -Method "POST" -Url "$JavaBaseUrl/api/chat/runs" -Payload (@{ prompt = $prompt }) -Headers (@{ "X-CSRF-Token" = $csrf })
         $runData = Get-Field $runResponse @("data")
         $report.run_id = [string](Get-Field $runData @("run_id", "runId"))
         $sessionId = [string](Get-Field $runData @("session_id", "sessionId"))
@@ -424,11 +422,11 @@ try {
         $report.approval = [ordered]@{ status_before_confirm = [string](Get-Field $approvalData @("status")); operation = [string](Get-Field $approvalData @("operation")); resource_type = [string](Get-Field $approvalData @("resource_type", "resourceType")) }
 
         $confirmParameters = @{ plan = $plan }
-        $confirmed = Invoke-Api $context "POST" "$JavaBaseUrl/api/approvals/$($report.approval_request_id)/confirm" $confirmParameters $null @{ "X-CSRF-Token" = $csrf }
+        $confirmed = Invoke-Api -ApiContext $context -Method "POST" -Url "$JavaBaseUrl/api/approvals/$($report.approval_request_id)/confirm" -Payload $confirmParameters -Headers (@{ "X-CSRF-Token" = $csrf })
         $confirmedData = Get-Field $confirmed @("data")
         if ([string](Get-Field $confirmedData @("status")) -ne "confirmed") { throw "meal plan approval confirmation did not succeed" }
 
-        $executed = Invoke-Api $context "POST" "$JavaBaseUrl/api/approvals/$($report.approval_request_id)/execute" $confirmParameters $null @{ "X-CSRF-Token" = $csrf }
+        $executed = Invoke-Api -ApiContext $context -Method "POST" -Url "$JavaBaseUrl/api/approvals/$($report.approval_request_id)/execute" -Payload $confirmParameters -Headers (@{ "X-CSRF-Token" = $csrf })
         $executedData = Get-Field $executed @("data")
         if ([string](Get-Field $executedData @("status")) -ne "executed") { throw "meal plan approval execution did not succeed" }
         $mealPlanId = [string](Get-Field $executedData @("resource_id", "resourceId"))
@@ -464,13 +462,13 @@ try {
         if (-not [string]::IsNullOrWhiteSpace([string]$mealPlanId) -and $null -ne $csrfForCleanup -and $null -ne $mealPlanRevision) {
             try {
                 $cleanupKey = "codex-r3-meal-plan-cleanup-" + [guid]::NewGuid().ToString("N")
-                [void](Invoke-Api $context "DELETE" "$JavaBaseUrl/api/meal-plans/$mealPlanId`?revision=$mealPlanRevision" $null $null @{ "X-CSRF-Token" = $csrfForCleanup; "Idempotency-Key" = $cleanupKey })
+                [void](Invoke-Api -ApiContext $context -Method "DELETE" -Url "$JavaBaseUrl/api/meal-plans/$mealPlanId`?revision=$mealPlanRevision" -Headers (@{ "X-CSRF-Token" = $csrfForCleanup; "Idempotency-Key" = $cleanupKey }))
                 $report.cleanup.meal_plan_deleted = $true
             } catch { Add-CleanupError "meal plan cleanup failed" }
         }
         if (-not [string]::IsNullOrWhiteSpace([string]$sessionId) -and $null -ne $csrfForCleanup) {
             try {
-                [void](Invoke-Api $context "DELETE" "$JavaBaseUrl/api/sessions/$sessionId" $null $null @{ "X-CSRF-Token" = $csrfForCleanup })
+                [void](Invoke-Api -ApiContext $context -Method "DELETE" -Url "$JavaBaseUrl/api/sessions/$sessionId" -Headers (@{ "X-CSRF-Token" = $csrfForCleanup }))
                 $report.cleanup.session_soft_deleted = $true
             } catch { Add-CleanupError "session cleanup failed" }
         }
