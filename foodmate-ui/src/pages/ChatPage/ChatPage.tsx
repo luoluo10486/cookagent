@@ -1711,7 +1711,12 @@ function RealChatPage() {
     setError(undefined);
     loadSessionMessages(sessionId)
       .then((rows) => {
-        if (!cancelled) setMessages(rows.sort((a, b) => a.sequence_no - b.sequence_no));
+        if (cancelled) return;
+        const ordered = rows.sort((a, b) => a.sequence_no - b.sequence_no);
+        setMessages(ordered);
+        // 重新进入历史会话时恢复最近一次 Run，才能回放终态事件和引用。
+        const latestRunId = [...ordered].reverse().find((message) => message.agent_run_id)?.agent_run_id;
+        if (latestRunId) setActiveRunId(String(latestRunId));
       })
       .catch((reason) => {
         if (!cancelled) setError(reason instanceof Error ? reason.message : '消息加载失败');
@@ -1730,6 +1735,9 @@ function RealChatPage() {
 
   useEffect(() => {
     if (!activeRunId) return undefined;
+    const hasPersistedAnswer = messages.some(
+      (message) => message.agent_run_id === activeRunId && message.role === 'assistant',
+    );
     // The stream subscription establishes the queued state before receiving runtime events.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setRunStatus('queued');
@@ -1739,14 +1747,14 @@ function RealChatPage() {
       (eventType, payload) => {
         if (eventType === 'run.answer_stream') {
           setRunStatus('validating');
-          setAssistantText((current) => current + (payload.text ?? ''));
+          if (!hasPersistedAnswer) setAssistantText((current) => current + (payload.text ?? ''));
           return;
         }
         if (eventType === 'run.completed') {
           setRunStatus('completed');
           setCheckpointAvailable(false);
           setApproval(undefined);
-          setAssistantText((current) => payload.answer ?? current);
+          if (!hasPersistedAnswer) setAssistantText((current) => payload.answer ?? current);
           if (sessionId) {
             void loadSessionMessages(sessionId).then((rows) => {
               const assistant = rows.find(
@@ -1820,7 +1828,7 @@ function RealChatPage() {
       stream.close();
       streamRef.current = undefined;
     };
-  }, [activeRunId, sessionId]);
+  }, [activeRunId, messages, sessionId]);
 
   const send = async () => {
     const content = input.trim();
