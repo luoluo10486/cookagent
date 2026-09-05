@@ -22,6 +22,12 @@ export const FIGMA_PROFILE_AVATARS = {
   main: '/assets/figma/profile/main-avatar.png',
 } as const;
 
+// Admin Figma fixture 使用设计稿中的示例头像，不能与真实用户的性别默认头像混用。
+export const FIGMA_ADMIN_AVATARS = {
+  sidebar: '/assets/figma/admin/admin-sidebar-avatar.png',
+  userDetail: '/assets/figma/admin/user-detail-avatar.png',
+} as const;
+
 export function getDefaultAvatarForGender(gender?: string): string | undefined {
   const normalized = gender?.trim().toLowerCase();
   if (normalized === '女' || normalized === 'female' || normalized === 'f') return DEFAULT_AVATARS.female;

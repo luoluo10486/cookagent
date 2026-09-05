@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -265,7 +264,12 @@ export function OverviewSection({ refreshNonce = 0 }: { onAction?: unknown; refr
                         onClick={() => copyRunId(row.runId)}
                         title={`复制 ${row.runId}`}
                       >
-                        <Copy aria-hidden="true" />
+                        <img
+                          alt=""
+                          className={styles.copyIcon}
+                          data-figma-asset="admin-overview-copy"
+                          src="/assets/figma/admin/overview/copy.svg"
+                        />
                       </Button>
                     </span>
                   </TableCell>

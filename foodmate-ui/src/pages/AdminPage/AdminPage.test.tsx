@@ -80,6 +80,16 @@ describe('AdminPage overview', () => {
     ).toBe(true);
   });
 
+  it('uses Figma fixture avatars and the registered overview copy asset', () => {
+    renderAdmin('/admin?state=overview');
+
+    expect(document.querySelector('.userAvatar img')).toHaveAttribute(
+      'src',
+      '/assets/figma/admin/admin-sidebar-avatar.png',
+    );
+    expect(document.querySelectorAll('[data-figma-asset="admin-overview-copy"]')).toHaveLength(6);
+  });
+
   it('uses the registered Figma filter icons while preserving shadcn Select behavior', () => {
     renderAdmin();
 
@@ -156,13 +166,16 @@ describe('AdminPage overview', () => {
     view.unmount();
   });
 
-  it('uses the Figma user-detail close affordance and gender avatar fallback', () => {
+  it('uses the Figma user-detail close affordance and registered fixture avatar', () => {
     renderAdmin('/admin?state=user-detail');
 
     const closeButton = screen.getByRole('button', { name: '关闭用户详情' });
     expect(closeButton).toHaveAttribute('data-figma-asset', 'admin-user-detail-close');
     expect(closeButton.querySelector('svg circle')).toBeInTheDocument();
-    expect(document.querySelector('.userDetailAvatar img')).toHaveAttribute('src', '/assets/avatars/default-male.svg');
+    expect(document.querySelector('.userDetailAvatar img')).toHaveAttribute(
+      'src',
+      '/assets/figma/admin/user-detail-avatar.png',
+    );
   });
 
   it('limits operation-state fixtures to the four Figma registry rows', () => {

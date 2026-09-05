@@ -2152,3 +2152,38 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 三项自动 diff 均为非零差异，不能标记像素级 `PASS`；本节不改变其他画板的历史证据，也不代表 105 张画板完成全量人工验收。
 - [x] 本批次集中执行三页定向测试：4 个测试文件、28 个用例通过；`npm run format:check`、`npm run lint`、`npm run typecheck`、`npm run build`、`npm run qa:figma:validate`、JSON 解析和 `git diff --check` 均通过。`qa:figma:validate` 返回 `structuralPass=true`、`strictDprPass=true`、`errors=[]`，但全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍未提供，资源登记继续保持 `BLOCKED`。
+
+## 33. 2026-09-06 Admin 页面组资源证据更新
+
+本节只记录 Admin 页面组的最新 Figma 资源接入和 21 项浏览器证据，不重新执行 105 个画板的全量截图或人工验收。Figma 文件保持只读，Admin 的真实服务请求、权限判断、确认操作和审计边界不因资源收口改变。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Admin Tool Registry | `692:3847` | `/admin?state=tool-registry` | `dpr1-admin-tool-registry-browser-2026-09-06.png` | `1440×1024 / 1` | 15.8782% | 3.999545 | 20.969931 | 224 | `DIFF_REVIEW` |
+| Admin Deleted Resources | `692:4104` | `/admin?state=deleted-resources` | `dpr1-admin-deleted-resources-browser-2026-09-06.png` | `1440×1024 / 1` | 17.6843% | 2.682758 | 16.687796 | 224 | `DIFF_REVIEW` |
+| Admin Operation No Permission | `692:4319` | `/admin?state=op-no-permission` | `dpr1-admin-op-no-permission-browser-2026-09-06.png` | `1440×1024 / 1` | 15.4554% | 3.857794 | 20.380618 | 239 | `DIFF_REVIEW` |
+| Admin Operation Confirm | `692:4539` | `/admin?state=op-confirm` | `dpr1-admin-op-confirm-browser-2026-09-06.png` | `1440×1024 / 1` | 17.4894% | 2.173829 | 11.940769 | 224 | `DIFF_REVIEW` |
+| Admin Operation Submitting | `692:4766` | `/admin?state=op-submitting` | `dpr1-admin-op-submitting-browser-2026-09-06.png` | `1440×1024 / 1` | 15.9030% | 2.180962 | 11.956242 | 224 | `DIFF_REVIEW` |
+| Admin Operation Success | `692:4995` | `/admin?state=op-success` | `dpr1-admin-op-success-browser-2026-09-06.png` | `1440×1024 / 1` | 14.9661% | 3.819746 | 20.499449 | 231 | `DIFF_REVIEW` |
+| Admin Operation Failed | `692:5207` | `/admin?state=op-failed` | `dpr1-admin-op-failed-browser-2026-09-06.png` | `1440×1024 / 1` | 17.1870% | 2.490200 | 13.230959 | 204 | `DIFF_REVIEW` |
+| Admin Knowledge Uploading | `782:212` | `/admin?state=knowledge-uploading` | `dpr1-admin-knowledge-uploading-browser-2026-09-06.png` | `1440×1024 / 1` | 30.3681% | 1.976585 | 12.259095 | 250 | `DIFF_REVIEW` |
+| Admin Knowledge Indexing | `782:366` | `/admin?state=knowledge-indexing` | `dpr1-admin-knowledge-indexing-browser-2026-09-06.png` | `1440×1024 / 1` | 30.8948% | 2.110329 | 12.663239 | 250 | `DIFF_REVIEW` |
+| Admin Knowledge Upload Failed | `782:520` | `/admin?state=knowledge-upload-failed` | `dpr1-admin-knowledge-upload-failed-browser-2026-09-06.png` | `1440×1024 / 1` | 31.0393% | 2.431026 | 14.149767 | 250 | `DIFF_REVIEW` |
+| Admin Run Detail | `797:212` | `/admin?state=run-detail` | `dpr1-admin-run-detail-browser-2026-09-06.png` | `1440×1024 / 1` | 12.0080% | 2.499439 | 15.990066 | 211 | `DIFF_REVIEW` |
+| Admin Tool Calls | `797:359` | `/admin?state=tool-calls` | `dpr1-admin-tool-calls-browser-2026-09-06.png` | `1440×1024 / 1` | 6.5448% | 2.357275 | 16.839382 | 211 | `DIFF_REVIEW` |
+| Admin SQL Audit | `797:490` | `/admin?state=sql-audit` | `dpr1-admin-sql-audit-browser-2026-09-06.png` | `1440×1024 / 1` | 6.5533% | 2.401219 | 17.082409 | 211 | `DIFF_REVIEW` |
+| Admin Trace | `797:621` | `/admin?state=trace` | `dpr1-admin-trace-browser-2026-09-06.png` | `1440×1024 / 1` | 11.8608% | 2.428496 | 15.748137 | 211 | `DIFF_REVIEW` |
+| Admin User Detail | `801:215` | `/admin?state=user-detail` | `dpr1-admin-user-detail-browser-2026-09-06.png` | `1440×1024 / 1` | 23.4795% | 4.031070 | 21.611936 | 227 | `DIFF_REVIEW` |
+| Admin Knowledge Upload Success | `806:1737` | `/admin?state=knowledge-upload-success` | `dpr1-admin-knowledge-upload-success-browser-2026-09-06.png` | `1440×1024 / 1` | 46.4221% | 5.066889 | 23.039189 | 242 | `DIFF_REVIEW` |
+| Admin Overview | `995:977` | `/admin?state=overview` | `dpr1-admin-overview-browser-2026-09-06.png` | `1440×1024 / 1` | 10.6503% | 2.553537 | 15.653056 | 204 | `DIFF_REVIEW` |
+| Admin Model Usage | `995:1238` | `/admin/usage` | `dpr1-admin-model-usage-browser-2026-09-06.png` | `1440×1024 / 1` | 11.9490% | 2.789790 | 16.413194 | 238 | `DIFF_REVIEW` |
+| Admin Operation Audit | `995:1499` | `/admin?view=audit` | `dpr1-admin-operation-audit-browser-2026-09-06.png` | `1440×1024 / 1` | 9.0025% | 3.000415 | 18.332441 | 241 | `DIFF_REVIEW` |
+| Admin Knowledge Format Error | `997:2` | `/admin?state=knowledge-format-error` | `dpr1-admin-knowledge-format-error-browser-2026-09-06.png` | `1440×1024 / 1` | 59.9796% | 2.542161 | 12.922332 | 204 | `DIFF_REVIEW` |
+| Admin Knowledge Size Error | `997:160` | `/admin?state=knowledge-size-error` | `dpr1-admin-knowledge-size-error-browser-2026-09-06.png` | `1440×1024 / 1` | 59.9767% | 2.552692 | 13.012652 | 204 | `DIFF_REVIEW` |
+
+- [x] 21 项浏览器证据均由 Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体 `loaded` 和无横向溢出条件下采集；浏览器 PNG、运行时检查和 `figma-105-diff-results.json` 已同步到 `2026-09-06` 证据路径。
+- [x] 新增资源 `foodmate-ui/public/assets/figma/admin/admin-sidebar-avatar.png` 的 SHA-256 为 `EC63D2CDB253B2E58A36075163731E98F7CD3032BB50C0DC94F22BBC339F45AF`。
+- [x] 新增资源 `foodmate-ui/public/assets/figma/admin/overview/copy.svg` 的 SHA-256 为 `C23E71416B45E9528A605ECD8CA8D2029CB2D0DE09AEBBD09285C78792CB6F5E`；User Detail 使用的 Figma 用户头像继续沿用既有登记。
+- [x] Admin 资源接入没有创建虚构 iconfont 字体、glyph 或 Unicode 映射；标准命令图标继续使用 Lucide 或已登记的 Figma SVG 资源。
+- [ ] 21 项自动 diff 均为非零差异，不能标记为像素级 `PASS`；全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] 本节只复核 Admin 21 项，不代表其余画板重新采集或完成全量人工视觉复核；iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍缺失，继续保持 `BLOCKED`。

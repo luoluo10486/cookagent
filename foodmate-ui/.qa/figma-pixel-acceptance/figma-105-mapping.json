@@ -2900,7 +2900,7 @@
       "queryState": "state=tool-registry",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-tool-registry.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-tool-registry-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-tool-registry-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-tool-registry",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -2931,6 +2931,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-09-05",
         "conclusion": "最新浏览器证据已对齐工具注册表筛选、统计卡、十列表格和行内操作结构；仍存在头像、侧栏图标、文字光栅化和局部间距差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=tool-registry&visual-qa=1"
       }
     },
     {
@@ -2944,7 +2954,7 @@
       "queryState": "state=deleted-resources",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-deleted-resources.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-deleted-resources-table-row-height-browser-2026-08-29-rgba.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-deleted-resources-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-deleted-resources",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -3017,7 +3027,17 @@
           "visualChange": "依据 Figma 节点 692:4205、692:4215、692:4216、692:4236、692:4256、692:4276，将删除者列内容宽度恢复为 120px，并将表格行分隔线与外框改为内描边，收口数据行高度和表格容器尺寸；未修改 Figma 设计稿。",
           "conclusion": "表格容器、表头、四行数据高度、删除者换行和操作列边界已复核；整页仍存在头像、字体、图标和其它组合视觉差异，保留 DIFF_REVIEW。"
         }
-      ]
+      ],
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=deleted-resources&visual-qa=1"
+      }
     },
     {
       "figmaNodeId": "692:4319",
@@ -3030,7 +3050,7 @@
       "queryState": "state=op-no-permission",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-op-no-permission.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-op-no-permission-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-op-no-permission-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-op-no-permission",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -3061,6 +3081,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-09-05",
         "conclusion": "Operator 无权限横幅、双筛选、四行注册表、锁定操作按钮和侧栏权限标识均已进入最新证据；头像、图标、字体光栅化和局部密度仍有差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=op-no-permission&visual-qa=1"
       }
     },
     {
@@ -3074,7 +3104,7 @@
       "queryState": "state=op-confirm",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-op-confirm.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-op-confirm-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-op-confirm-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-op-confirm",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -3105,6 +3135,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-09-05",
         "conclusion": "确认弹窗、影响资源说明、黑色 40% 遮罩、按钮尺寸和底层注册表均已按最新 Figma 证据收口；仍有头像、图标、字体光栅化和局部像素差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=op-confirm&visual-qa=1"
       }
     },
     {
@@ -3118,7 +3158,7 @@
       "queryState": "state=op-submitting",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-op-submitting.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-op-submitting-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-op-submitting-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-op-submitting",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -3149,6 +3189,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-09-05",
         "conclusion": "提交中弹窗、进度条、服务集群同步说明、禁用按钮和底层注册表均已按最新 Figma 证据收口；仍有头像、图标、字体光栅化和局部像素差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=op-submitting&visual-qa=1"
       }
     },
     {
@@ -3162,7 +3212,7 @@
       "queryState": "state=op-success",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-op-success.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-op-success-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-op-success-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-op-success",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -3193,6 +3243,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-09-05",
         "conclusion": "成功横幅、首行已停用状态、启用操作和最新注册表结构均已进入证据；仍有头像、侧栏图标、字体光栅化和局部间距差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=op-success&visual-qa=1"
       }
     },
     {
@@ -3206,7 +3266,7 @@
       "queryState": "state=op-failed",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-op-failed.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-op-failed-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-op-failed-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-op-failed",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -3237,6 +3297,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-09-05",
         "conclusion": "失败弹窗已包含错误码、请求 ID、healthy-cluster-0 超时原因、关闭和重新尝试操作，底层注册表结构已同步；仍有头像、图标、字体光栅化和局部像素差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=op-failed&visual-qa=1"
       }
     },
     {
@@ -3412,7 +3482,7 @@
       "queryState": "state=knowledge-uploading",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-knowledge-uploading.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-knowledge-uploading-browser-2026-08-30.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-knowledge-uploading-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-knowledge-uploading",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -3443,6 +3513,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-08-30",
         "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 截图；弹层已按 Figma 对齐到主区域 x=570、560x260，标题、批次文案、64% 进度、绿色进度条和查看任务进度链接均已复核。Figma-only 左上角窗口点未渲染；底层知识库页面、字体光栅化和整页仍存在视觉差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=knowledge-uploading&visual-qa=1"
       }
     },
     {
@@ -3456,7 +3536,7 @@
       "queryState": "state=knowledge-indexing",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-knowledge-indexing.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-knowledge-indexing-browser-2026-08-30.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-knowledge-indexing-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-knowledge-indexing",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -3487,6 +3567,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-08-30",
         "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 截图；弹层已按 Figma 对齐到主区域 x=570、560x280，后台建立索引标题、批次文案、72% 蓝色进度条和任务详情文案均已复核。Figma-only 左上角窗口点未渲染；底层页面、字体光栅化和整页仍存在视觉差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=knowledge-indexing&visual-qa=1"
       }
     },
     {
@@ -3500,7 +3590,7 @@
       "queryState": "state=knowledge-upload-failed",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-knowledge-upload-failed.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-knowledge-upload-failed-browser-2026-08-30.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-knowledge-upload-failed-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-knowledge-upload-failed",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -3531,6 +3621,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-08-30",
         "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 截图；失败弹层已按 Figma 对齐到主区域 x=570、560x286，失败范围、错误码、批次说明、右上角失败标记/关闭控件和重试此文件按钮均已复核。Figma-only 左上角窗口点未渲染；底层页面、字体光栅化和整页仍存在视觉差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=knowledge-upload-failed&visual-qa=1"
       }
     },
     {
@@ -4356,7 +4456,7 @@
       "queryState": "state=run-detail",
       "browserViewport": "1440x1024",
       "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured/admin-run-detail-figma-live-2026-08-29.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-run-detail-height-browser-2026-08-29-rgba.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-run-detail-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-run-detail",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -4416,7 +4516,17 @@
           },
           "conclusion": "DIFF_REVIEW"
         }
-      ]
+      ],
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=run-detail&visual-qa=1"
+      }
     },
     {
       "figmaNodeId": "797:359",
@@ -4429,7 +4539,7 @@
       "queryState": "state=tool-calls",
       "browserViewport": "1440x1024",
       "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured/admin-tool-calls-figma-current.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-tool-calls-detail-spacing-browser-2026-08-29-rgba.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-tool-calls-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-tool-calls",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -4511,7 +4621,17 @@
           },
           "conclusion": "DIFF_REVIEW"
         }
-      ]
+      ],
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=tool-calls&visual-qa=1"
+      }
     },
     {
       "figmaNodeId": "797:490",
@@ -4524,7 +4644,7 @@
       "queryState": "state=sql-audit",
       "browserViewport": "1440x1024",
       "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured/admin-sql-audit-figma-live-2026-08-29.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-sql-audit-risk-filter-browser-2026-08-29.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-sql-audit-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-sql-audit",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -4609,7 +4729,17 @@
           },
           "conclusion": "DIFF_REVIEW"
         }
-      ]
+      ],
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=sql-audit&visual-qa=1"
+      }
     },
     {
       "figmaNodeId": "797:621",
@@ -4622,7 +4752,7 @@
       "queryState": "state=trace",
       "browserViewport": "1440x1024",
       "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured/admin-trace-figma-live-2026-08-29.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-trace-table-columns-browser-2026-08-29-rgba.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-trace-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-trace",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -4788,7 +4918,17 @@
           },
           "conclusion": "DIFF_REVIEW"
         }
-      ]
+      ],
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=trace&visual-qa=1"
+      }
     },
     {
       "figmaNodeId": "801:215",
@@ -4801,7 +4941,7 @@
       "queryState": "state=user-detail",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-user-detail.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-user-detail-filter-aligned-browser-2026-08-29-rgba.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-user-detail-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-user-detail",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -4863,7 +5003,17 @@
           },
           "conclusion": "DIFF_REVIEW"
         }
-      ]
+      ],
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=user-detail&visual-qa=1"
+      }
     },
     {
       "figmaNodeId": "806:212",
@@ -5268,7 +5418,7 @@
       "queryState": "state=knowledge-upload-success",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-knowledge-upload-success.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-knowledge-upload-success-browser-2026-08-30.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-knowledge-upload-success-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-knowledge-upload-success",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -5299,6 +5449,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-08-30",
         "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 正常知识库页面；成功态不再渲染上传进度弹层，上传区域、文档表格、向量洞察和状态行均可见。底层页面与 Figma 在字体、图标、颜色和内容几何上仍存在视觉差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=knowledge-upload-success&visual-qa=1"
       }
     },
     {
@@ -5312,7 +5472,7 @@
       "queryState": "state=overview",
       "browserViewport": "1440x1024",
       "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/admin-overview-current-2026-08-31.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-overview-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-overview-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-overview",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -5345,7 +5505,7 @@
         "conclusion": "已依据实时 Figma 节点 995:977 复核概览总量和分页文案，浏览器改为显示 12,480 条系统结果；最新截图为 1440x1024、DPR 1、字体 loaded、页面无横向溢出，三张分析卡位置为 x=308/668/1028、y=782、w=344、h=180。默认男性头像按用户要求使用项目默认资产，不替换为 Figma 真人头像；最新 diff 为 10.6799%，头像、字体和浏览器光栅化差异仍存在，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -5541,7 +5701,7 @@
       "queryState": null,
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-model-usage.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-model-usage-browser-2026-09-01-rgba.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-model-usage-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-model-usage",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -5572,6 +5732,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-08-19",
         "conclusion": "Workspace input states differ visually from the Figma reference. Retain DIFF_REVIEW."
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin/usage?null&visual-qa=1"
       }
     },
     {
@@ -5585,7 +5755,7 @@
       "queryState": "view=audit",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-operation-audit.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-operation-audit-browser-2026-09-02.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-operation-audit-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-operation-audit",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_REMAIN",
@@ -5616,6 +5786,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-09-02",
         "conclusion": "顶栏生产环境标记、筛选、统计、十列表格、分页和底部分析区已与 Figma 结构对齐；仍存在头像素材、文字光栅化和局部像素差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?view=audit&visual-qa=1"
       }
     },
     {
@@ -5629,7 +5809,7 @@
       "queryState": "state=knowledge-format-error",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-knowledge-format-error.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-knowledge-format-error-browser-2026-08-30.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-knowledge-format-error-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-knowledge-format-error",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -5660,6 +5840,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-08-30",
         "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 截图；格式错误弹层已按 Figma 对齐到主区域 x=570、560x286，错误标题、文件范围、支持格式说明、错误码、失败标记、关闭控件和移除并重试按钮均已复核。Figma-only 左上角窗口点未渲染；底层页面、字体光栅化和整页仍存在视觉差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=knowledge-format-error&visual-qa=1"
       }
     },
     {
@@ -5673,7 +5863,7 @@
       "queryState": "state=knowledge-size-error",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/admin-knowledge-size-error.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/admin-knowledge-size-error-browser-2026-08-30.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-knowledge-size-error-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-knowledge-size-error",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -5704,6 +5894,16 @@
         "reviewer": "Codex",
         "reviewedAt": "2026-08-30",
         "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 截图；大小限制弹层已按 Figma 对齐到主区域 x=570、560x286，文件大小说明、错误码、失败标记、关闭控件和重新选择文件按钮均已复核。Figma-only 左上角窗口点未渲染；底层页面、字体光栅化和整页仍存在视觉差异，保留 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/admin?state=knowledge-size-error&visual-qa=1"
       }
     },
     {

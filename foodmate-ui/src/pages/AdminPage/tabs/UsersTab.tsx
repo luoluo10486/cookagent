@@ -42,7 +42,7 @@ import {
 } from './AdminShared';
 import type { AdminActionPayload } from './types';
 import { loadAdminUsers, revokeAdminUserSessions, updateAdminUserStatus } from '../../../services/adminService';
-import { resolveAvatarUrl } from '../../../lib/avatar';
+import { FIGMA_ADMIN_AVATARS, resolveAvatarUrl } from '../../../lib/avatar';
 
 const isMockMode = import.meta.env.VITE_AGENT_MODE !== 'real';
 
@@ -63,7 +63,7 @@ const figmaUserRows: AdminUserView[] = [
     displayName: 'Anddy 实验室',
     role: 'admin',
     status: 'active',
-    avatarUrl: '',
+    avatarUrl: FIGMA_ADMIN_AVATARS.userDetail,
     phone: '-',
     gender: '男',
     heightCm: 0,

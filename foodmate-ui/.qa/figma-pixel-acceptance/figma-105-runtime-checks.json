@@ -90,7 +90,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -99,10 +99,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=op-no-permission",
+      "url": "/admin?state=op-no-permission&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -192,7 +192,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -201,10 +201,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=knowledge-format-error",
+      "url": "/admin?state=knowledge-format-error&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -384,7 +384,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -393,10 +393,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=knowledge-upload-failed",
+      "url": "/admin?state=knowledge-upload-failed&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -638,7 +638,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -647,10 +647,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=deleted-resources",
+      "url": "/admin?state=deleted-resources&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -1026,7 +1026,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1035,10 +1035,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=op-submitting",
+      "url": "/admin?state=op-submitting&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -1190,7 +1190,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1199,10 +1199,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=knowledge-size-error",
+      "url": "/admin?state=knowledge-size-error&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -1214,7 +1214,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1223,10 +1223,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin/usage",
+      "url": "/admin/usage?visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -1471,7 +1471,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1480,10 +1480,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=tool-registry",
+      "url": "/admin?state=tool-registry&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -1719,7 +1719,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1728,10 +1728,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=tool-calls",
+      "url": "/admin?state=tool-calls&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -1767,7 +1767,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1776,10 +1776,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?view=audit",
+      "url": "/admin?view=audit&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -1903,7 +1903,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1912,10 +1912,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=op-success",
+      "url": "/admin?state=op-success&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -1951,7 +1951,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1960,10 +1960,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=op-confirm",
+      "url": "/admin?state=op-confirm&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -1975,7 +1975,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1984,10 +1984,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=knowledge-uploading",
+      "url": "/admin?state=knowledge-uploading&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -2050,7 +2050,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2059,10 +2059,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=knowledge-upload-success",
+      "url": "/admin?state=knowledge-upload-success&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -2074,7 +2074,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2083,10 +2083,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=user-detail",
+      "url": "/admin?state=user-detail&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -2098,7 +2098,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2107,10 +2107,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=trace",
+      "url": "/admin?state=trace&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -2512,7 +2512,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2521,10 +2521,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=run-detail",
+      "url": "/admin?state=run-detail&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -2608,7 +2608,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2617,7 +2617,7 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=overview",
+      "url": "/admin?state=overview&visual-qa=1",
       "windowControls": 0,
       "trafficLightColors": 0,
       "analyticsGeometry": {
@@ -2626,8 +2626,8 @@
         "border": "inset"
       },
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -2755,7 +2755,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2764,10 +2764,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=knowledge-indexing",
+      "url": "/admin?state=knowledge-indexing&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -2924,7 +2924,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2933,10 +2933,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=op-failed",
+      "url": "/admin?state=op-failed&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
@@ -2972,7 +2972,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2981,10 +2981,10 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/admin?state=sql-audit",
+      "url": "/admin?state=sql-audit&visual-qa=1",
       "viewport": {
-        "height": 1024,
-        "width": 1440
+        "width": 1440,
+        "height": 1024
       },
       "dprPass": true
     },
