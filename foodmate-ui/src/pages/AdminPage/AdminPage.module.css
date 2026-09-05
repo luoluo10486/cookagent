@@ -5151,6 +5151,19 @@
   color: #ed706c;
 }
 
+/* Figma 状态画板未展示关闭图标，但保留可访问的关闭操作供键盘用户使用。 */
+.knowledgeFixtureCloseHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .knowledgeFixtureClose:hover {
   background: #fff0ee;
   color: #dc5a5c;

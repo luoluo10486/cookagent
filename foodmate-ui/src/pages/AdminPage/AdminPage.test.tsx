@@ -166,6 +166,20 @@ describe('AdminPage overview', () => {
     view.unmount();
   });
 
+  it('matches the Figma knowledge fixture navigation and default table state', () => {
+    renderAdmin('/admin?state=knowledge-upload-success');
+
+    expect(screen.getByRole('link', { name: '工具调用与 SQL' })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'SQL 审计' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Trace' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: '工具注册表' })).not.toBeInTheDocument();
+    expect(screen.getByText('已索引')).toBeInTheDocument();
+    expect(screen.getByText('索引中')).toBeInTheDocument();
+    expect(screen.getByText('失败')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '下线文档' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '删除文档' })).not.toBeInTheDocument();
+  });
+
   it('uses the Figma user-detail close affordance and registered fixture avatar', () => {
     renderAdmin('/admin?state=user-detail');
 

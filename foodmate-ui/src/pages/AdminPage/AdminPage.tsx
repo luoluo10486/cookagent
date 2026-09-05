@@ -61,6 +61,17 @@ type AdminFixtureState =
 
 type KnowledgeFixtureState = Extract<AdminFixtureState, `knowledge-${string}`>;
 
+const knowledgeFixtureNavKeys = new Set([
+  'overview',
+  'users',
+  'runs',
+  'tools',
+  'usage',
+  'knowledge',
+  'deleted',
+  'audit',
+]);
+
 type KnowledgeFixtureCopy = {
   title: string;
   summary: string;
@@ -521,10 +532,9 @@ function AdminKnowledgeFixture({ state, onDismiss }: { state: KnowledgeFixtureSt
           <h2 id={titleId}>{copy.title}</h2>
           {copy.showFailureBadge ? (
             <div className={styles.knowledgeFixtureHeaderActions}>
-              <span className={styles.knowledgeFixtureFailureBadge}>失败</span>
               <Button
                 aria-label="关闭"
-                className={styles.knowledgeFixtureClose}
+                className={`${styles.knowledgeFixtureClose} ${styles.knowledgeFixtureCloseHidden}`}
                 onClick={onDismiss}
                 size="icon"
                 type="button"
@@ -805,7 +815,8 @@ export function AdminPage() {
   const activeOperationAction = fixtureOperationStatus ? figmaOperationAction : pendingAction;
   const activeOperationError = fixtureOperationStatus === 'failed' ? defaultOperationError : operationError;
   const isKnowledgeFixture = Boolean(requestedFixture && isKnowledgeFixtureState(requestedFixture));
-  const dismissFixture = () => navigate('/admin?state=tool-registry', { replace: true });
+  const dismissFixture = () =>
+    navigate(isKnowledgeFixture ? '/admin/knowledge' : '/admin?state=tool-registry', { replace: true });
 
   useEffect(() => {
     const handleNotice = (event: Event) => {
@@ -913,7 +924,12 @@ export function AdminPage() {
           <span className={styles.adminTag}>FoodMate 管理</span>
         </div>
         <nav className={styles.adminNav} aria-label="管理后台导航">
-          {adminNavItems.map((item) => {
+          {(isKnowledgeFixture
+            ? adminNavItems
+                .filter((item) => knowledgeFixtureNavKeys.has(item.key))
+                .map((item) => (item.key === 'tools' ? { ...item, label: '工具调用与 SQL' } : item))
+            : adminNavItems
+          ).map((item) => {
             const isActive = fixtureNavKey
               ? item.key === fixtureNavKey
               : isAdminNavItemActive(item.path, pathname, search);
@@ -971,7 +987,7 @@ export function AdminPage() {
           onDismiss={fixtureOperationStatus ? dismissFixture : dismissOperation}
         />
         {requestedFixture && !requestedFixture.startsWith('op-') && !isDetailFixture ? (
-          <AdminFixtureOverlay state={requestedFixture} onDismiss={() => navigate('/admin', { replace: true })} />
+          <AdminFixtureOverlay state={requestedFixture} onDismiss={dismissFixture} />
         ) : null}
         <header className={`${styles.topbar} ${isKnowledgeFixture ? styles.knowledgeFixtureTopbar : ''}`}>
           <div className={styles.topbarTitle}>

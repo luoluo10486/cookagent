@@ -70,7 +70,15 @@ function documentSize(document: KnowledgeRow) {
   return document.chunks > 500 ? '12.8 MB' : document.chunks ? '4.2 MB' : '890 KB';
 }
 
-function documentStatus(document: KnowledgeRow) {
+function documentStatus(document: KnowledgeRow, figmaFixture: boolean) {
+  if (figmaFixture) {
+    const fixtureLabel = document.status === 'indexed' ? '已索引' : document.status === 'indexing' ? '索引中' : '失败';
+    return (
+      <span className={`${styles.knowledgeStatus} ${styles[`knowledgeStatus${document.status}`] ?? ''}`}>
+        {fixtureLabel}
+      </span>
+    );
+  }
   const visibility = document.visibility;
   const label =
     visibility === 'published'
@@ -293,7 +301,7 @@ export function KnowledgeSection({
                   <strong>{document.title}</strong>
                 </span>
                 <span>{isRealMode ? '-' : documentSize(document)}</span>
-                <span>{documentStatus(document)}</span>
+                <span>{documentStatus(document, figmaFixture)}</span>
                 <span>{document.chunks} chunks</span>
               </Button>
             ))
@@ -325,7 +333,7 @@ export function KnowledgeSection({
             <ChunkPreview id="chunk_02" score="0.884" text="避免食用酸面包，除非标明为低碳水高纤维小麦淀粉替代品..." />
           </div>
         )}
-        {selectedDoc ? (
+        {selectedDoc && !figmaFixture ? (
           <div className={styles.knowledgeManageActions}>
             {selectedVisibility === 'published' ? (
               <Button

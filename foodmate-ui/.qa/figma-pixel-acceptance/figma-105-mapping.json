@@ -1462,7 +1462,7 @@
       "queryState": "state=write-confirmation",
       "browserViewport": "1440x1024",
       "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/agent-write-confirmation-2026-08-29.png",
-    "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-write-confirmation-browser-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-write-confirmation-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#agent-write-confirmation",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -1506,7 +1506,7 @@
       "queryState": "state=budget-limit",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/agent-budget-limit.png",
-    "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-budget-limit-browser-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-budget-limit-browser-2026-09-06.png",
       "mobileBrowserPng": ".qa/figma-pixel-acceptance/recaptured/agent-budget-limit-browser-390x844-current.png",
       "mobileBrowserViewport": "390x844",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#agent-budget-limit",
@@ -1607,7 +1607,7 @@
       "queryState": "state=tool-failed-retryable",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/agent-tool-failed-retryable.png",
-    "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-tool-failed-retryable-browser-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-tool-failed-retryable-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#agent-tool-failed-retryable",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -1662,7 +1662,7 @@
       "queryState": "state=safety-degraded",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/agent-safety-degraded.png",
-    "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-safety-degraded-browser-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-safety-degraded-browser-2026-09-06.png",
       "mobileBrowserPng": ".qa/figma-pixel-acceptance/recaptured/agent-safety-degraded-browser-390x844-current.png",
       "mobileBrowserViewport": "390x844",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#agent-safety-degraded",
@@ -1727,7 +1727,7 @@
       "queryState": "state=user-cancelled",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/agent-user-cancelled.png",
-    "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-user-cancelled-browser-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-user-cancelled-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#agent-user-cancelled",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -1806,7 +1806,7 @@
       "queryState": "state=sse-reconnecting",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/agent-sse-reconnecting.png",
-    "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-sse-reconnecting-browser-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-agent-sse-reconnecting-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#agent-sse-reconnecting",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -3515,7 +3515,7 @@
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
+        "conclusion": "2026-09-06 已按 Figma 参考图重新收口知识库状态 fixture：侧栏导航、状态标签、洞察卡操作区和错误弹层视觉层已对齐；共享壳层头像与字体光栅化仍存在差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -3569,7 +3569,7 @@
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
+        "conclusion": "2026-09-06 已按 Figma 参考图重新收口知识库状态 fixture：侧栏导航、状态标签、洞察卡操作区和错误弹层视觉层已对齐；共享壳层头像与字体光栅化仍存在差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -3623,7 +3623,7 @@
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
+        "conclusion": "2026-09-06 已按 Figma 参考图重新收口知识库状态 fixture：侧栏导航、状态标签、洞察卡操作区和错误弹层视觉层已对齐；共享壳层头像与字体光栅化仍存在差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -5451,7 +5451,7 @@
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
+        "conclusion": "2026-09-06 已按 Figma 参考图重新收口知识库状态 fixture：侧栏导航、状态标签、洞察卡操作区和错误弹层视觉层已对齐；共享壳层头像与字体光栅化仍存在差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -5842,7 +5842,7 @@
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
+        "conclusion": "2026-09-06 已按 Figma 参考图重新收口知识库状态 fixture：侧栏导航、状态标签、洞察卡操作区和错误弹层视觉层已对齐；共享壳层头像与字体光栅化仍存在差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -5896,7 +5896,7 @@
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
+        "conclusion": "2026-09-06 已按 Figma 参考图重新收口知识库状态 fixture：侧栏导航、状态标签、洞察卡操作区和错误弹层视觉层已对齐；共享壳层头像与字体光栅化仍存在差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",

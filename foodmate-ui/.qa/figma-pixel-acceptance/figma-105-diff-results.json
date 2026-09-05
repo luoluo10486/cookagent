@@ -689,10 +689,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 439427,
-      "differentRatio": 0.29800550672743054,
-      "meanAbsoluteError": 1.9148612128363716,
-      "rmse": 12.235797141284724,
+      "differentPixels": 435222,
+      "differentRatio": 0.29515380859375,
+      "meanAbsoluteError": 1.887562052408854,
+      "rmse": 12.209292623871603,
       "maxChannelDelta": 250
     },
     "admin-knowledge-indexing": {
@@ -700,10 +700,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 450711,
-      "differentRatio": 0.305657958984375,
-      "meanAbsoluteError": 2.049993387858073,
-      "rmse": 12.640506265483682,
+      "differentPixels": 446199,
+      "differentRatio": 0.30259806315104165,
+      "meanAbsoluteError": 2.0226993136935763,
+      "rmse": 12.614874793417588,
       "maxChannelDelta": 250
     },
     "admin-knowledge-upload-failed": {
@@ -711,10 +711,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 453394,
-      "differentRatio": 0.30747748480902776,
-      "meanAbsoluteError": 2.3717083401150174,
-      "rmse": 14.130722984037124,
+      "differentPixels": 448833,
+      "differentRatio": 0.30438435872395836,
+      "meanAbsoluteError": 2.327844407823351,
+      "rmse": 14.066926669931451,
       "maxChannelDelta": 250
     },
     "profile-basic-avatar-uploading": {
@@ -1030,10 +1030,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 549181,
-      "differentRatio": 0.37243720160590277,
-      "meanAbsoluteError": 3.8622489081488713,
-      "rmse": 20.602686872015017,
+      "differentPixels": 561070,
+      "differentRatio": 0.3804999457465278,
+      "meanAbsoluteError": 3.6297680324978296,
+      "rmse": 19.62817929399438,
       "maxChannelDelta": 242
     },
     "admin-overview": {
@@ -1074,10 +1074,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 840082,
-      "differentRatio": 0.5697170681423611,
-      "meanAbsoluteError": 2.4734759860568576,
-      "rmse": 12.808434307665836,
+      "differentPixels": 847063,
+      "differentRatio": 0.5744513617621527,
+      "meanAbsoluteError": 2.4821370442708335,
+      "rmse": 12.951714699436478,
       "maxChannelDelta": 204
     },
     "admin-knowledge-size-error": {
@@ -1085,10 +1085,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 840039,
-      "differentRatio": 0.5696879069010417,
-      "meanAbsoluteError": 2.484013875325521,
-      "rmse": 12.899584704539432,
+      "differentPixels": 847020,
+      "differentRatio": 0.5744222005208334,
+      "meanAbsoluteError": 2.4926722208658854,
+      "rmse": 13.041846748384378,
       "maxChannelDelta": 204
     },
     "profile-memories-empty": {
