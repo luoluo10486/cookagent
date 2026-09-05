@@ -2081,3 +2081,13 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] Auth 页面未发现可见原生 `button`、`input`、`select` 或 `textarea` 控件；Login 的隐藏文件输入不在页面实现中，故不存在以原生控件替代 shadcn 控件的问题。
 - [x] Figma 资源映射、语义 Token、字体和动画契约保持原状；Auth 13 个已登记画板继续使用 `1440×900 / DPR 1` 证据。
 - [ ] Auth 13 个 diff 仍为非零差异，当前结论保持 `DIFF_REVIEW`；控件迁移审计通过不等于像素级 `PASS`，也不关闭其余页面的 shadcn 审计和 iconfont `BLOCKED`。
+
+## 28. 2026-09-06 Workspace/Home 与 Agent Chat shadcn 控件迁移审计
+
+本节记录 Workspace/Home、Agent Chat 和共享工作区组件的控件基础设施审计，不重新采集 105 个画板，也不替换既有 Workspace 与 Agent Chat 证据。
+
+- [x] `WorkspaceLayout` 使用 shadcn `Button`、`Input`、`DropdownMenu` 和 `Dialog` 覆盖新建任务、会话搜索、账户菜单、会话重命名、删除、回收站和窗口操作。
+- [x] `HomePage` 与 `Composer` 使用 shadcn `Input`/`Button`；隐藏文件输入仅用于附件选择，不替代可见页面控件。
+- [x] `ChatPage` 使用 shadcn `Tabs`、`Card`、`Alert`、`RadioGroup` 和 `Button`；Agent 卡片及会话列表的操作入口均通过共享 UI 组件承载。
+- [x] 当前代码中 Workspace/Home 与 Agent Chat 相关目录没有 `AdminPrimitives` 直接引用，且没有新增 iconfont 字体或虚构 Unicode 映射。
+- [ ] Workspace Home 与 Agent Chat 仍存在整页自动 diff 和待人工复核项，控件迁移审计通过不等于像素级 `PASS`；页面视觉 Token 和布局差异仍需后续处理。
