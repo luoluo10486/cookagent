@@ -2009,3 +2009,18 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] 两页浏览器证据均由 Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体 `loaded` 和无页面横向溢出条件下采集；`figma-105-mapping.json` 与 `figma-105-diff-results.json` 已同步同版本路径。
 - [x] 全量结构校验仍为 `total=105`、`structuralPass=true`、`strictDprPass=true`、`errors=[]`；全量自动比较输入为 `105/105`。
 - [ ] 两页仍存在非零像素差异，不能将局部视觉收口、几何检查或构建通过替代像素级 `PASS`；全量汇总保持 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。shadcn 全量逐页视觉迁移尚未完成，iconfont 继续为 `BLOCKED`。
+
+## 24. 2026-09-05 饮食业务三页定向验收范围
+
+本批次只对 Diet Records、Intake Analysis 和 Meal Planning 进行交付收口，不执行 105 个画板的全量重新验收。Figma 节点分别为 `640:588`、`640:773`、`640:901`；Figma 文件保持只读。
+
+| 画板 | 前端入口 | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---:|---:|---:|---:|---:|---|
+| Diet Records | `/analysis?view=records&state=v2` | `1440×1024 / 1` | `7.9260%` | `2.544206` | `16.833673` | `219` | `DIFF_REVIEW` |
+| Intake Analysis | `/analysis?state=v2` | `1440×1024 / 1` | `7.5430%` | `2.004188` | `14.243366` | `211` | `DIFF_REVIEW` |
+| Meal Planning | `/planning?state=v2` | `1440×1024 / 1` | `10.8815%` | `1.939608` | `12.962410` | `204` | `DIFF_REVIEW` |
+
+- [x] 三页已完成 Figma 节点级标识、指标环 SVG、餐次图标基线和 Meal Planning 实线边框收口；现有截图和 diff JSON 保留在 `foodmate-ui/.qa/figma-pixel-acceptance/`。
+- [x] 三页自动 diff 均已存在且尺寸一致；非零差异继续保留 `DIFF_REVIEW`，不以结构检查或截图存在替代像素级 `PASS`。
+- [ ] 本批次不重新执行 105 个画板的全量人工复核；其它画板的历史状态不因本批次改变。
+- [x] 三页定向测试和必要工程门禁已集中执行：3 个测试文件、27 个用例通过；`npm run typecheck`、`npm run build`、`npm run lint`、`npm run format:check` 和 `git diff --check` 均通过。

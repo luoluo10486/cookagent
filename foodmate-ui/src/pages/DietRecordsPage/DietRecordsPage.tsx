@@ -200,15 +200,7 @@ function mapWeekLogs(logs: FoodLog[], date: Date): WeekDay[] {
   });
 }
 
-function ProgressRing({
-  percentage,
-  tone,
-  assetSrc,
-}: {
-  percentage: number;
-  tone: Metric['tone'];
-  assetSrc?: string;
-}) {
+function ProgressRing({ percentage, tone, assetSrc }: { percentage: number; tone: Metric['tone']; assetSrc?: string }) {
   const style = { '--progress': percentage } as CSSProperties;
   return (
     <div
