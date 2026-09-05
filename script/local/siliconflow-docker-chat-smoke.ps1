@@ -10,9 +10,8 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path
 $composeFile = Join-Path $repoRoot "docker/compose.yml"
 $envFile = Join-Path $repoRoot ".env"
 $composeArgs = @("--env-file", $envFile, "-f", $composeFile)
-# Compose maps FOODMATE_DOCKER_MODEL_PROVIDER_CLOUD_PRIMARY_API_KEY from the
-# host-side .env into the container-only provider variable. Never pass its value
-# as a process argument or print it.
+# Compose 将宿主机 .env 中的 FOODMATE_DOCKER_MODEL_PROVIDER_CLOUD_PRIMARY_API_KEY
+# 映射为仅容器可见的供应商变量；脚本绝不把密钥作为进程参数传递或打印。
 
 if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
     throw "Docker CLI is required"
@@ -50,7 +49,7 @@ function Test-AgentRuntimeReady {
 function Invoke-AgentPython([string]$source, [string[]]$arguments) {
     $encodedSource = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($source))
     $bootstrap = "import base64,sys;exec(base64.b64decode(sys.argv[1]))"
-    # The command contract is: docker compose exec -T agent-runtime python -c.
+    # 命令契约固定为 docker compose exec -T agent-runtime python -c。
     & docker compose @composeArgs exec -T agent-runtime python -c $bootstrap $encodedSource @arguments
     if ($LASTEXITCODE -ne 0) {
         throw "agent-runtime Docker Chat smoke failed"

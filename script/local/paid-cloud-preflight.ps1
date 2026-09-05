@@ -27,9 +27,8 @@ if (-not $ExecutePaid) {
     exit 0
 }
 
-# These process-only values are interpolated by Compose and disappear when this
-# PowerShell process exits. Credentials are read by Compose from .env and never
-# become script arguments or output.
+# 以下变量只存在于当前进程，由 Compose 插值后传入容器；PowerShell 进程退出后即消失。
+# 凭据由 Compose 从 .env 读取，绝不变成脚本参数或标准输出内容。
 $env:FOODMATE_DOCKER_PAID_EXECUTION_ENABLED = "true"
 $env:FOODMATE_DOCKER_PAID_MAX_SCENARIOS = "4"
 $env:FOODMATE_DOCKER_PAID_MAX_TOTAL_COST_CNY = "5"

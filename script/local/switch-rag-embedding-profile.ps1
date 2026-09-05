@@ -9,7 +9,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path
-# FOODMATE_DOCKER_RAG_EMBEDDING_API_KEY is intentionally left untouched.
+# 故意不修改 FOODMATE_DOCKER_RAG_EMBEDDING_API_KEY，避免切换 profile 时覆盖密钥。
 if ([string]::IsNullOrWhiteSpace($EnvFile)) {
     $EnvFile = Join-Path $repoRoot ".env"
 }

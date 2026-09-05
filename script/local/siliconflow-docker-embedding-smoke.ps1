@@ -11,10 +11,10 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path
 $composeFile = Join-Path $repoRoot "docker/compose.yml"
 $envFile = Join-Path $repoRoot ".env"
 $composeArgs = @("--env-file", $envFile, "-f", $composeFile)
-# Compose reads this secret from the root .env and maps it to the container-only
-# FOODMATE_RAG_EMBEDDING_API_KEY variable. The script never reads the value.
-# The explicit execution contract is: docker compose exec -T agent-runtime python -c.
-# The source variable is FOODMATE_DOCKER_RAG_EMBEDDING_API_KEY.
+# Compose 从根目录 .env 读取该密钥，并映射为仅容器可见的
+# FOODMATE_RAG_EMBEDDING_API_KEY；脚本本身不读取密钥值。
+# 显式执行契约固定为 docker compose exec -T agent-runtime python -c。
+# 宿主机来源变量为 FOODMATE_DOCKER_RAG_EMBEDDING_API_KEY。
 
 if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
     throw "Docker CLI 不存在，无法执行 Docker Runtime smoke"
@@ -205,8 +205,8 @@ $encodedPythonCode = [Convert]::ToBase64String(
 )
 $pythonBootstrap = "import base64,sys;exec(base64.b64decode(sys.argv[2]))"
 
-# Pass only base64 through the Windows Docker CLI so Python source quotes are
-# not re-parsed or stripped before they reach the container.
+# 通过 Windows Docker CLI 只传递 base64，避免 Python 源码中的引号在到达容器前
+# 被命令行再次解析或剥离。
 & docker compose @composeArgs exec -T agent-runtime python -c $pythonBootstrap $EmbeddingProfile $encodedPythonCode
 if ($LASTEXITCODE -ne 0) {
     throw "Docker SiliconFlow Embedding smoke failed"
