@@ -1,7 +1,6 @@
-import { AlertTriangle, CheckCircle2, RefreshCw, ShieldAlert, X, XCircle } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, CheckCircle2, Plus, RefreshCw, ShieldAlert, X, XCircle } from 'lucide-react';
 import { useEffect, useState, type CSSProperties } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -721,6 +720,8 @@ function renderSection(
   onAction: (payload: AdminActionPayload) => void,
   refreshNonce: number,
   operationStatus: AdminOperationState,
+  figmaFixture: boolean,
+  knowledgeUploadRequest: number,
 ) {
   switch (sectionKey) {
     case 'users':
@@ -734,7 +735,14 @@ function renderSection(
     case 'model':
       return <ModelGovernanceSection onAction={onAction} refreshNonce={refreshNonce} />;
     case 'knowledge':
-      return <KnowledgeSection onAction={onAction} refreshNonce={refreshNonce} />;
+      return (
+        <KnowledgeSection
+          figmaFixture={figmaFixture}
+          onAction={onAction}
+          openUploadRequest={knowledgeUploadRequest}
+          refreshNonce={refreshNonce}
+        />
+      );
     case 'deleted':
       return <DeletedSection onAction={onAction} refreshNonce={refreshNonce} />;
     case 'audit':
@@ -784,6 +792,7 @@ export function AdminPage() {
   const [operationError, setOperationError] = useState<AdminOperationError>();
   const [notice, setNotice] = useState('');
   const [refreshNonce, setRefreshNonce] = useState(0);
+  const [knowledgeUploadRequest, setKnowledgeUploadRequest] = useState(0);
   const fixtureUser = requestedFixture
     ? { displayName: 'Anddy', id: '1234567' }
     : { displayName: authUser.displayName, id: authUser.id };
@@ -795,6 +804,7 @@ export function AdminPage() {
   const activeOperationStatus = fixtureOperationStatus ?? operationStatus;
   const activeOperationAction = fixtureOperationStatus ? figmaOperationAction : pendingAction;
   const activeOperationError = fixtureOperationStatus === 'failed' ? defaultOperationError : operationError;
+  const isKnowledgeFixture = Boolean(requestedFixture && isKnowledgeFixtureState(requestedFixture));
   const dismissFixture = () => navigate('/admin?state=tool-registry', { replace: true });
 
   useEffect(() => {
@@ -963,7 +973,7 @@ export function AdminPage() {
         {requestedFixture && !requestedFixture.startsWith('op-') && !isDetailFixture ? (
           <AdminFixtureOverlay state={requestedFixture} onDismiss={() => navigate('/admin', { replace: true })} />
         ) : null}
-        <header className={styles.topbar}>
+        <header className={`${styles.topbar} ${isKnowledgeFixture ? styles.knowledgeFixtureTopbar : ''}`}>
           <div className={styles.topbarTitle}>
             <h1>
               {isDetailFixture
@@ -998,56 +1008,69 @@ export function AdminPage() {
             ) : null}
           </div>
           <div className={styles.topbarActions}>
-            <span className={styles.refreshStatus}>
-              {isDetailFixture
-                ? '刷新时间：刚刚'
-                : isRegistryRoute
-                  ? '服务节点：healthy-cluster-0'
-                  : isDeletedRoute
-                    ? '存档保留时长：90天安全窗口'
-                    : isUsageRoute
-                      ? '数据刷新：刚刚'
-                      : sectionKey === 'users'
-                        ? '刷新时间：刚刚'
-                        : isAuditFigmaRoute
+            {isKnowledgeFixture ? (
+              <Button
+                className={styles.knowledgeFixtureUploadButton}
+                onClick={() => setKnowledgeUploadRequest((current) => current + 1)}
+                type="button"
+              >
+                <Plus aria-hidden="true" />
+                批量上传
+              </Button>
+            ) : (
+              <>
+                <span className={styles.refreshStatus}>
+                  {isDetailFixture
+                    ? '刷新时间：刚刚'
+                    : isRegistryRoute
+                      ? '服务节点：healthy-cluster-0'
+                      : isDeletedRoute
+                        ? '存档保留时长：90天安全窗口'
+                        : isUsageRoute
                           ? '数据刷新：刚刚'
-                          : sectionKey === 'audit'
-                            ? '审计记录只读'
-                            : '数据刷新：刚刚'}
-            </span>
-            <Button
-              variant="outline"
-              className={styles.topbarRefresh}
-              onClick={
-                isDeletedRoute
-                  ? () => setNotice('合规性审计记录仅供查看，恢复操作会写入审计。')
-                  : isUsageRoute
-                    ? () => setNotice('模型用量 CSV 已生成。')
-                    : isAuditFigmaRoute
-                      ? () => setNotice('审计导出已准备。')
-                      : handleRefresh
-              }
-            >
-              {isDetailFixture
-                ? '刷新'
-                : isRegistryRoute
-                  ? '更新状态'
-                  : isDeletedRoute
-                    ? '合规性审计'
-                    : isUsageRoute
-                      ? '导出 CSV'
-                      : isAuditFigmaRoute
-                        ? '导出审计'
-                        : sectionKey === 'users'
-                          ? '刷新'
-                          : sectionKey === 'audit'
-                            ? '刷新审计'
-                            : '刷新数据'}
-            </Button>
+                          : sectionKey === 'users'
+                            ? '刷新时间：刚刚'
+                            : isAuditFigmaRoute
+                              ? '数据刷新：刚刚'
+                              : sectionKey === 'audit'
+                                ? '审计记录只读'
+                                : '数据刷新：刚刚'}
+                </span>
+                <Button
+                  variant="outline"
+                  className={styles.topbarRefresh}
+                  onClick={
+                    isDeletedRoute
+                      ? () => setNotice('合规性审计记录仅供查看，恢复操作会写入审计。')
+                      : isUsageRoute
+                        ? () => setNotice('模型用量 CSV 已生成。')
+                        : isAuditFigmaRoute
+                          ? () => setNotice('审计导出已准备。')
+                          : handleRefresh
+                  }
+                >
+                  {isDetailFixture
+                    ? '刷新'
+                    : isRegistryRoute
+                      ? '更新状态'
+                      : isDeletedRoute
+                        ? '合规性审计'
+                        : isUsageRoute
+                          ? '导出 CSV'
+                          : isAuditFigmaRoute
+                            ? '导出审计'
+                            : sectionKey === 'users'
+                              ? '刷新'
+                              : sectionKey === 'audit'
+                                ? '刷新审计'
+                                : '刷新数据'}
+                </Button>
+              </>
+            )}
           </div>
         </header>
         <div
-          className={`${styles.page} ${sectionKey === 'users' ? styles.usersPage : ''} ${isDetailFixture ? styles.fixtureDetailPage : ''} fm-enter`}
+          className={`${styles.page} ${sectionKey === 'users' ? styles.usersPage : ''} ${isDetailFixture ? styles.fixtureDetailPage : ''} ${isKnowledgeFixture ? styles.knowledgeFixturePage : ''} fm-enter`}
         >
           {notice ? (
             <div className={styles.notice} role="status">
@@ -1066,7 +1089,14 @@ export function AdminPage() {
           {isDetailFixture ? (
             <AdminFixtureOverlay state={requestedFixture} onDismiss={() => navigate('/admin', { replace: true })} />
           ) : (
-            renderSection(sectionKey, requestAdminAction, refreshNonce, activeOperationStatus)
+            renderSection(
+              sectionKey,
+              requestAdminAction,
+              refreshNonce,
+              activeOperationStatus,
+              isKnowledgeFixture,
+              knowledgeUploadRequest,
+            )
           )}
         </div>
       </main>

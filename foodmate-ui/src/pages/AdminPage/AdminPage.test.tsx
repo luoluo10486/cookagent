@@ -266,6 +266,7 @@ describe('AdminPage knowledge upload fixtures', () => {
     expect(screen.getByRole('dialog', { name: '批量任务已提交' })).toBeInTheDocument();
     expect(screen.getByText('3 个文件 · nutrient_reference.xlsx 等')).toBeInTheDocument();
     expect(screen.getByText('上传中 · 64% · 可离开页面，完成后自动开始索引')).toBeInTheDocument();
+    expect(screen.getByText('Max file size: 50MB. Allowed formats: PDF, CSV, XLSX, TXT.')).toBeInTheDocument();
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '64');
     expect(screen.getByRole('link', { name: '查看任务进度' })).toBeInTheDocument();
   });
@@ -310,12 +311,18 @@ describe('AdminPage knowledge upload fixtures', () => {
     expect(screen.getByRole('button', { name: '重新选择文件' })).toBeInTheDocument();
   });
 
-  it('returns to the normal knowledge page after upload success', () => {
+  it('returns to the normal knowledge page after upload success', async () => {
+    const user = userEvent.setup();
     renderAdmin('/admin?state=knowledge-upload-success');
 
     expect(screen.getByRole('link', { name: '知识库管理' })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('button', { name: '批量上传' })).toBeInTheDocument();
+    expect(screen.getByText('Max file size: 50MB. Allowed formats: PDF, CSV, XLSX, TXT.')).toBeInTheDocument();
     expect(screen.getByText('USDA_Keto_Ingredient_Guidelines.pdf')).toBeInTheDocument();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: '批量上传' }));
+    expect(screen.getByRole('dialog', { name: '上传知识库文档' })).toBeInTheDocument();
   });
 });
 

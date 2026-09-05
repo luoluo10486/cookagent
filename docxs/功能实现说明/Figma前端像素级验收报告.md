@@ -2187,3 +2187,23 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] Admin 资源接入没有创建虚构 iconfont 字体、glyph 或 Unicode 映射；标准命令图标继续使用 Lucide 或已登记的 Figma SVG 资源。
 - [ ] 21 项自动 diff 均为非零差异，不能标记为像素级 `PASS`；全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [ ] 本节只复核 Admin 21 项，不代表其余画板重新采集或完成全量人工视觉复核；iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍缺失，继续保持 `BLOCKED`。
+
+## 34. 2026-09-06 Admin 知识库状态页视觉收口
+
+本节记录 Admin 知识库六个状态页的增量视觉收口和最新浏览器证据。该批次只重新采集受影响的六个画板，不重新验收全部 105 个画板；Figma 文件保持只读，真实模式上传、权限和知识库服务请求边界未改变。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Admin Knowledge Uploading | `782:212` | `/admin?state=knowledge-uploading` | `dpr1-admin-knowledge-uploading-browser-2026-09-06.png` | `1440×1024 / 1` | 29.8006% | 1.914861 | 12.235797 | 250 | `DIFF_REVIEW` |
+| Admin Knowledge Indexing | `782:366` | `/admin?state=knowledge-indexing` | `dpr1-admin-knowledge-indexing-browser-2026-09-06.png` | `1440×1024 / 1` | 30.5658% | 2.049993 | 12.640506 | 250 | `DIFF_REVIEW` |
+| Admin Knowledge Upload Failed | `782:520` | `/admin?state=knowledge-upload-failed` | `dpr1-admin-knowledge-upload-failed-browser-2026-09-06.png` | `1440×1024 / 1` | 30.7477% | 2.371708 | 14.130723 | 250 | `DIFF_REVIEW` |
+| Admin Knowledge Upload Success | `806:1737` | `/admin?state=knowledge-upload-success` | `dpr1-admin-knowledge-upload-success-browser-2026-09-06.png` | `1440×1024 / 1` | 37.2437% | 3.862249 | 20.602687 | 242 | `DIFF_REVIEW` |
+| Admin Knowledge Format Error | `997:2` | `/admin?state=knowledge-format-error` | `dpr1-admin-knowledge-format-error-browser-2026-09-06.png` | `1440×1024 / 1` | 56.9717% | 2.473476 | 12.808434 | 204 | `DIFF_REVIEW` |
+| Admin Knowledge Size Error | `997:160` | `/admin?state=knowledge-size-error` | `dpr1-admin-knowledge-size-error-browser-2026-09-06.png` | `1440×1024 / 1` | 56.9688% | 2.484014 | 12.899585 | 204 | `DIFF_REVIEW` |
+
+- [x] Figma fixture 已按节点复核并保留六个独立入口；fixture 模式采用 Figma 的页面内边距、上传区尺寸、表格行高、向量洞察区域、状态弹层和顶部“批量上传”入口。
+- [x] 顶部“批量上传”入口与页面上传区域共用现有知识库上传 Dialog；真实模式仍保留原有文件数量、大小、格式约束和服务请求逻辑。
+- [x] 六项浏览器证据由 Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体 `loaded` 和无横向溢出条件下采集；截图、映射和 `figma-105-diff-results.json` 已同步到 `2026-09-06` 证据路径。
+- [x] Admin 定向测试、`npm run typecheck`、`npm run build`、`npm run lint`、`npm run format:check`、`npm run qa:figma:validate` 和 `git diff --check` 已在本批次代码完成后通过；结构校验为 `structuralPass=true`、`strictDprPass=true`、`errors=[]`。
+- [ ] 六项自动 diff 均为非零差异，底层工作区壳层仍存在字体光栅化、导航图标、头像和局部内容差异；未完成逐项像素级 `PASS`，继续保持 `DIFF_REVIEW`。
+- [ ] 本节只更新六个受影响画板的增量证据，不改变全量聚合 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`；shadcn 全页面视觉迁移和 iconfont 资源登记仍未完成，iconfont 继续为 `BLOCKED`。

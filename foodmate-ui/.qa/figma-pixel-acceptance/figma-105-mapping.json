@@ -3511,8 +3511,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-30",
-        "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 截图；弹层已按 Figma 对齐到主区域 x=570、560x260，标题、批次文案、64% 进度、绿色进度条和查看任务进度链接均已复核。Figma-only 左上角窗口点未渲染；底层知识库页面、字体光栅化和整页仍存在视觉差异，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -3565,8 +3565,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-30",
-        "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 截图；弹层已按 Figma 对齐到主区域 x=570、560x280，后台建立索引标题、批次文案、72% 蓝色进度条和任务详情文案均已复核。Figma-only 左上角窗口点未渲染；底层页面、字体光栅化和整页仍存在视觉差异，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -3619,8 +3619,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-30",
-        "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 截图；失败弹层已按 Figma 对齐到主区域 x=570、560x286，失败范围、错误码、批次说明、右上角失败标记/关闭控件和重试此文件按钮均已复核。Figma-only 左上角窗口点未渲染；底层页面、字体光栅化和整页仍存在视觉差异，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -5447,8 +5447,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-30",
-        "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 正常知识库页面；成功态不再渲染上传进度弹层，上传区域、文档表格、向量洞察和状态行均可见。底层页面与 Figma 在字体、图标、颜色和内容几何上仍存在视觉差异，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -5838,8 +5838,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-30",
-        "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 截图；格式错误弹层已按 Figma 对齐到主区域 x=570、560x286，错误标题、文件范围、支持格式说明、错误码、失败标记、关闭控件和移除并重试按钮均已复核。Figma-only 左上角窗口点未渲染；底层页面、字体光栅化和整页仍存在视觉差异，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -5892,8 +5892,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-30",
-        "conclusion": "2026-08-30 浏览器证据已切换为最新 1440x1024 截图；大小限制弹层已按 Figma 对齐到主区域 x=570、560x286，文件大小说明、错误码、失败标记、关闭控件和重新选择文件按钮均已复核。Figma-only 左上角窗口点未渲染；底层页面、字体光栅化和整页仍存在视觉差异，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "2026-09-06 已按实时 Figma 参考图重新采集并复核；知识库 fixture 已采用 Figma 文案、页面边距、上传区、表格行高、向量洞察和顶部批量上传入口，状态弹层尺寸与状态色保持对齐。底层页面仍存在字体光栅化、导航图标、头像和局部内容差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",

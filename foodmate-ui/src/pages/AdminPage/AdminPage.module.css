@@ -323,6 +323,34 @@
   background: var(--fm-bg-soft) !important;
 }
 
+.knowledgeFixtureTopbar {
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
+.knowledgeFixtureUploadButton {
+  min-width: 96px;
+  height: 32px !important;
+  padding: 8px 12px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: #fff1c7 !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 16px !important;
+  box-shadow: none !important;
+}
+
+.knowledgeFixtureUploadButton:hover {
+  background: #ffe9a8 !important;
+}
+
+.knowledgeFixtureUploadButton svg {
+  width: 14px;
+  height: 14px;
+}
+
 .page {
   display: flex;
   flex-direction: column;
@@ -335,6 +363,10 @@
 
 .page::-webkit-scrollbar {
   display: none;
+}
+
+.knowledgeFixturePage {
+  padding: 24px;
 }
 
 .notice {
@@ -3734,6 +3766,41 @@
   gap: 20px;
   padding: 20px;
   border-radius: 16px !important;
+}
+
+.knowledgeFixtureWorkspace .knowledgeDropZone {
+  min-height: 128px;
+  gap: 8px;
+  padding: 16px;
+  background: #fffdf8;
+}
+
+.knowledgeFixtureWorkspace .knowledgeDropZone svg {
+  color: #ffedb2;
+}
+
+.knowledgeFixtureWorkspace .knowledgeTableHeader,
+.knowledgeFixtureWorkspace .knowledgeTableRow {
+  grid-template-columns: 120px minmax(0, 246px) 80px 83px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.knowledgeFixtureWorkspace .knowledgeTableHeader {
+  min-height: 40px;
+  padding: 10px 12px;
+}
+
+.knowledgeFixtureWorkspace .knowledgeTableRow {
+  min-height: 48px;
+  padding: 12px;
+}
+
+.knowledgeFixtureWorkspace .knowledgeVectorStats {
+  background: #f8f5ff;
+}
+
+.knowledgeFixtureWorkspace .knowledgeChunk {
+  background: #ffffff;
 }
 .knowledgeInsightsTitle {
   color: #333333;
