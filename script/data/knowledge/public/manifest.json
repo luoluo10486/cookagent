@@ -1,0 +1,38 @@
+{
+  "dataset": "FoodMate public nutrition knowledge",
+  "dataset_version": "2026-09-06",
+  "purpose": "公共知识库业务验收与本地 RAG 资料基线",
+  "embedding_status": "未构建向量",
+  "documents": [
+    {
+      "file": "who-healthy-diet-zh.md",
+      "title": "健康饮食",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/healthy-diet",
+      "source_version": "2026-01-26",
+      "retrieved_at": "2026-09-06",
+      "sha256": "578a92f83164ff6d73298b8c19c980810b2d80efb8f4d47ef029b948eb954e0e",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    },
+    {
+      "file": "who-salt-reduction-zh.md",
+      "title": "减少钠摄入",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/salt-reduction",
+      "source_version": "2026-05-11",
+      "retrieved_at": "2026-09-06",
+      "sha256": "595dd41aab7195b1dc20bebb555f2a127381976e9e7fed1467e6c9a869387f00",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    },
+    {
+      "file": "who-obesity-overweight-zh.md",
+      "title": "肥胖和超重",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/obesity-and-overweight",
+      "source_version": "2025-12-08",
+      "retrieved_at": "2026-09-06",
+      "sha256": "1a8dd29479110c9b6678004b8e47fb777ec589052aafdd0f0a03a613d5a29fb2",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    }
+  ]
+}

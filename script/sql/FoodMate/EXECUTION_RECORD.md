@@ -2081,3 +2081,14 @@
 | 代码与测试 | `script/data/nutrition/build_usda_catalog.py` 支持稳定外部 ID、中文别名、食材形态、foodPortion 去重和 SQL 转义；营养目录生成器契约测试 `4 passed`，PowerShell 清理脚本语法检查和 `git diff --check` 通过。 |
 | 运行边界 | 本轮未调用真实 Chat/Embedding、未写入 Milvus、未修改 RAG 发布状态；只清理了本轮可确认的原始压缩包和 Python 缓存，无法确认归属的临时目录保留待人工判断。 |
 | 结论 | 本轮完成真实 USDA 营养目录基线，可供后续饮食匹配使用；营养学人工复核、复合菜配方和生产级目录治理不在本轮完成口径内。 |
+
+## D132 M2-1 官方公共营养资料快照（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 来源 | 选取 WHO 中文事实表《健康饮食》《减少钠摄入》《肥胖和超重》，页面日期分别为 2026-01-26、2026-05-11、2025-12-08；三个来源 URL 均为独立 HTTPS 页面。 |
+| 本地资料 | 新增 `script/data/knowledge/public/` 下 3 份中文 Markdown 资料和 `manifest.json`；每份资料保留来源名称、URL、页面版本、检索日期和 SHA-256，内容标注为官方页面摘要，不冒充 FoodMate 自有医学结论。 |
+| 数据校验 | `validate_public_sources.py` 校验通过：资料数量 `3`、来源 URL 唯一、文件 SHA-256 一致、Front Matter 与 manifest 一致、未发现 API Key/Authorization/测试占位内容或重复正文。 |
+| 业务测试 | 项目 `.venv` 执行 `agent-runtime/.venv/Scripts/python.exe -B -m pytest -q -p no:cacheprovider agent-runtime/tests/test_public_knowledge_manifest.py`：`2 passed`；未生成 Python 缓存。 |
+| Embedding 边界 | manifest 明确记录 `embedding_status=未构建向量`；本轮未上传管理员 API、未调用真实 Embedding、未写入 Redis/Milvus、未发布 RAG 文档，也未改变现有知识库状态。 |
+| 结论 | 公共知识库真实资料准备和来源可追溯校验已完成；待后续确认后，才执行批量上传、真实 Embedding、Milvus 索引和显式发布。 |
