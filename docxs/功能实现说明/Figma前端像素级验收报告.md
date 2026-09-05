@@ -2072,3 +2072,12 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] ProfilePage 与 WorkspaceLayout 定向测试为 `2` 个测试文件、`37/37` 个用例通过；`npm run typecheck`、`npm run build`、`npm run lint`、`npm run format:check`、`npm run qa:figma:validate` 和 `git diff --check` 均通过。
 - [ ] 19 项自动 diff 均为非零差异，尚未完成逐项人工视觉复核，全部保持 `DIFF_REVIEW`；本批次不将结构检查、截图存在或代码测试通过替代像素级 `PASS`。
 - [ ] 当前全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`；本批次不重新验收其它 86 个画板，shadcn 全量逐页视觉迁移和 iconfont 实体资源登记仍未完成，iconfont 继续为 `BLOCKED`。
+
+## 27. 2026-09-06 Auth 页面组 shadcn 控件迁移审计
+
+本节记录 Auth 页面组的控件基础设施审计，不重新采集 105 个画板，也不替换已有 Auth Figma 与浏览器证据。审计范围为 Login、Register、Forgot Password、Reset Password 和 Token Status。
+
+- [x] `AuthVisual` 使用 `src/components/ui/button.tsx` 与 `src/components/ui/input.tsx` 提供共享 Button/Input；页面上的提交、返回、密码显隐、辅助操作和状态操作均通过这些组件实现。
+- [x] Auth 页面未发现可见原生 `button`、`input`、`select` 或 `textarea` 控件；Login 的隐藏文件输入不在页面实现中，故不存在以原生控件替代 shadcn 控件的问题。
+- [x] Figma 资源映射、语义 Token、字体和动画契约保持原状；Auth 13 个已登记画板继续使用 `1440×900 / DPR 1` 证据。
+- [ ] Auth 13 个 diff 仍为非零差异，当前结论保持 `DIFF_REVIEW`；控件迁移审计通过不等于像素级 `PASS`，也不关闭其余页面的 shadcn 审计和 iconfont `BLOCKED`。
