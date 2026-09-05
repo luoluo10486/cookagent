@@ -2136,7 +2136,7 @@
 |---|---|
 | 问题 | 真实模式重新进入已有会话时，页面只加载持久化消息，没有恢复最近 `agent_run_id`；即使补订阅 SSE，也会把已持久化的助手回答再渲染一次。 |
 | 修复 | 会话消息按 `sequence_no` 排序后恢复最近 Run；历史 Run 回放继续接收 `run.completed` 的引用和状态，但检测到已有助手消息时不重复渲染答案文本，新 Run 仍保留流式答案显示。 |
-| 业务测试 | `foodmate-ui` 执行 `npm.cmd test -- --run src/pages/ChatPage/ChatPage.real.test.tsx`：`1` 个测试通过；Prettier 已检查并修复新增/修改文件格式。测试使用本地模块桩，不调用 Java API、真实 Chat 或 Embedding。 |
+| 业务测试 | `foodmate-ui` 执行 `npm.cmd test -- --run src/pages/ChatPage/ChatPage.real.test.tsx`：`1` 个测试通过；`npm.cmd run typecheck` 和 Prettier 检查均通过。测试使用本地模块桩，不调用 Java API、真实 Chat 或 Embedding。 |
 | 证据边界 | 测试验证历史消息 -> Run 恢复 -> SSE `run.completed` -> 引用展示和答案唯一性；真实云闭环证据仍以 D134、D130、D128、D129 为准。 |
 | 注释与提交 | 新增实现注释使用中文；未混入用户已有 Java、Admin UI、Figma QA 或资源改动。 |
 | 结论 | 前端刷新/重新进入历史会话时可以恢复终态引用，且不会产生重复助手回答；本轮未新增付费请求、数据库写入或临时数据。 |
