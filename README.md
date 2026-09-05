@@ -46,6 +46,7 @@ FoodMate 是面向饮食记录、营养分析与备餐规划的任务型 Agent �
 | 恢复与 M1-6 本地门禁 | 已验证 Runtime readiness、Redis AOF 探针恢复、RocketMQ 重启/Topic 初始化、双 JVM 有界读取和 Java 重启回读；完整 PostgreSQL/Outbox/Inbox/SSE 故障矩阵仍未完成。 |
 | 前端 | G1-G6 页面代码边界、追问/确认/失败/取消/SSE 状态、真实管理查询和知识库批次/RAG 引用接入已完成；真实聊天历史会话现在会恢复最近 Run 并回放终态引用，新增定向测试通过。2026-09-02 当前工作区 typecheck/build 通过；D137 对 `RunsTab` 两个测试文件执行定向验证，4/4 通过。完整 Vitest 套件未在本轮重跑。 |
 | Java 回归 | 当前 Java 全量业务门禁、Spotless、ArchUnit 和 Alibaba 可执行规范子集均通过；HTTP 与 RocketMQ `food_log_writer` 回归各 11/11，包含官方 foodPortions 换算 matched/pending 数据库断言。具体运行批次和跳过项以 [`EXECUTION_RECORD.md`](./script/sql/FoodMate/EXECUTION_RECORD.md) 为准。 |
+| 本轮容器复核 | 2026-09-06 使用 `.env` 成功构建并启动 `foodmate` 镜像；容器 readiness 为 healthy，`admin@foodmate.local` 登录返回 admin 会话；数据库只读复核确认探针账号为 0、管理员密码哈希为 BCrypt，现有营养目录和知识库记录仍保留。 |
 
 当前不能宣称完成的内容：
 
@@ -124,6 +125,13 @@ npm run dev
 - V33 validation：活动食材与规范键均为 `1,000`，活动换算与食材/单位组合均为 `1,518`，非法目录值、重复规范键、非法换算值均为 `0`；rollback 前置检查显示本版本暂无饮食明细引用。
 - 重新筛选时淘汰的旧生成记录仅做软删除（食材 `9` 条、换算 `12` 条），没有执行 `TRUNCATE` 或宽泛删除；清理前备份保存在 Git 忽略目录 `script/sql/FoodMate/backups/`。
 - 本轮只完成真实营养目录数据基线，不调用真实 Chat/Embedding，不写入 Milvus，也不代表 RAG 发布或生产质量验收已完成。
+
+## 2026-09-06 本地容器与账号复核
+
+- `docker compose --env-file .env -f docker/compose.yml build foodmate` 构建成功；随后仅重建 `foodmate` 应用容器，未重建依赖服务、迁移数据库或清理数据卷。
+- `foodmate` 容器启动后 readiness 返回 HTTP 200，Docker health 状态为 `healthy`；使用开发管理员 `admin@foodmate.local` 和已确认的本地密码完成登录，返回 admin 角色和会话 Cookie。
+- 数据库只读复核：明确的 `codex_*` 探针账号为 `0`，管理员账号为 `1` 且密码字段仍为 BCrypt 哈希；营养目录为 `1,009` 条，知识库文档为 `3` 条，知识导入批次为 `1` 条。
+- 本轮没有执行性能压测、组件重启矩阵、ACK/重复投递故障注入、备份恢复、生产操作或发布回滚；未把 Docker 启动复核扩展为完整 M1-6 故障验收。
 
 ## M1-5 / M1-6 收尾边界
 

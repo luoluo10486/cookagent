@@ -2151,3 +2151,16 @@
 | 付费与数据边界 | 未调用 Chat/Embedding，未访问 Java API，未写入 PostgreSQL、Redis、Milvus 或 RocketMQ，未生成测试数据。 |
 | 范围说明 | 本轮只复核此前记录的已知定向失败，不重新运行完整 Vitest 套件；README 和测试策略已同步更新，避免把定向结果误写成完整套件结果。 |
 | 结论 | `RunsTab` 已知定向测试问题当前不可复现且本次验证通过；完整前端测试套件仍需在后续大功能点按计划集中执行。 |
+
+## D138 Docker 应用容器、管理员登录与数据边界复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；使用根目录 `.env` 启动本地 Docker Compose 应用容器。真实密钥、管理员密码和会话令牌未写入本记录。 |
+| 镜像构建 | `docker compose --env-file .env -f docker/compose.yml build foodmate` 返回成功；随后执行 `docker compose --env-file .env -f docker/compose.yml up -d --no-deps foodmate`，只重建应用容器，未重建依赖服务、迁移数据库或清理数据卷。 |
+| readiness | `foodmate` 容器启动后 Docker health 状态为 `healthy`；`/actuator/health/readiness` 返回 HTTP 200，应用日志显示 Java 控制面正常启动并连接 PostgreSQL。 |
+| 管理员登录 | `POST /api/auth/login` 使用 `admin@foodmate.local` 和本地开发密码返回 HTTP 200、`admin` 角色及会话 Cookie；首轮使用驼峰字段得到 `INVALID_ARGUMENT`，按现有 `LoginRequest` 的 `snake_case` 契约改为 `username_or_email` 后通过，未修改业务代码。 |
+| 数据边界 | PostgreSQL 只读复核结果：明确的 `codex_*` 探针账号 `0`；管理员账号 `1` 且 `password_hash` 为 BCrypt；营养目录 `1,009` 条；知识库文档 `3` 条；知识导入批次 `1` 条。未发现营养目录或知识库历史事实被误删。 |
+| 代码与计划 | 中文代码注释门禁已写入《秋招真实业务闭环执行计划》和《M2剩余功能执行计划》；本轮没有新增 Java/Python 业务代码，因此没有进行无关的全仓库注释翻译。 |
+| 暂缓范围 | 未执行性能压测、真实 Agent 流量统计、组件重启矩阵、ACK 丢失/重复投递故障注入、SSE 断线专项、备份恢复、生产操作或发布回滚。 |
+| 结论 | 本轮确认 Docker 应用镜像可构建、容器可启动、管理员认证可用且数据库清理范围受控；该结果只补充本地启动和账号复核证据，不将暂缓的 M1-6 故障/性能内容标记为完成。 |
