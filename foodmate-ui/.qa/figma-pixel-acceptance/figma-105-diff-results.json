@@ -722,10 +722,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 645094,
-      "differentRatio": 0.43748236762152776,
-      "meanAbsoluteError": 2.113119845920139,
-      "rmse": 14.014534408342547,
+      "differentPixels": 718320,
+      "differentRatio": 0.4871419270833333,
+      "meanAbsoluteError": 2.8339553833007813,
+      "rmse": 16.570733932338946,
       "maxChannelDelta": 229
     },
     "profile-basic-avatar-failed": {
@@ -733,10 +733,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 646073,
-      "differentRatio": 0.4381462944878472,
-      "meanAbsoluteError": 2.2488750881618924,
-      "rmse": 15.298400211289866,
+      "differentPixels": 719301,
+      "differentRatio": 0.48780721028645835,
+      "meanAbsoluteError": 2.969718763563368,
+      "rmse": 17.669842205512428,
       "maxChannelDelta": 255
     },
     "profile-basic-unsaved-leave-confirmation": {
@@ -744,10 +744,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 1130305,
-      "differentRatio": 0.7665371365017362,
-      "meanAbsoluteError": 5.188280402289497,
-      "rmse": 16.942845050531044,
+      "differentPixels": 1161621,
+      "differentRatio": 0.787774658203125,
+      "meanAbsoluteError": 5.912527296278212,
+      "rmse": 19.28383127688969,
       "maxChannelDelta": 255
     },
     "profile-security-password-submitting": {
@@ -755,10 +755,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 271473,
-      "differentRatio": 0.18410441080729167,
-      "meanAbsoluteError": 2.0920918782552085,
-      "rmse": 14.301180002274823,
+      "differentPixels": 297655,
+      "differentRatio": 0.20186021592881945,
+      "meanAbsoluteError": 2.709614732530382,
+      "rmse": 16.74480212585534,
       "maxChannelDelta": 235
     },
     "profile-security-password-success": {
@@ -766,10 +766,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 267970,
-      "differentRatio": 0.1817287868923611,
-      "meanAbsoluteError": 1.970212131076389,
-      "rmse": 13.673125339651483,
+      "differentPixels": 294152,
+      "differentRatio": 0.19948459201388888,
+      "meanAbsoluteError": 2.5877349853515623,
+      "rmse": 16.211693475093945,
       "maxChannelDelta": 235
     },
     "profile-security-password-failed": {
@@ -777,10 +777,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 269806,
-      "differentRatio": 0.1829739040798611,
-      "meanAbsoluteError": 2.0796885172526043,
-      "rmse": 14.0611267052245,
+      "differentPixels": 295988,
+      "differentRatio": 0.20072970920138888,
+      "meanAbsoluteError": 2.6972113715277777,
+      "rmse": 16.540251902463936,
       "maxChannelDelta": 255
     },
     "profile-privacy-export-queued": {
@@ -788,10 +788,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 553918,
-      "differentRatio": 0.3756496853298611,
-      "meanAbsoluteError": 2.6847913953993054,
-      "rmse": 12.502093642483286,
+      "differentPixels": 579802,
+      "differentRatio": 0.3932033962673611,
+      "meanAbsoluteError": 3.3021375868055554,
+      "rmse": 15.236541167667115,
       "maxChannelDelta": 229
     },
     "profile-privacy-export-running": {
@@ -799,10 +799,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 553903,
-      "differentRatio": 0.37563951280381946,
-      "meanAbsoluteError": 3.044773186577691,
-      "rmse": 14.733213866657117,
+      "differentPixels": 579787,
+      "differentRatio": 0.39319322374131943,
+      "meanAbsoluteError": 3.662119377983941,
+      "rmse": 17.114830766012595,
       "maxChannelDelta": 246
     },
     "profile-privacy-export-expired": {
@@ -810,10 +810,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 553918,
-      "differentRatio": 0.3756496853298611,
-      "meanAbsoluteError": 2.7513175116644963,
-      "rmse": 13.030190225264802,
+      "differentPixels": 579802,
+      "differentRatio": 0.3932033962673611,
+      "meanAbsoluteError": 3.3686637030707467,
+      "rmse": 15.672769334587302,
       "maxChannelDelta": 246
     },
     "profile-privacy-deletion-submitting": {
@@ -821,10 +821,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 1122204,
-      "differentRatio": 0.7610432942708333,
-      "meanAbsoluteError": 3.9614610460069444,
-      "rmse": 15.257595751255305,
+      "differentPixels": 1153520,
+      "differentRatio": 0.7822808159722222,
+      "meanAbsoluteError": 4.537253824869792,
+      "rmse": 17.42808521018372,
       "maxChannelDelta": 235
     },
     "profile-privacy-deletion-success": {
@@ -832,10 +832,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 550948,
-      "differentRatio": 0.3736355251736111,
-      "meanAbsoluteError": 2.611826917860243,
-      "rmse": 12.57012116485658,
+      "differentPixels": 576832,
+      "differentRatio": 0.3911892361111111,
+      "meanAbsoluteError": 3.229173109266493,
+      "rmse": 15.292409470314647,
       "maxChannelDelta": 234
     },
     "profile-privacy-deletion-failed": {
@@ -843,10 +843,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 398286,
-      "differentRatio": 0.27010498046875,
-      "meanAbsoluteError": 1.988785637749566,
-      "rmse": 13.290962817650625,
+      "differentPixels": 424170,
+      "differentRatio": 0.28765869140625,
+      "meanAbsoluteError": 2.606131829155816,
+      "rmse": 15.890233916741604,
       "maxChannelDelta": 255
     },
     "user-knowledge-empty": {
@@ -986,10 +986,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 908031,
-      "differentRatio": 0.6157979329427083,
-      "meanAbsoluteError": 3.9595523410373263,
-      "rmse": 18.376665090949142,
+      "differentPixels": 974245,
+      "differentRatio": 0.6607021755642362,
+      "meanAbsoluteError": 5.251134406195747,
+      "rmse": 21.538661233095013,
       "maxChannelDelta": 239
     },
     "profile-memories": {
@@ -997,10 +997,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 543407,
-      "differentRatio": 0.3685214572482639,
-      "meanAbsoluteError": 5.015174357096354,
-      "rmse": 23.438346686095507,
+      "differentPixels": 571915,
+      "differentRatio": 0.3878546820746528,
+      "meanAbsoluteError": 5.5464630126953125,
+      "rmse": 24.74448959025959,
       "maxChannelDelta": 238
     },
     "profile-security": {
@@ -1008,10 +1008,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 308819,
-      "differentRatio": 0.20943128797743055,
-      "meanAbsoluteError": 3.5445242987738714,
-      "rmse": 18.954002172919562,
+      "differentPixels": 337161,
+      "differentRatio": 0.22865193684895832,
+      "meanAbsoluteError": 4.07522701687283,
+      "rmse": 20.541920854441454,
       "maxChannelDelta": 229
     },
     "profile-privacy": {
@@ -1019,10 +1019,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 505381,
-      "differentRatio": 0.34273342556423614,
-      "meanAbsoluteError": 4.089115566677517,
-      "rmse": 18.83333663265233,
+      "differentPixels": 533368,
+      "differentRatio": 0.3617133246527778,
+      "meanAbsoluteError": 4.618948025173611,
+      "rmse": 20.425739781172712,
       "maxChannelDelta": 229
     },
     "admin-knowledge-upload-success": {
@@ -1096,10 +1096,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 1203077,
-      "differentRatio": 0.8158888075086805,
-      "meanAbsoluteError": 4.9146704779730905,
-      "rmse": 20.137191266414288,
+      "differentPixels": 1207381,
+      "differentRatio": 0.8188076443142361,
+      "meanAbsoluteError": 4.934674072265625,
+      "rmse": 20.223494534180908,
       "maxChannelDelta": 227
     },
     "profile-security-logout-confirm": {
@@ -1107,10 +1107,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 747793,
-      "differentRatio": 0.5071295844184027,
-      "meanAbsoluteError": 5.217243787977431,
-      "rmse": 21.15650380375364,
+      "differentPixels": 751903,
+      "differentRatio": 0.5099168565538195,
+      "meanAbsoluteError": 5.236345757378472,
+      "rmse": 21.23760917884485,
       "maxChannelDelta": 226
     },
     "profile-privacy-delete-confirm": {
@@ -1118,10 +1118,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 809672,
-      "differentRatio": 0.5490939670138889,
-      "meanAbsoluteError": 3.7921069675021704,
-      "rmse": 19.729956026006246,
+      "differentPixels": 813491,
+      "differentRatio": 0.5516838921440972,
+      "meanAbsoluteError": 3.8111907958984377,
+      "rmse": 19.816504374428522,
       "maxChannelDelta": 226
     },
     "agent-chat-running-stop": {

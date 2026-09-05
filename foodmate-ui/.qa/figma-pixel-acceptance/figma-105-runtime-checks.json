@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05",
+  "generatedAt": "2026-09-06",
   "tool": "Codex Browser runtime DOM inspection (recaptured evidence)",
   "rules": {
     "viewport": "mapping.browserViewport",
@@ -15,7 +15,7 @@
     "geometryPass": 105,
     "textPass": 105,
     "textReview": 0,
-    "manualPending": 0,
+    "manualPending": 19,
     "errors": 0
   },
   "items": {
@@ -305,7 +305,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -319,7 +319,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-success-browser-2026-09-06.png"
+      }
     },
     "agent-chat-trash": {
       "artboardName": "agent-chat-trash",
@@ -576,7 +583,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -590,7 +597,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-queued-browser-2026-09-06.png"
+      }
     },
     "workspace-home-error": {
       "artboardName": "workspace-home-error",
@@ -648,7 +662,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -662,7 +676,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-running-browser-2026-09-06.png"
+      }
     },
     "user-knowledge-source-unavailable": {
       "artboardName": "user-knowledge-source-unavailable",
@@ -715,7 +736,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -729,7 +750,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-logout-confirm-browser-2026-09-06.png"
+      }
     },
     "workspace-home-input-states": {
       "artboardName": "workspace-home-input-states",
@@ -763,7 +791,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -817,7 +845,14 @@
           "放弃并离开"
         ]
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-unsaved-leave-confirmation-browser-2026-09-06.png"
+      }
     },
     "meal-planning-error": {
       "artboardName": "meal-planning-error",
@@ -899,7 +934,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -913,7 +948,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-browser-2026-09-06.png"
+      }
     },
     "agent-chat-archived": {
       "artboardName": "agent-chat-archived",
@@ -1056,7 +1098,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1070,7 +1112,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-avatar-uploading-browser-2026-09-06.png"
+      }
     },
     "login-account-locked": {
       "artboardName": "login-account-locked",
@@ -1110,7 +1159,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1124,7 +1173,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-memories-empty-browser-2026-09-06.png"
+      }
     },
     "admin-knowledge-size-error": {
       "artboardName": "admin-knowledge-size-error",
@@ -1268,7 +1324,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1282,7 +1338,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-submitting-browser-2026-09-06.png"
+      }
     },
     "profile-privacy-deletion-submitting": {
       "artboardName": "profile-privacy-deletion-submitting",
@@ -1292,7 +1355,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1306,7 +1369,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-submitting-browser-2026-09-06.png"
+      }
     },
     "agent-chat-history-page-3": {
       "artboardName": "agent-chat-history-page-3",
@@ -1448,7 +1518,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1462,7 +1532,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-failed-browser-2026-09-06.png"
+      }
     },
     "profile-security": {
       "artboardName": "profile-security",
@@ -1496,11 +1573,12 @@
         "sessionAccentCount": 0
       },
       "recapture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
-        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-browser-2026-09-05.png"
-      }
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-browser-2026-09-06.png"
+      },
+      "bodyOverflow": false
     },
     "login-field-error": {
       "artboardName": "login-field-error",
@@ -1540,7 +1618,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1554,7 +1632,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-failed-browser-2026-09-06.png"
+      }
     },
     "token-invalid": {
       "artboardName": "token-invalid",
@@ -1907,7 +1992,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "dprPass": true,
       "fonts": "loaded",
       "root": {
@@ -1941,6 +2026,13 @@
       "viewport": {
         "height": 1024,
         "width": 1440
+      },
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-browser-2026-09-06.png"
       }
     },
     "admin-knowledge-upload-success": {
@@ -2139,7 +2231,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2153,7 +2245,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-expired-browser-2026-09-06.png"
+      }
     },
     "profile-privacy-deletion-success": {
       "artboardName": "profile-privacy-deletion-success",
@@ -2163,7 +2262,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2177,7 +2276,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-success-browser-2026-09-06.png"
+      }
     },
     "user-knowledge-empty": {
       "artboardName": "user-knowledge-empty",
@@ -2544,7 +2650,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2558,7 +2664,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-avatar-failed-browser-2026-09-06.png"
+      }
     },
     "profile-privacy-delete-confirm": {
       "artboardName": "profile-privacy-delete-confirm",
@@ -2568,7 +2681,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2582,7 +2695,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-delete-confirm-browser-2026-09-06.png"
+      }
     },
     "login-account-disabled": {
       "artboardName": "login-account-disabled",
@@ -2646,7 +2766,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2672,7 +2792,14 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "bodyOverflow": false,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-memories-browser-2026-09-06.png"
+      }
     },
     "token-expired": {
       "artboardName": "token-expired",

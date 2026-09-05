@@ -63,8 +63,8 @@ describe('ProfilePage', () => {
     expect(screen.getByDisplayValue('150')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '花生' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '乳糖' })).toBeInTheDocument();
-    expect(screen.queryByText('早餐奶昔配方')).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: '下一页' })).not.toBeInTheDocument();
+    expect(screen.getByText('早餐奶昔配方')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '下一页' })).toBeInTheDocument();
     expect(screen.getByText('饮食与身体目标')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: '个人头像' })).toHaveAttribute(
       'src',
@@ -75,19 +75,21 @@ describe('ProfilePage', () => {
       '/assets/figma/profile/topbar-avatar.png',
     );
     expect(container.querySelector('.profile img')).toHaveAttribute('src', '/assets/figma/profile/sidebar-avatar.png');
-    expect(document.querySelector('[data-name="window-controls"]')).not.toBeInTheDocument();
+    expect(document.querySelector('[data-name="window-controls"]')).toBeInTheDocument();
   });
 
-  it('limits the basic Figma fixture to the fields shown in the reference artboard', () => {
+  it('renders the complete basic Figma fixture field set', () => {
     renderPage('/profile?state=basic');
 
-    expect(screen.getByRole('textbox', { name: '蛋白质目标 (g)' })).toHaveValue('150');
+    expect(screen.getByRole('textbox', { name: '展示名称' })).toHaveValue('Anddy 的工作区');
+    expect(screen.getByRole('combobox', { name: '性别（可选）' })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: '身高 (cm)' })).toHaveValue('180');
+    expect(screen.getByRole('textbox', { name: '体重 (kg)' })).toHaveValue('78');
+    expect(screen.getByRole('combobox', { name: '活动水平' })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: '饮食目标' })).toHaveValue('精益增肌');
+    expect(screen.getByRole('textbox', { name: '每日热量目标 (千卡)' })).toHaveValue('2500');
+    expect(screen.getByRole('textbox', { name: '每日蛋白质目标 (g)' })).toHaveValue('150');
     expect(screen.getByRole('heading', { name: '饮食与身体目标' }).closest('div')).toHaveClass(styles.figmaGoalsCard);
-    expect(screen.queryByRole('textbox', { name: '展示名称' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('combobox', { name: '性别（可选）' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('textbox', { name: '身高 (cm)' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('textbox', { name: '体重 (kg)' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('combobox', { name: '活动水平' })).not.toBeInTheDocument();
     expect(screen.queryByText('偏好速览')).not.toBeInTheDocument();
     expect(screen.queryByText('头像与账号概览')).not.toBeInTheDocument();
   });
@@ -268,7 +270,7 @@ describe('ProfilePage', () => {
     const user = userEvent.setup();
     renderPage('/profile');
 
-    const proteinTarget = screen.getByRole('textbox', { name: '蛋白质目标 (g)' });
+    const proteinTarget = screen.getByRole('textbox', { name: '每日蛋白质目标 (g)' });
     await user.clear(proteinTarget);
     await user.type(proteinTarget, '160');
 

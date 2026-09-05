@@ -364,22 +364,17 @@
 }
 
 .figmaGoalsCard {
-  height: 366px;
-  min-height: 366px;
+  height: 520px;
+  min-height: 520px;
   padding: 23px;
 }
 
 .figmaGoalsCard h1 {
-  color: #333;
+  color: #c79654;
 }
 
 .figmaGoalsGrid {
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0;
-}
-
-.figmaGoalsCard .allergenSection {
-  padding-top: 56px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .goalsAccent {
@@ -411,11 +406,6 @@
   display: grid;
   min-height: 450px;
   grid-template-rows: 1fr auto auto;
-}
-
-.figmaGoalsCard form {
-  min-height: 0;
-  grid-template-rows: auto auto auto;
 }
 
 .goalsGrid {

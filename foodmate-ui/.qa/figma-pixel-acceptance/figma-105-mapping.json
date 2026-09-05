@@ -6,7 +6,7 @@
     "metadataNode": "0:1",
     "capturedAt": "2026-09-05",
     "figmaMcp": "get_metadata",
-    "lastUpdated": "2026-09-05"
+    "lastUpdated": "2026-09-06"
   },
   "acceptanceRules": {
     "dpr": 1,
@@ -3544,17 +3544,17 @@
       "queryState": "state=basic-avatar-uploading",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-basic-avatar-uploading.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-avatar-uploading-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-avatar-uploading-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-basic-avatar-uploading",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -3571,13 +3571,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-22",
-        "conclusion": "Figma-aligned white overlay, blue card geometry, state title and progress treatment are present. Shell, identity and text-density differences remain; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -3598,17 +3598,17 @@
       "queryState": "state=basic-avatar-failed",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-basic-avatar-failed.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-avatar-failed-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-avatar-failed-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-basic-avatar-failed",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -3625,13 +3625,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-22",
-        "conclusion": "Avatar upload failure modal is present, but browser differs in allowed-format/size rule, error detail, action availability, modal geometry, profile identity, and underlying layout. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -3652,19 +3652,19 @@
       "queryState": "state=basic-unsaved-leave-confirmation",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-basic-unsaved-leave-confirmation.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-unsaved-leave-confirmation-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-unsaved-leave-confirmation-browser-2026-09-06.png",
       "mobileBrowserPng": ".qa/figma-pixel-acceptance/recaptured/profile-basic-unsaved-leave-confirmation-figma-modal-browser-390x844-2026-08-30.png",
       "mobileBrowserViewport": "390x844",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-basic-unsaved-leave-confirmation",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -3681,13 +3681,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-30",
-        "conclusion": "当前浏览器 fixture 已按 Figma 节点 794:380 收口为主区域 x=590,y=320 的 520x252 弹窗，标题与正文使用深色基准，操作为‘继续编辑’和‘放弃并离开’，overlay 仅覆盖主区域且前端窗口装饰点为 0。头像、底层资料、字体光栅化和其它整页差异仍存在，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -3708,17 +3708,17 @@
       "queryState": "state=security-password-submitting",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-security-password-submitting.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-submitting-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-submitting-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security-password-submitting",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -3735,13 +3735,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-22",
-        "conclusion": "Password update state is present, but browser uses a different profile identity, security-page composition, modal geometry, progress bar, supporting copy, and device/activity detail. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -3762,17 +3762,17 @@
       "queryState": "state=security-password-success",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-security-password-success.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-success-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-success-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security-password-success",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -3789,13 +3789,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-22",
-        "conclusion": "Password-success dialog semantics exist, but the profile identity, base page composition, dialog geometry, progress treatment, and supporting detail differ. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -3816,17 +3816,17 @@
       "queryState": "state=security-password-failed",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-security-password-failed.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-failed-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-failed-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security-password-failed",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -3843,13 +3843,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-22",
-        "conclusion": "Figma-aligned white overlay, red card treatment and error hierarchy are present. Shell, detail copy and background-page density differences remain; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -3870,17 +3870,17 @@
       "queryState": "state=privacy-export-queued",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-privacy-export-queued.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-queued-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-queued-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-export-queued",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -3897,13 +3897,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-22",
-        "conclusion": "Figma-aligned white overlay, blue card geometry and queued-state hierarchy are present. Shell and privacy-page density differences remain; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -3924,17 +3924,17 @@
       "queryState": "state=privacy-export-running",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-privacy-export-running.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-running-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-running-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-export-running",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -3951,13 +3951,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-23",
-        "conclusion": "Desktop and mobile captures preserve the export-running semantics and the mobile state/progress geometry is clear. Privacy-page composition, content density, dialog boundary, color, and layout still differ from the current Figma reference. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -3978,17 +3978,17 @@
       "queryState": "state=privacy-export-expired",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-privacy-export-expired.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-expired-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-expired-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-export-expired",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -4005,13 +4005,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-23",
-        "conclusion": "Desktop and mobile captures preserve the expired-state semantics, orange visual treatment, close action, and recreate action without overlap. Privacy-page composition, content density, dialog boundary, and layout still differ from the current Figma reference. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -4032,17 +4032,17 @@
       "queryState": "state=privacy-deletion-submitting",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-privacy-deletion-submitting.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-submitting-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-submitting-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-deletion-submitting",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -4059,13 +4059,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-23",
-        "conclusion": "Desktop and mobile captures preserve the 560x250 account-deletion submission card, orange treatment, request identifier, close action, and no-progress-bar state. Page composition and remaining shell/rasterization differences remain; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -4086,17 +4086,17 @@
       "queryState": "state=privacy-deletion-success",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-privacy-deletion-success.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-success-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-success-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-deletion-success",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -4113,13 +4113,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-22",
-        "conclusion": "Desktop and mobile captures preserve the 560x250 desktop card, responsive 358.4x250 mobile card, green success treatment, request identifier, close action, and no-progress-bar state. Page composition and remaining shell/rasterization differences remain; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -4140,17 +4140,17 @@
       "queryState": "state=privacy-deletion-failed",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-privacy-deletion-failed.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-failed-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-failed-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-deletion-failed",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -4167,13 +4167,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-23",
-        "conclusion": "Desktop and mobile captures preserve the 600x280 desktop error card, responsive 358.4x280 mobile card, red error treatment, error code, request identifier, retry action, and no-progress-bar state. Page composition and remaining shell/rasterization differences remain; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -5052,119 +5052,11 @@
       "queryState": "state=basic",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-basic.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-basic",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
-      "geometryCheck": {
-        "status": "PASS",
-        "expectedViewport": "1440x1024",
-        "actualViewport": "1440x1024",
-        "expectedDpr": 1,
-        "actualDpr": 1.25,
-        "viewportPass": true,
-        "dprPass": false,
-        "bodyOverflow": false,
-        "root": {
-          "height": 1024,
-          "width": 1440,
-          "x": 0,
-          "y": 0
-        }
-      },
-      "textCheck": {
-        "status": "PASS",
-        "overflowCount": 0,
-        "overflow": []
-      },
-      "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
-        "reviewer": "Codex",
-        "reviewedAt": "2026-08-30",
-        "conclusion": "The fixture now shows the measured online status label before the new-task action, removes the session search and collapse controls, and keeps the bottom status/profile dock. Full-image differences remain from the workspace shell, avatar, icons, typography rasterization and actual browser DPR; retain DIFF_REVIEW."
-      },
-      "dpr1Capture": {
-        "capturedAt": "2026-09-05",
-        "tool": "Chrome CDP Page.captureScreenshot",
-        "browser": "Chrome/152.0.7977.77",
-        "dpr": 1,
-        "viewport": "1440x1024",
-        "fonts": "loaded",
-        "bodyOverflow": false,
-        "url": "http://127.0.0.1:5174/profile?state=basic&visual-qa=1"
-      }
-    },
-    {
-      "figmaNodeId": "806:1281",
-      "artboardName": "profile-memories",
-      "artboardSize": {
-        "width": 1440,
-        "height": 1024
-      },
-      "frontendRoute": "/profile",
-      "queryState": "state=memories",
-      "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-memories.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-memories-browser-2026-09-05.png",
-      "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-memories",
-      "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
-      "geometryCheck": {
-        "status": "PASS",
-        "expectedViewport": "1440x1024",
-        "actualViewport": "1440x1024",
-        "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
-        "viewportPass": true,
-        "dprPass": true,
-        "bodyOverflow": false,
-        "root": {
-          "height": 1024,
-          "width": 1440,
-          "x": 0,
-          "y": 0
-        }
-      },
-      "textCheck": {
-        "status": "PASS",
-        "overflowCount": 0,
-        "overflow": []
-      },
-      "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
-        "reviewer": "Codex",
-        "reviewedAt": "2026-08-30",
-        "conclusion": "The fixture now uses the measured 96px intro card, 124px regular memory rows, 130px pending row, and 240px guidance panel with the Figma sidebar shell. Full-image differences remain from the workspace shell, avatar, icons, typography rasterization, and browser rendering; retain DIFF_REVIEW."
-      },
-      "dpr1Capture": {
-        "capturedAt": "2026-09-05",
-        "tool": "Chrome CDP Page.captureScreenshot",
-        "browser": "Chrome/152.0.7977.77",
-        "dpr": 1,
-        "viewport": "1440x1024",
-        "fonts": "loaded",
-        "bodyOverflow": false,
-        "url": "http://127.0.0.1:5174/profile?state=memories&visual-qa=1"
-      }
-    },
-    {
-      "figmaNodeId": "806:1445",
-      "artboardName": "profile-security",
-      "artboardSize": {
-        "width": 1440,
-        "height": 1024
-      },
-      "frontendRoute": "/profile",
-      "queryState": "state=security",
-      "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-security.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-browser-2026-09-05.png",
-      "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security",
-      "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -5187,13 +5079,121 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-30",
-        "conclusion": "The Figma fixture now renders only the password and active-session cards. The activity card, SECURE label, device-count label and top accent lines are absent as required by node 806:1445; shell, avatar, icon, typography rasterization and browser rendering differences remain, so retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/profile?state=basic&visual-qa=1"
+      }
+    },
+    {
+      "figmaNodeId": "806:1281",
+      "artboardName": "profile-memories",
+      "artboardSize": {
+        "width": 1440,
+        "height": 1024
+      },
+      "frontendRoute": "/profile",
+      "queryState": "state=memories",
+      "browserViewport": "1440x1024",
+      "figmaPng": "docxs/设计/figma-png/profile-memories.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-memories-browser-2026-09-06.png",
+      "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-memories",
+      "status": "DIFF_REVIEW",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "geometryCheck": {
+        "status": "PASS",
+        "expectedViewport": "1440x1024",
+        "actualViewport": "1440x1024",
+        "expectedDpr": 1,
+        "actualDpr": 1,
+        "viewportPass": true,
+        "dprPass": true,
+        "bodyOverflow": false,
+        "root": {
+          "height": 1024,
+          "width": 1440,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "textCheck": {
+        "status": "PASS",
+        "overflowCount": 0,
+        "overflow": []
+      },
+      "manualReview": {
+        "status": "PENDING",
+        "reviewer": "Codex",
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "dpr": 1,
+        "viewport": "1440x1024",
+        "fonts": "loaded",
+        "bodyOverflow": false,
+        "url": "http://127.0.0.1:5174/profile?state=memories&visual-qa=1"
+      }
+    },
+    {
+      "figmaNodeId": "806:1445",
+      "artboardName": "profile-security",
+      "artboardSize": {
+        "width": 1440,
+        "height": 1024
+      },
+      "frontendRoute": "/profile",
+      "queryState": "state=security",
+      "browserViewport": "1440x1024",
+      "figmaPng": "docxs/设计/figma-png/profile-security.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-browser-2026-09-06.png",
+      "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security",
+      "status": "DIFF_REVIEW",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "geometryCheck": {
+        "status": "PASS",
+        "expectedViewport": "1440x1024",
+        "actualViewport": "1440x1024",
+        "expectedDpr": 1,
+        "actualDpr": 1,
+        "viewportPass": true,
+        "dprPass": true,
+        "bodyOverflow": false,
+        "root": {
+          "height": 1024,
+          "width": 1440,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "textCheck": {
+        "status": "PASS",
+        "overflowCount": 0,
+        "overflow": []
+      },
+      "manualReview": {
+        "status": "PENDING",
+        "reviewer": "Codex",
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+      },
+      "dpr1Capture": {
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -5214,17 +5214,17 @@
       "queryState": "state=privacy",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-privacy.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -5241,13 +5241,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-22",
-        "conclusion": "Current fixture renders export and deletion controls, but automatic full-image comparison still reports visual differences. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -5717,17 +5717,17 @@
       "queryState": "state=memories-empty",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-memories-empty.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-memories-empty-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-memories-empty-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-memories-empty",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -5744,13 +5744,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-18",
-        "conclusion": "Empty-memory semantics exist, but the Figma tab context, card geometry, supporting text, and visual treatment differ. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -5771,17 +5771,17 @@
       "queryState": "state=security-logout-confirm",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-security-logout-confirm.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-logout-confirm-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-logout-confirm-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security-logout-confirm",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -5798,13 +5798,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-18",
-        "conclusion": "Logout confirmation semantics exist, but the dialog copy, geometry, device context, page composition, and visual treatment differ. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -5825,17 +5825,17 @@
       "queryState": "state=privacy-delete-confirm",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/profile-privacy-delete-confirm.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-delete-confirm-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-delete-confirm-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-delete-confirm",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "manualReviewConclusion": "PENDING",
+      "evidenceNote": "Automated diff exists; manual visual review remains open",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -5852,13 +5852,13 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "VISUAL_DIFFERENCES_CONFIRMED",
+        "status": "PENDING",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-18",
-        "conclusion": "Account-deletion confirmation semantics exist, but the confirmation input, dialog copy, geometry, page composition, and visual treatment differ. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,

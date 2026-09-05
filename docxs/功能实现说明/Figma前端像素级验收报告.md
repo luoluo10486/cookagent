@@ -2039,3 +2039,36 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] `npm run qa:figma:validate` 返回 `structuralPass=true`、`strictDprPass=true`、`errors=[]`，但 `mappedPass=0`、`diffReview=105`；结构通过不替代像素级 `PASS`。
 - [x] Knowledge 与 WorkspaceLayout 定向测试共 `19/19` 个用例通过；typecheck、build、lint、format check 和 `git diff --check` 均通过。
 - [ ] 本批次不改变其它画板的历史证据，不代表 105 个画板完成全量人工验收；shadcn 全量页面迁移和 iconfont 实体资源登记继续保持未完成，iconfont 为 `BLOCKED`。
+
+## 26. 2026-09-06 Profile 页面视觉收口与 19 项状态证据
+
+本批次只复核 Profile 页面，Figma 文件保持只读，不执行 105 个画板的全量重新截图和人工验收。主设计节点为 `806:1119`、`806:1281`、`806:1445`、`806:1585`；状态节点为 `792:212`、`794:212`、`794:380`、`794:548`、`794:693`、`794:838`、`794:984`、`794:1127`、`795:212`、`795:356`、`795:499`、`795:642`、`1013:2`、`1013:235`、`1013:465`。
+
+| 画板 | Figma 节点 | 前端入口 | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---:|---:|---:|---:|---:|---|
+| `profile-basic` | `806:1119` | `/profile?state=basic` | `1440×1024 / 1` | `66.0702%` | `5.251134` | `21.538661` | `239` | `DIFF_REVIEW` |
+| `profile-memories` | `806:1281` | `/profile?state=memories` | `1440×1024 / 1` | `38.7855%` | `5.546463` | `24.744490` | `238` | `DIFF_REVIEW` |
+| `profile-security` | `806:1445` | `/profile?state=security` | `1440×1024 / 1` | `22.8652%` | `4.075227` | `20.541921` | `229` | `DIFF_REVIEW` |
+| `profile-privacy` | `806:1585` | `/profile?state=privacy` | `1440×1024 / 1` | `36.1713%` | `4.618948` | `20.425740` | `229` | `DIFF_REVIEW` |
+| `profile-basic-avatar-uploading` | `792:212` | `/profile?state=basic-avatar-uploading` | `1440×1024 / 1` | `48.7142%` | `2.833955` | `16.570734` | `229` | `DIFF_REVIEW` |
+| `profile-basic-avatar-failed` | `794:212` | `/profile?state=basic-avatar-failed` | `1440×1024 / 1` | `48.7807%` | `2.969719` | `17.669842` | `255` | `DIFF_REVIEW` |
+| `profile-basic-unsaved-leave-confirmation` | `794:380` | `/profile?state=basic-unsaved-leave-confirmation` | `1440×1024 / 1` | `78.7775%` | `5.912527` | `19.283831` | `255` | `DIFF_REVIEW` |
+| `profile-security-password-submitting` | `794:548` | `/profile?state=security-password-submitting` | `1440×1024 / 1` | `20.1860%` | `2.709615` | `16.744802` | `235` | `DIFF_REVIEW` |
+| `profile-security-password-success` | `794:693` | `/profile?state=security-password-success` | `1440×1024 / 1` | `19.9485%` | `2.587735` | `16.211693` | `235` | `DIFF_REVIEW` |
+| `profile-security-password-failed` | `794:838` | `/profile?state=security-password-failed` | `1440×1024 / 1` | `20.0730%` | `2.697211` | `16.540252` | `255` | `DIFF_REVIEW` |
+| `profile-privacy-export-queued` | `794:984` | `/profile?state=privacy-export-queued` | `1440×1024 / 1` | `39.3203%` | `3.302138` | `15.236541` | `229` | `DIFF_REVIEW` |
+| `profile-privacy-export-running` | `794:1127` | `/profile?state=privacy-export-running` | `1440×1024 / 1` | `39.3193%` | `3.662119` | `17.114831` | `246` | `DIFF_REVIEW` |
+| `profile-privacy-export-expired` | `795:212` | `/profile?state=privacy-export-expired` | `1440×1024 / 1` | `39.3203%` | `3.368664` | `15.672769` | `246` | `DIFF_REVIEW` |
+| `profile-privacy-deletion-submitting` | `795:356` | `/profile?state=privacy-deletion-submitting` | `1440×1024 / 1` | `78.2281%` | `4.537254` | `17.428085` | `235` | `DIFF_REVIEW` |
+| `profile-privacy-deletion-success` | `795:499` | `/profile?state=privacy-deletion-success` | `1440×1024 / 1` | `39.1189%` | `3.229173` | `15.292409` | `234` | `DIFF_REVIEW` |
+| `profile-privacy-deletion-failed` | `795:642` | `/profile?state=privacy-deletion-failed` | `1440×1024 / 1` | `28.7659%` | `2.606132` | `15.890234` | `255` | `DIFF_REVIEW` |
+| `profile-memories-empty` | `1013:2` | `/profile?state=memories-empty` | `1440×1024 / 1` | `81.8808%` | `4.934674` | `20.223495` | `227` | `DIFF_REVIEW` |
+| `profile-security-logout-confirm` | `1013:235` | `/profile?state=security-logout-confirm` | `1440×1024 / 1` | `50.9917%` | `5.236346` | `21.237609` | `226` | `DIFF_REVIEW` |
+| `profile-privacy-delete-confirm` | `1013:465` | `/profile?state=privacy-delete-confirm` | `1440×1024 / 1` | `55.1684%` | `3.811191` | `19.816504` | `226` | `DIFF_REVIEW` |
+
+- [x] Profile `state=basic` fixture 已按实时 Figma 恢复八字段双列资料表单，主卡高度为 `520px`；Profile 侧栏、顶栏和页面状态均已与本批次截图同步。
+- [x] 19 项浏览器证据均由 Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体 `loaded`、无横向溢出条件下采集；截图、映射、运行时检查和 diff JSON 的日期统一为 `2026-09-06`。
+- [x] `figma-105-mapping.json`、`figma-105-runtime-checks.json` 和 `figma-105-diff-results.json` 已更新；当前聚合为 `total=105`、`automatedDiffInputs=105`、`unmapped=0`、`sizeMismatch=0`。
+- [x] ProfilePage 与 WorkspaceLayout 定向测试为 `2` 个测试文件、`37/37` 个用例通过；`npm run typecheck`、`npm run build`、`npm run lint`、`npm run format:check`、`npm run qa:figma:validate` 和 `git diff --check` 均通过。
+- [ ] 19 项自动 diff 均为非零差异，尚未完成逐项人工视觉复核，全部保持 `DIFF_REVIEW`；本批次不将结构检查、截图存在或代码测试通过替代像素级 `PASS`。
+- [ ] 当前全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`；本批次不重新验收其它 86 个画板，shadcn 全量逐页视觉迁移和 iconfont 实体资源登记仍未完成，iconfont 继续为 `BLOCKED`。

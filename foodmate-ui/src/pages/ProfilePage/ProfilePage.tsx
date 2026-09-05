@@ -900,8 +900,67 @@ function BasicTab({
         <h1>饮食与身体目标</h1>
         <form onSubmit={handleSave}>
           {figmaFixture ? (
-            <div className={cn(styles.goalsGrid, styles.figmaGoalsGrid)}>
-              <Field label="蛋白质目标 (g)">
+            <div className={styles.goalsGrid}>
+              <Field label="展示名称">
+                <Input
+                  value={profileForm.displayName}
+                  onChange={(event) => setField('displayName', event.target.value)}
+                />
+              </Field>
+              <Field label="性别（可选）">
+                <Select
+                  value={profileForm.gender || 'unset'}
+                  onValueChange={(value) => setField('gender', value === 'unset' ? '' : value)}
+                >
+                  <SelectTrigger className={styles.select} aria-label="性别（可选）">
+                    <SelectValue placeholder="未设置" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="unset">未设置</SelectItem>
+                    <SelectItem value="男">男</SelectItem>
+                    <SelectItem value="女">女</SelectItem>
+                  </SelectContent>
+                </Select>
+              </Field>
+              <Field label="身高 (cm)">
+                <Input
+                  inputMode="decimal"
+                  value={profileForm.heightCm}
+                  onChange={(event) => setField('heightCm', event.target.value)}
+                />
+              </Field>
+              <Field label="体重 (kg)">
+                <Input
+                  inputMode="decimal"
+                  value={profileForm.weightKg}
+                  onChange={(event) => setField('weightKg', event.target.value)}
+                />
+              </Field>
+              <Field label="活动水平">
+                <Select value={profileForm.activityLevel} onValueChange={(value) => setField('activityLevel', value)}>
+                  <SelectTrigger className={styles.select} aria-label="活动水平">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {activityOptions.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+              <Field label="饮食目标">
+                <Input value={profileForm.dietGoal} onChange={(event) => setField('dietGoal', event.target.value)} />
+              </Field>
+              <Field label="每日热量目标 (千卡)">
+                <Input
+                  inputMode="numeric"
+                  value={profileForm.calorieTarget}
+                  onChange={(event) => setField('calorieTarget', event.target.value)}
+                />
+              </Field>
+              <Field label="每日蛋白质目标 (g)">
                 <Input
                   inputMode="numeric"
                   value={profileForm.proteinTarget}
@@ -2046,14 +2105,14 @@ export function ProfilePage() {
       profileActiveTab={isFigmaFixture ? activeTab : undefined}
       sidebarAvatarSrc={isFigmaFixture ? FIGMA_PROFILE_AVATARS.sidebar : undefined}
       topAvatarSrc={isFigmaFixture ? FIGMA_PROFILE_AVATARS.topbar : undefined}
-      hideSessionHistory={isFigmaFixture}
+      topbarShowMarkLetter={!isFigmaFixture}
+      showWindowControls={isFigmaFixture}
       sidebarFixture={
         isFigmaFixture
           ? {
+              currentPage: 1,
               sessions: figmaSidebarSessions,
               showTopStatus: true,
-              hideSessionSearch: true,
-              hideCollapseButton: true,
             }
           : undefined
       }
