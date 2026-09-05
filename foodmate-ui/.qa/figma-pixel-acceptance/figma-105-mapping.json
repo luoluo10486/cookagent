@@ -4193,8 +4193,8 @@
       "frontendRoute": "/knowledge",
       "queryState": "state=empty",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/user-knowledge-empty.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-user-knowledge-empty-browser-2026-09-05.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/user-knowledge-empty-795-786-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-user-knowledge-empty-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#user-knowledge-empty",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -4227,7 +4227,7 @@
         "conclusion": "Figma-aligned empty card geometry, badge, and accent are present. The frontend does not render the Figma-only red, yellow, and green window controls; business status dots remain. Broad shell, sidebar, avatar, and typography differences remain in the screenshot diff; retain DIFF_REVIEW."
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -4247,8 +4247,8 @@
       "frontendRoute": "/knowledge",
       "queryState": "state=search-failed",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/user-knowledge-search-failed.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-user-knowledge-search-failed-browser-2026-09-05.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/user-knowledge-search-failed-795-968-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-user-knowledge-search-failed-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#user-knowledge-search-failed",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -4281,7 +4281,7 @@
         "conclusion": "Figma-aligned error card geometry and visual treatment are present. Broad shell, sidebar, avatar, and typography differences remain in the screenshot diff; retain DIFF_REVIEW."
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,
@@ -4301,8 +4301,8 @@
       "frontendRoute": "/knowledge",
       "queryState": "state=source-unavailable",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/user-knowledge-source-unavailable.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-user-knowledge-source-unavailable-browser-2026-09-05.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/user-knowledge-source-unavailable-795-1151-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-user-knowledge-source-unavailable-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#user-knowledge-source-unavailable",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -4335,7 +4335,7 @@
         "conclusion": "Figma-aligned partial-access card geometry and visual treatment are present. Broad shell, sidebar, avatar, and typography differences remain in the screenshot diff; retain DIFF_REVIEW."
       },
       "dpr1Capture": {
-        "capturedAt": "2026-09-05",
+        "capturedAt": "2026-09-06",
         "tool": "Chrome CDP Page.captureScreenshot",
         "browser": "Chrome/152.0.7977.77",
         "dpr": 1,

@@ -10,6 +10,11 @@
   font-family: var(--fm-font);
 }
 
+/* Figma 知识库画板的主内容透明区域按白色画布渲染，仅作用于 fixture。 */
+.figmaFixture {
+  background: var(--fm-surface);
+}
+
 .resultsPanel {
   display: flex;
   min-width: 0;

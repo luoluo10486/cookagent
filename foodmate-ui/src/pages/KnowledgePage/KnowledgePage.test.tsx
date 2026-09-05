@@ -49,9 +49,10 @@ describe('KnowledgePage', () => {
     expect(screen.getByRole('button', { name: 'Anddy' })).toBeInTheDocument();
     expect(screen.getByText('Anddy 的工作区')).toBeInTheDocument();
     expect(container.querySelectorAll('img[src="/assets/figma/knowledge/user-avatar.png"]')).toHaveLength(2);
-    expect(screen.queryByPlaceholderText('搜索会话...')).not.toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: /每周饮食微调/ })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: '下一页' })).not.toBeInTheDocument();
+    expect(screen.getByPlaceholderText('搜索会话...')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /每周饮食微调/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '下一页' })).toBeInTheDocument();
+    expect(container.querySelector('[data-name="window-controls"]')).toBeInTheDocument();
     expect(screen.queryByText('梁同学')).not.toBeInTheDocument();
   });
 
@@ -73,11 +74,11 @@ describe('KnowledgePage', () => {
     const { container } = renderPage('/knowledge?state=empty');
 
     expect(screen.getByText('Anddy')).toBeInTheDocument();
-    expect(screen.queryByText('早餐奶昔配方')).not.toBeInTheDocument();
-    expect(screen.queryByPlaceholderText('搜索会话...')).not.toBeInTheDocument();
+    expect(screen.getByText('早餐奶昔配方')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('搜索会话...')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /每周饮食微调/ })).toBeInTheDocument();
     expect(screen.getByRole('alert')).toHaveTextContent('没有找到相关内容');
-    expect(container.querySelector('[data-name="window-controls"]')).not.toBeInTheDocument();
-    expect(container.innerHTML).not.toMatch(/window-controls|traffic-light|#ff3b30|#ffcc00|#34c759/i);
+    expect(container.querySelector('[data-name="window-controls"]')).toBeInTheDocument();
   });
 
   it('recovers from search and source availability errors', async () => {

@@ -68,6 +68,7 @@ type WorkspaceLayoutProps = {
   profileActiveTab?: 'basic' | 'memories' | 'security' | 'privacy';
   showKnowledgeTopNav?: boolean;
   topbarShowMarkLetter?: boolean;
+  showWindowControls?: boolean;
   designChat?: boolean;
   topbarVariant?: 'planning-list';
   hideSessionHistory?: boolean;
@@ -96,6 +97,7 @@ export function WorkspaceLayout({
   profileActiveTab,
   showKnowledgeTopNav = true,
   topbarShowMarkLetter = true,
+  showWindowControls,
   designChat = false,
   topbarVariant,
   hideSessionHistory = false,
@@ -127,8 +129,10 @@ export function WorkspaceLayout({
   const profileId = profileIdOverride ?? (isAuthenticated ? authUser.id : currentAuth.code);
   const displayedSessions = sidebarFixture?.sessions ?? sessions;
   const displayedSessionQuery = sidebarFixture?.searchValue ?? sessionQuery;
-  // 窗口控制点属于所有 Figma 工作台业务 fixture，不进入普通业务壳层。
-  const showFixtureWindowControls = designChat || Boolean(sidebarFixture && !showKnowledgeTopNav);
+  // 窗口控制点只由 Figma fixture 显式开启，避免装饰元素进入真实业务壳层。
+  const showFixtureWindowControls =
+    showWindowControls ?? (designChat || Boolean(sidebarFixture && !showKnowledgeTopNav));
+  const isFigmaSidebarFixture = Boolean(sidebarFixture && (!showKnowledgeTopNav || showWindowControls));
 
   useEffect(() => {
     if (!realMode) return;
@@ -228,7 +232,7 @@ export function WorkspaceLayout({
   return (
     <TooltipProvider delayDuration={300}>
       <div
-        className={`${styles.shell} ${rightRail ? styles.withRail : ''} ${rightRailWidth === 340 ? styles.withWideRail : ''} ${activeModule === 'knowledge' ? styles.knowledgeLayout : ''} ${designChat ? styles.designChat : ''} ${sidebarFixture && !showKnowledgeTopNav ? styles.figmaFixture : ''}`}
+        className={`${styles.shell} ${rightRail ? styles.withRail : ''} ${rightRailWidth === 340 ? styles.withWideRail : ''} ${activeModule === 'knowledge' ? styles.knowledgeLayout : ''} ${designChat ? styles.designChat : ''} ${isFigmaSidebarFixture ? styles.figmaFixture : ''}`}
       >
         <aside className={`${styles.sidebar} ${sidebarFixture?.showTopStatus ? styles.profileFixture : ''}`}>
           {showFixtureWindowControls ? (

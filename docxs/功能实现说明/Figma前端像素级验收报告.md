@@ -2024,3 +2024,18 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] 三页自动 diff 均已存在且尺寸一致；非零差异继续保留 `DIFF_REVIEW`，不以结构检查或截图存在替代像素级 `PASS`。
 - [ ] 本批次不重新执行 105 个画板的全量人工复核；其它画板的历史状态不因本批次改变。
 - [x] 三页定向测试和必要工程门禁已集中执行：3 个测试文件、27 个用例通过；`npm run typecheck`、`npm run build`、`npm run lint`、`npm run format:check` 和 `git diff --check` 均通过。
+
+## 25. 2026-09-06 Knowledge 页面状态证据收口
+
+本批次只复核 Knowledge 页面，Figma 文件保持只读，不执行 105 个画板的全量重新截图和人工验收。实时设计节点为主节点 `795:838`，状态节点为 `795:786`、`795:968` 和 `795:1151`。
+
+| 画板 | 前端入口 | 视口 / DPR | 差异比例 | 结论 |
+|---|---|---:|---:|---|
+| Knowledge Empty | `/knowledge?state=empty` | `1440×1024 / 1` | `40.8765%` | `DIFF_REVIEW` |
+| Knowledge Search Failed | `/knowledge?state=search-failed` | `1440×1024 / 1` | `39.9119%` | `DIFF_REVIEW` |
+| Knowledge Source Unavailable | `/knowledge?state=source-unavailable` | `1440×1024 / 1` | `39.8908%` | `DIFF_REVIEW` |
+
+- [x] 三项均已登记 Figma PNG、浏览器 PNG 和 diff JSON；浏览器条件为 Chrome `152.0.7977.77`、字体 `loaded`、无横向溢出和 DPR `1`。
+- [x] `npm run qa:figma:validate` 返回 `structuralPass=true`、`strictDprPass=true`、`errors=[]`，但 `mappedPass=0`、`diffReview=105`；结构通过不替代像素级 `PASS`。
+- [x] Knowledge 与 WorkspaceLayout 定向测试共 `19/19` 个用例通过；typecheck、build、lint、format check 和 `git diff --check` 均通过。
+- [ ] 本批次不改变其它画板的历史证据，不代表 105 个画板完成全量人工验收；shadcn 全量页面迁移和 iconfont 实体资源登记继续保持未完成，iconfont 为 `BLOCKED`。

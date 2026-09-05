@@ -238,8 +238,8 @@ export function KnowledgePage() {
       profileIdOverride={isFigmaFixture ? '1234567' : undefined}
       sidebarAvatarSrc={isFigmaFixture ? FIGMA_KNOWLEDGE_AVATARS.sidebar : undefined}
       topAvatarSrc={isFigmaFixture ? FIGMA_KNOWLEDGE_AVATARS.topbar : undefined}
-      hideSessionHistory={isFigmaFixture}
-      sidebarFixture={isFigmaFixture ? { sessions: figmaSidebarSessions } : undefined}
+      showWindowControls={isFigmaFixture}
+      sidebarFixture={isFigmaFixture ? { currentPage: 1, sessions: figmaSidebarSessions } : undefined}
       topbarShowMarkLetter={!isFigmaFixture}
       pageOverlay={
         displayedState !== 'default' ? (
@@ -257,7 +257,7 @@ export function KnowledgePage() {
         ) : null
       }
     >
-      <div className={`${styles.page} fm-enter`}>
+      <div className={`${styles.page} ${isFigmaFixture ? styles.figmaFixture : ''} fm-enter`}>
         <main className={styles.resultsPanel} aria-label="知识库检索结果">
           <header className={styles.pageHeader}>
             <h1>知识库</h1>
