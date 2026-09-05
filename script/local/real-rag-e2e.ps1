@@ -301,7 +301,8 @@ function New-KnowledgeMultipart([object[]]$Documents, [string]$IdempotencyKey) {
         $part.Headers.ContentType = [System.Net.Http.Headers.MediaTypeHeaderValue]::Parse([string]$document.content_type)
         [void]$multipart.Add($part, "files", [string]$document.name)
     }
-    return $multipart
+    # MultipartFormDataContent 可枚举，必须保持为单个 HttpContent 传入上传请求。
+    return ,$multipart
 }
 
 function Get-BatchState([object]$Response) {

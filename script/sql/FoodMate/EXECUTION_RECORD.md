@@ -2105,3 +2105,17 @@
 | 数据与安全边界 | 未修改数据库、未上传资料、未构建向量；未输出或提交任何 API Key、密码、Prompt、完整模型响应或临时测试数据。 |
 | 暂缓范围 | 未执行真实付费业务、性能压测、组件重启、ACK/重复投递故障注入、备份恢复、生产操作或发布回滚。 |
 | 结论 | 真实业务入口已具备可执行且跨 PowerShell 版本的预检条件；本轮仅完成工具修复和无付费配置门禁，不将真实云闭环新增标记为完成。 |
+
+## D134 R1 真实云公共知识库 RAG 闭环（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；Docker `foodmate`、`agent-runtime`、PostgreSQL、Redis、RocketMQ、MinIO 和 Milvus 均恢复为 healthy；管理员凭据仅注入当前 PowerShell 进程，未写入 `.env`、日志或本记录。 |
+| 真实配置与费用门禁 | RAG 使用 `local`、OpenAI-compatible `Qwen/Qwen3-Embedding-0.6B` 和独立 Milvus collection；Chat 使用 `cloud_primary/deepseek-ai/DeepSeek-V4-Flash`；固定单场景、累计上限 `5 CNY`、`no_retry=true`、`require_cloud=true`。 |
+| 批次与索引 | 批次 `354708496958099456` 上传 `3` 个隔离文档，3 个条目均索引成功，批次最终状态为 `completed`；Java Index Outbox -> RocketMQ -> Python 解析/真实 Embedding -> Milvus -> Java 结果回写闭环成功。 |
+| 批次 SSE | 批次 SSE 共 `6` 个事件，包含 `3` 个 indexed 状态事件；使用 `Last-Event-ID` 回放得到 `5` 个后续事件，事件 ID 连续可复核且无重复终态。 |
+| 发布与检索 | 显式发布后公共检索返回 `matched`，引用数量 `2`；下线后检索和恢复接口均返回成功，脚本核对了可见性边界。查询摘要仅记录 SHA-256，不保存原文或完整查询。 |
+| AgentRun 与引用 | Run `354708662054293504` 的 SSE 共 `8` 个事件，唯一终态为 `run.completed`，包含 `2` 条安全引用和 `1` 个真实 Chat 模型事件；回放得到 `7` 个后续事件，未出现重复终态。 |
+| 数据清理 | 脚本默认清理成功：本轮 `3` 个文档软删除、会话软删除，错误数量 `0`；审计、Outbox/Inbox 和 SSE 事实按保留约定保留。 |
+| 安全与暂缓范围 | 未输出或记录 API Key、密码、Prompt、完整回答、对象键、对象地址或完整原文；未执行性能压测、组件重启、ACK 丢失/重复投递故障注入、备份恢复、生产操作或发布回滚。 |
+| 结论 | 真实 SiliconFlow Embedding/Chat -> 公共知识库索引与发布 -> AgentRun 检索 -> `run.completed`/SSE 引用的 R1 业务闭环已取得直接证据；生产质量、容量和完整故障矩阵仍按范围后置。 |
