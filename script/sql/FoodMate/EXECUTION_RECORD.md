@@ -2176,3 +2176,17 @@
 | 数据与费用边界 | 未访问 Java API，未调用 Chat/Embedding，未写入 PostgreSQL、Redis、Milvus 或 RocketMQ，未生成业务测试数据。 |
 | 注释门禁 | 本轮没有修改业务代码；涉及的现有测试注释保持中文，未进行无关的全仓库翻译。 |
 | 结论 | G0 前端业务构建门禁在当前工作区复核通过，可进入 K1/K2 知识索引契约复核；完整 Vitest 套件不作为本轮必要重复测试。 |
+
+## D140 K1/K3 知识索引契约与双模式业务测试复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| Java 业务测试 | `KnowledgeIndexResultMessageProcessorTest`、`KnowledgeOutboxPublisherTest`、`KnowledgeUploadValidationTest`、`KnowledgeServiceImplTest`、`KnowledgeSearchServiceImplTest`、`FlywayV16V17KnowledgeMigrationScriptTest`、`FlywayV28MigrationScriptTest`、`FlywayV29MigrationScriptTest`、`KnowledgeControllerTest`、`KnowledgeSearchControllerTest` 合计 36/36 通过。 |
+| Python 业务测试 | 使用 `agent-runtime\\.venv\\Scripts\\python.exe -B -m pytest -q -p no:cacheprovider tests/test_knowledge_worker.py tests/test_knowledge_rag.py tests/test_runtime_env.py tests/test_docker_compose_contract.py`，79/79 通过，4 个子断言通过；未调用真实云服务。 |
+| 只读数据库校验 | V16、V17、V28、V32、V33 validation 均执行成功；知识状态/重试/重复事实均无非法计数，V33 当前活动目录为 1,000 条食材和 1,518 条换算，非法值为 0。 |
+| 发现的问题 | 首次执行 V29 validation 时，当前本地库尚未应用 V29，旧脚本直接引用不存在的 `provider_trace_id`，导致 SQL 错误；该次失败已保留为本轮修复依据，未修改数据库。 |
+| 修复内容 | V29 validation 和 rollback precheck 先判断列是否存在，再通过 psql `\\gexec` 动态执行对应只读查询；未应用时返回 `provider_trace_migration_status=not_applied`，已应用时继续校验 Trace 长度和记录数。 |
+| 修复验证 | V29 validation 和 rollback precheck 在当前数据库均返回 `not_applied`，不再中止；`FlywayV29MigrationScriptTest` 2/2 通过，`git diff --check` 通过。 |
+| 数据与费用边界 | 未执行迁移、truncate、删除、备份恢复或真实云调用；未写入 PostgreSQL、Redis、Milvus 或 RocketMQ 业务数据。 |
+| 注释门禁 | 新增 SQL 注释使用中文；未翻译与本切片无关的已有注释或用户改动。 |
+| 结论 | K1/K3 的知识索引契约、双模式业务测试和当前数据库只读校验已完成；V29 尚未应用的本地状态被明确区分，不误报为数据损坏。 |
