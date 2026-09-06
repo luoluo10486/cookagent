@@ -165,7 +165,13 @@ export const adminNavItems: Array<{
 
 export function isAdminNavItemActive(path: string, pathname: string, search: string) {
   const target = new URL(path, 'http://foodmate.local');
-  return target.pathname === pathname && target.search === search;
+  const normalizeSearch = (value: string) => {
+    const params = new URLSearchParams(value);
+    // 视觉验收标记只用于截图，不应改变业务导航的当前高亮状态。
+    params.delete('visual-qa');
+    return params.toString();
+  };
+  return target.pathname === pathname && normalizeSearch(target.search) === normalizeSearch(search);
 }
 
 export const sectionMeta: Record<string, { title: string; description: string; tag: string }> = {

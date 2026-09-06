@@ -143,6 +143,17 @@ describe('AdminPage overview', () => {
     expect(screen.getByRole('link', { name: '操作审计' })).toHaveAttribute('aria-current', 'page');
   });
 
+  it('keeps visual QA query parameters out of admin navigation matching', () => {
+    const { unmount } = renderAdmin('/admin/usage?visual-qa=1');
+
+    expect(screen.getByRole('link', { name: '模型用量' })).toHaveAttribute('aria-current', 'page');
+
+    unmount();
+    renderAdmin('/admin?view=audit&visual-qa=1');
+
+    expect(screen.getByRole('link', { name: '操作审计' })).toHaveAttribute('aria-current', 'page');
+  });
+
   it('maps admin visual fixture query states to their real sections', () => {
     let view = renderAdmin('/admin?state=tool-registry');
     expect(screen.getByText('已注册工具')).toBeInTheDocument();

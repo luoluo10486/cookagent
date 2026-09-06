@@ -5756,8 +5756,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-19",
-        "conclusion": "Workspace input states differ visually from the Figma reference. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "模型用量导航高亮已按 Figma 参考图对齐；仍存在头像素材、文字光栅化和局部像素差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -5810,8 +5810,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-09-02",
-        "conclusion": "顶栏生产环境标记、筛选、统计、十列表格、分页和底部分析区已与 Figma 结构对齐；仍存在头像素材、文字光栅化和局部像素差异，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "操作审计导航高亮已按 Figma 参考图对齐；顶栏生产环境标记、筛选、统计、十列表格、分页和底部分析区已与 Figma 结构对齐，仍存在头像素材、文字光栅化和局部像素差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",

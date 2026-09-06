@@ -1052,10 +1052,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 176195,
-      "differentRatio": 0.11948988172743055,
-      "meanAbsoluteError": 2.7897896660698787,
-      "rmse": 16.41319422006209,
+      "differentPixels": 168745,
+      "differentRatio": 0.1144375271267361,
+      "meanAbsoluteError": 2.7497856987847222,
+      "rmse": 16.29372168911096,
       "maxChannelDelta": 238
     },
     "admin-operation-audit": {
@@ -1063,10 +1063,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 132747,
-      "differentRatio": 0.09002482096354167,
-      "meanAbsoluteError": 3.0004152086046005,
-      "rmse": 18.332440566086767,
+      "differentPixels": 125160,
+      "differentRatio": 0.08487955729166667,
+      "meanAbsoluteError": 2.9663375854492187,
+      "rmse": 18.254482834675684,
       "maxChannelDelta": 241
     },
     "admin-knowledge-format-error": {

@@ -2312,3 +2312,19 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 本节只复核四个 Admin 详情画板，不代表 105 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [x] 本批次没有创建虚构 iconfont 字体、glyph 或 Unicode 映射，iconfont 仍为 `BLOCKED`。
 - [x] 本批次集中执行 AdminPage 定向测试 `25/25`；类型、格式、lint、构建、Figma 证据校验和 `git diff --check` 均通过，证据校验为 `structuralPass=true`、`strictDprPass=true`、`errors=[]`。
+
+## 41. 2026-09-06 Admin 模型用量与操作审计增量验收
+
+本节只处理 Admin Model Usage 与 Operation Audit 两个画板的导航高亮和增量证据，不重新采集或人工验收其余画板。Figma 文件保持只读；`visual-qa=1` 仅用于截图，不参与业务导航高亮判断。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Admin Model Usage | `995:1238` | `/admin/usage` | `dpr1-admin-model-usage-browser-2026-09-06.png` | `1440×1024 / 1` | 11.4438% | 2.749786 | 16.293722 | 238 | `DIFF_REVIEW` |
+| Admin Operation Audit | `995:1499` | `/admin?view=audit` | `dpr1-admin-operation-audit-browser-2026-09-06.png` | `1440×1024 / 1` | 8.4880% | 2.966338 | 18.254483 | 241 | `DIFF_REVIEW` |
+
+- [x] 导航高亮比较时忽略仅用于视觉验收的 `visual-qa` 查询参数，模型用量和操作审计均恢复 Figma 的粉色选中背景与图标颜色。
+- [x] 两张浏览器 PNG 均由 Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体 `loaded` 和无横向溢出条件下重新采集。
+- [x] 两项同尺寸 diff 已同步到 `figma-105-diff-results.json`，差异比例较修正前分别下降 `0.5052` 和 `0.5125` 个百分点。
+- [ ] 头像素材、字体光栅化和局部像素差异仍存在，两项继续保持 `DIFF_REVIEW`，不能标记为像素级 `PASS`。
+- [ ] 本节只复核两个 Admin 画板，不代表其余画板重新采集或完成 105 项全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [x] 本批次未创建虚构 iconfont 字体、glyph 或 Unicode 映射；iconfont 资源登记继续保持 `BLOCKED`。
