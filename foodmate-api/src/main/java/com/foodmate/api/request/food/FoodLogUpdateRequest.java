@@ -23,5 +23,6 @@ public record FoodLogUpdateRequest(
     public record Item(
             @NotNull @Size(min = 1, max = 255) String rawName,
             @NotNull @Positive BigDecimal amount,
-            @NotNull @Size(min = 1, max = 32) String unit) {}
+            @NotNull @Size(min = 1, max = 32) String unit,
+            Long nutritionFoodId) {}
 }

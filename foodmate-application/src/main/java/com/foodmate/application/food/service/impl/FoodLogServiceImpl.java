@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodmate.application.common.service.OperationAuditService;
 import com.foodmate.application.food.port.out.FoodLogRepository;
 import com.foodmate.application.food.service.FoodLogService;
+import com.foodmate.application.food.service.NutritionNameNormalizer;
 import com.foodmate.shared.error.BusinessException;
 import com.foodmate.shared.error.ErrorCode;
 import com.foodmate.shared.food.enums.MealType;
@@ -309,7 +310,8 @@ public class FoodLogServiceImpl implements FoodLogService {
                     || item.amount().scale() > 3
                     || item.unit() == null
                     || item.unit().isBlank()
-                    || item.unit().length() > 32) {
+                    || item.unit().length() > 32
+                    || (item.nutritionFoodId() != null && item.nutritionFoodId() <= 0)) {
                 throw new BusinessException(ErrorCode.INVALID_ARGUMENT, "食材明细无效");
             }
         }
@@ -332,7 +334,8 @@ public class FoodLogServiceImpl implements FoodLogService {
                     || item.amount().scale() > 3
                     || item.unit() == null
                     || item.unit().isBlank()
-                    || item.unit().length() > 32) {
+                    || item.unit().length() > 32
+                    || (item.nutritionFoodId() != null && item.nutritionFoodId() <= 0)) {
                 throw new BusinessException(ErrorCode.INVALID_ARGUMENT, "食材明细无效");
             }
         }
@@ -348,10 +351,10 @@ public class FoodLogServiceImpl implements FoodLogService {
             ItemCommand item, long foodLogId, int itemOrder, long userId) {
         String rawName = item.rawName().trim();
         String sourceUnit = normalizeUnit(item.unit());
-        FoodLogRepository.NutritionFoodLookup food =
-                store.findNutritionFood(normalizeName(rawName));
+        NutritionResolution resolution = resolveNutritionFood(item, rawName);
+        FoodLogRepository.NutritionFoodLookup food = resolution.lookup();
         if (food == null) {
-            return pendingItem(item, foodLogId, itemOrder, userId);
+            return pendingItem(item, foodLogId, itemOrder, userId, resolution.status());
         }
 
         BigDecimal normalizedAmount = null;
@@ -366,7 +369,7 @@ public class FoodLogServiceImpl implements FoodLogService {
             FoodLogRepository.UnitConversionLookup conversion =
                     store.findUnitConversion(food.nutritionFoodId(), sourceUnit, food.basisUnit());
             if (conversion == null) {
-                return pendingItem(item, foodLogId, itemOrder, userId);
+                return pendingItem(item, foodLogId, itemOrder, userId, "pending");
             }
             normalizedAmount =
                     item.amount()
@@ -375,8 +378,7 @@ public class FoodLogServiceImpl implements FoodLogService {
             normalizedUnit = conversion.targetUnit();
             conversionId = conversion.conversionId();
             nutritionSource = food.sourceName() + ";" + conversion.sourceName();
-            // The conversion version is more specific and includes the same food FDC ID plus
-            // the reviewed portion sequence; keep it as the bounded 64-char snapshot version.
+            // 换算版本包含同一食材的 FDC 标识和复核份量序号，保留为受限长度快照版本。
             nutritionVersion = conversion.sourceVersion();
         }
         BigDecimal factor = normalizedAmount.divide(new BigDecimal("100"), 8, RoundingMode.HALF_UP);
@@ -401,8 +403,39 @@ public class FoodLogServiceImpl implements FoodLogService {
                 nutritionVersion);
     }
 
+    private NutritionResolution resolveNutritionFood(ItemCommand item, String rawName) {
+        if (item.nutritionFoodId() != null) {
+            if (item.nutritionFoodId() <= 0) return new NutritionResolution(null, "pending_confirmation");
+            FoodLogRepository.NutritionFoodLookup selected =
+                    store.findNutritionFoodById(item.nutritionFoodId());
+            return selected == null
+                    ? new NutritionResolution(null, "pending_confirmation")
+                    : new NutritionResolution(selected, "matched");
+        }
+
+        String normalizedName = NutritionNameNormalizer.normalize(rawName);
+        List<FoodLogRepository.NutritionFoodCandidate> candidates =
+                store.findNutritionFoodCandidates(normalizedName, 12);
+        if (!candidates.isEmpty()) {
+            FoodLogRepository.NutritionFoodCandidate first = candidates.get(0);
+            boolean uniqueBest =
+                    candidates.size() == 1 || first.matchRank() < candidates.get(1).matchRank();
+            return uniqueBest
+                    ? new NutritionResolution(first.toLookup(), "matched")
+                    : new NutritionResolution(null, "pending_confirmation");
+        }
+        // 保留旧适配器和历史测试的兼容入口；当前 PostgreSQL 适配器始终优先返回候选结果。
+        FoodLogRepository.NutritionFoodLookup fallback = store.findNutritionFood(normalizedName);
+        return fallback == null
+                ? new NutritionResolution(null, "pending")
+                : new NutritionResolution(fallback, "matched");
+    }
+
+    private record NutritionResolution(
+            FoodLogRepository.NutritionFoodLookup lookup, String status) {}
+
     private FoodLogRepository.FoodLogItemWrite pendingItem(
-            ItemCommand item, long foodLogId, int itemOrder, long userId) {
+            ItemCommand item, long foodLogId, int itemOrder, long userId, String status) {
         return new FoodLogRepository.FoodLogItemWrite(
                 0L,
                 foodLogId,
@@ -410,15 +443,22 @@ public class FoodLogServiceImpl implements FoodLogService {
                 item.rawName().trim(),
                 item.amount(),
                 item.unit().trim(),
-                userId);
+                userId,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                status,
+                null,
+                null);
     }
 
     private static BigDecimal nutrient(BigDecimal factor, BigDecimal per100) {
         return factor.multiply(per100).setScale(4, RoundingMode.HALF_UP);
-    }
-
-    private static String normalizeName(String value) {
-        return value.trim().replaceAll("\\s+", " ").toLowerCase(Locale.ROOT);
     }
 
     private static String normalizeUnit(String value) {

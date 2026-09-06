@@ -3,6 +3,7 @@ package com.foodmate.infrastructure.persistence.food;
 import com.foodmate.application.food.port.out.FoodLogRepository.FoodLogItemSnapshot;
 import com.foodmate.application.food.port.out.FoodLogRepository.FoodLogItemWrite;
 import com.foodmate.application.food.port.out.FoodLogRepository.FoodLogWrite;
+import com.foodmate.application.food.port.out.FoodLogRepository.NutritionFoodCandidate;
 import com.foodmate.application.food.port.out.FoodLogRepository.NutritionFoodLookup;
 import com.foodmate.application.food.port.out.FoodLogRepository.UnitConversionLookup;
 import com.foodmate.application.food.port.out.FoodLogRepository.UpdateFoodLogWrite;
@@ -42,6 +43,67 @@ public interface FoodLogMapper {
     @Select(
             "SELECT nutrition_food_id AS nutritionFoodId,standard_name AS standardName,basis_unit AS basisUnit,calories_kcal_per_100 AS caloriesKcalPer100,protein_g_per_100 AS proteinGPer100,fat_g_per_100 AS fatGPer100,carbs_g_per_100 AS carbsGPer100,source_name AS sourceName,source_version AS sourceVersion FROM nutrition_foods WHERE is_deleted=FALSE AND review_status='approved' AND (lower(trim(standard_name))=#{normalizedName} OR lower(trim(chinese_name))=#{normalizedName} OR EXISTS (SELECT 1 FROM jsonb_array_elements_text(aliases_json) alias_value WHERE lower(trim(alias_value))=#{normalizedName})) ORDER BY CASE WHEN lower(trim(standard_name))=#{normalizedName} THEN 0 WHEN lower(trim(chinese_name))=#{normalizedName} THEN 1 ELSE 2 END,nutrition_food_id LIMIT 1")
     NutritionFoodLookup findNutritionFood(@Param("normalizedName") String normalizedName);
+
+    @Select(
+            "SELECT nutrition_food_id AS nutritionFoodId,standard_name AS standardName,basis_unit AS basisUnit,calories_kcal_per_100 AS caloriesKcalPer100,protein_g_per_100 AS proteinGPer100,fat_g_per_100 AS fatGPer100,carbs_g_per_100 AS carbsGPer100,source_name AS sourceName,source_version AS sourceVersion FROM nutrition_foods WHERE nutrition_food_id=#{nutritionFoodId} AND is_deleted=FALSE AND review_status='approved'")
+    NutritionFoodLookup findNutritionFoodById(@Param("nutritionFoodId") long nutritionFoodId);
+
+    @Select(
+            """
+            <script>
+            WITH query AS (SELECT #{normalizedName}::text AS value)
+            SELECT food.nutrition_food_id AS nutritionFoodId,
+                   food.standard_name AS standardName,
+                   food.chinese_name AS chineseName,
+                   food.category,
+                   food.food_form AS foodForm,
+                   food.basis_unit AS basisUnit,
+                   food.calories_kcal_per_100 AS caloriesKcalPer100,
+                   food.protein_g_per_100 AS proteinGPer100,
+                   food.fat_g_per_100 AS fatGPer100,
+                   food.carbs_g_per_100 AS carbsGPer100,
+                   food.source_name AS sourceName,
+                   food.source_version AS sourceVersion,
+                   CASE
+                       WHEN lower(trim(food.standard_name)) = query.value
+                            OR lower(trim(food.chinese_name)) = query.value THEN 0
+                       WHEN EXISTS (
+                           SELECT 1
+                           FROM jsonb_array_elements_text(COALESCE(food.aliases_json, '[]'::jsonb)) AS alias_value
+                           WHERE lower(trim(alias_value)) = query.value
+                       ) THEN 1
+                       WHEN lower(trim(food.standard_name)) LIKE query.value || '%'
+                            OR lower(trim(food.chinese_name)) LIKE query.value || '%' THEN 2
+                       ELSE 3
+                   END AS matchRank
+            FROM nutrition_foods food
+            CROSS JOIN query
+            WHERE food.is_deleted = FALSE
+              AND food.review_status = 'approved'
+              AND (
+                  lower(trim(food.standard_name)) = query.value
+                  OR lower(trim(food.chinese_name)) = query.value
+                  OR EXISTS (
+                      SELECT 1
+                      FROM jsonb_array_elements_text(COALESCE(food.aliases_json, '[]'::jsonb)) AS alias_value
+                      WHERE lower(trim(alias_value)) = query.value
+                  )
+                  OR lower(trim(food.standard_name)) LIKE '%' || query.value || '%'
+                  OR lower(trim(food.chinese_name)) LIKE '%' || query.value || '%'
+                  OR EXISTS (
+                      SELECT 1
+                      FROM jsonb_array_elements_text(COALESCE(food.aliases_json, '[]'::jsonb)) AS alias_value
+                      WHERE lower(trim(alias_value)) LIKE '%' || query.value || '%'
+                  )
+              )
+            ORDER BY matchRank,
+                     CASE food.food_form WHEN 'cooked' THEN 0 WHEN 'raw' THEN 1 ELSE 2 END,
+                     food.nutrition_food_id
+            LIMIT #{limit}
+            </script>
+            """)
+    List<NutritionFoodCandidate> findNutritionFoodCandidates(
+            @Param("normalizedName") String normalizedName, @Param("limit") int limit);
 
     @Select(
             "SELECT conversion_id AS conversionId,multiplier,target_unit AS targetUnit,source_name AS sourceName,source_version AS sourceVersion FROM nutrition_unit_conversions WHERE nutrition_food_id=#{nutritionFoodId} AND lower(trim(source_unit))=#{sourceUnit} AND target_unit=#{targetUnit} AND is_deleted=FALSE AND review_status='approved' LIMIT 1")

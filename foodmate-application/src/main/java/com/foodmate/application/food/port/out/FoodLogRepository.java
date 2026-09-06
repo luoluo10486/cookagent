@@ -12,6 +12,10 @@ public interface FoodLogRepository {
 
     NutritionFoodLookup findNutritionFood(String normalizedName);
 
+    NutritionFoodLookup findNutritionFoodById(long nutritionFoodId);
+
+    List<NutritionFoodCandidate> findNutritionFoodCandidates(String normalizedName, int limit);
+
     UnitConversionLookup findUnitConversion(
             long nutritionFoodId, String sourceUnit, String targetUnit);
 
@@ -114,6 +118,35 @@ public interface FoodLogRepository {
             BigDecimal carbsGPer100,
             String sourceName,
             String sourceVersion) {}
+
+    /** 面向用户展示的营养目录候选；营养数值仍由 Java 回源后计算。 */
+    record NutritionFoodCandidate(
+            long nutritionFoodId,
+            String standardName,
+            String chineseName,
+            String category,
+            String foodForm,
+            String basisUnit,
+            BigDecimal caloriesKcalPer100,
+            BigDecimal proteinGPer100,
+            BigDecimal fatGPer100,
+            BigDecimal carbsGPer100,
+            String sourceName,
+            String sourceVersion,
+            int matchRank) {
+        public NutritionFoodLookup toLookup() {
+            return new NutritionFoodLookup(
+                    nutritionFoodId,
+                    standardName,
+                    basisUnit,
+                    caloriesKcalPer100,
+                    proteinGPer100,
+                    fatGPer100,
+                    carbsGPer100,
+                    sourceName,
+                    sourceVersion);
+        }
+    }
 
     record UnitConversionLookup(
             long conversionId,

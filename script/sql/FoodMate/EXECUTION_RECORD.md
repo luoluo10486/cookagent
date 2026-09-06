@@ -2271,3 +2271,17 @@
 | PostgreSQL 只读检查 | 在运行中的 `foodmate-postgres` / `FoodMate` 执行 `findActiveByKey` 对应 SQL（advisory lock、删除/拒绝/过期过滤、`FOR UPDATE`）成功，返回 `0 rows`；未修改业务数据。 |
 | 数据边界 | 未执行迁移、truncate、删除、备份恢复、Docker 重启或故障注入；未修改现有数据库、Redis、Milvus、RocketMQ 数据。 |
 | 结论 | K3 结构化候选、同 key 幂等/冲突、用户修改删除后的失效边界、摘要与上下文白名单已完成业务门禁；性能、可靠性矩阵和生产治理继续后置。 |
+
+## D147 K4 营养候选确认与权威匹配收尾（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；Java 21；本地 Docker PostgreSQL `foodmate-postgres` / 数据库 `FoodMate`；未调用真实 Chat/Embedding。 |
+| 实现范围 | 新增 `GET /api/nutrition-foods/search` 候选查询；中文烹饪前缀归一化；饮食记录 create/update 支持显式 `nutrition_food_id`；多候选不自动猜测并保存为 `pending_confirmation`；V34 迁移、validation 和 rollback precheck 完成。 |
+| Java 业务测试 | `mvnw.cmd -pl foodmate-application,foodmate-infra,foodmate-api -am test -Dtest=FoodLogServiceImplTest,NutritionFoodServiceImplTest,FlywayV34MigrationScriptTest,NutritionFoodControllerTest -Dsurefire.failIfNoSpecifiedTests=false`：Application `19/19`、Infrastructure `2/2`、API `1/1`，无失败。 |
+| Java 格式检查 | 对本轮涉及的 17 个 Java 源码/测试文件执行 `spotless:check -DspotlessFiles=...`：通过。全模块 Spotless 复核仍被既有 12 个未涉及文件的格式问题阻断，首个报告为 `UserAccountServiceImpl.java`；未运行 `spotless:apply`，未改动这些文件。 |
+| PostgreSQL validation | 使用 `docker exec foodmate-postgres psql` 执行 V34 validation：状态约束包含 `pending_confirmation`；`pending_confirmation_rows=0`；`invalid_catalog_candidate_rows=0`；`missing_candidate_lookup_index=0`。修正 validation 的索引计数语义后重新执行通过。 |
+| 回滚前置检查 | 执行 R34 只读检查：`pending_confirmation_rows=0`，返回 `ready_for_manual_review: no pending_confirmation rows remain`；未执行回滚。 |
+| 业务行为证据 | 实际查询“鸡胸肉”返回多个 USDA 生熟/部位候选；显式目录 ID 才会计算营养快照，歧义和无安全换算路径不写入推断营养值。 |
+| 数据边界 | V34 已在本地库执行；本轮未清理、truncate、备份恢复或修改既有饮食数据，未启动付费服务、未执行性能压测、组件重启或故障注入。 |
+| 结论 | K4 营养候选确认业务切片完成并具备 Java/API/数据库校验证据；复合菜关系、人工营养学复核、性能、可靠性和生产治理继续按计划后置。 |

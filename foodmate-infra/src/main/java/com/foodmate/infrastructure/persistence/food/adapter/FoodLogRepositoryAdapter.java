@@ -2,6 +2,8 @@ package com.foodmate.infrastructure.persistence.food.adapter;
 
 import com.foodmate.application.common.port.out.OperationAuditPort;
 import com.foodmate.application.food.port.out.FoodLogRepository;
+import com.foodmate.application.food.port.out.FoodLogRepository.NutritionFoodCandidate;
+import com.foodmate.application.food.service.NutritionNameNormalizer;
 import com.foodmate.infrastructure.persistence.food.FoodLogMapper;
 import java.util.List;
 import org.springframework.context.annotation.Profile;
@@ -32,6 +34,18 @@ public class FoodLogRepositoryAdapter implements FoodLogRepository {
     @Override
     public NutritionFoodLookup findNutritionFood(String normalizedName) {
         return mapper.findNutritionFood(normalizedName);
+    }
+
+    @Override
+    public NutritionFoodLookup findNutritionFoodById(long nutritionFoodId) {
+        return mapper.findNutritionFoodById(nutritionFoodId);
+    }
+
+    @Override
+    public List<NutritionFoodCandidate> findNutritionFoodCandidates(
+            String normalizedName, int limit) {
+        return mapper.findNutritionFoodCandidates(
+                NutritionNameNormalizer.escapeLike(normalizedName), limit);
     }
 
     @Override

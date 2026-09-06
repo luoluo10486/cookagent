@@ -41,6 +41,7 @@ FoodMate 是面向饮食记录、营养分析与备餐规划的任务型 Agent �
 | 异步传输 | Java PostgreSQL Outbox -> RocketMQ -> Consumer 的真实 E2E 已验证 envelope、`request_hash`、`dispatch_id` 与 `run_id`。 |
 | Tool/SQL 闭环 | Proposal -> Java Tool Gateway -> 只读 SQL / 审计 -> Result 的真实 E2E 已验证；SQL 失败会记录 `SQL_EXECUTION_FAILED`，重复 Proposal 不重复执行。 |
 | M1-5 饮食业务 | 饮食记录创建、查询、编辑、删除、恢复，today/7d/30d 分析，餐食计划生命周期和购物清单已接入 Java/SQL/API；本地 PostgreSQL 当前有 1,000 条 approved/official USDA 食材和 1,518 条 approved USDA foodPortion 换算，规范键、来源 ID 和换算规则均通过校验，matched/pending 分支保持可用。 |
+| K4 营养候选确认 | 已完成业务切片 | `GET /api/nutrition-foods/search` 返回受限候选；中文烹饪前缀会归一化，多个生熟/部位候选不会自动猜测，饮食写入支持显式 `nutrition_food_id` 或 `pending_confirmation`；V34 已在本地 PostgreSQL 执行并通过校验。 |
 | 营养语义索引 | 1,000 条 approved/official 目录已通过真实 Qwen Embedding 建立独立 Milvus 集合 `foodmate_nutrition_foods`；Runtime 营养检索只返回候选 ID，饮食写入和营养数值仍回源 PostgreSQL 精确匹配。 |
 | M1-5 写确认 | `meal_plan.save_plan` 和 `food_log_writer` 的 create/update/delete/restore 已完成 Proposal -> Confirm -> Execute；reject、failed、superseded、revision 冲突、失败回滚/审计和幂等重放已通过真实 PostgreSQL HTTP/RocketMQ 回归。 |
 | Agent、Eval 与 RAG | `run.eval_decided`、预算、checkpoint、continuation、追问和安全降级已进入运行路径；公共知识库已完成批量上传、异步索引、发布可见性和 `public_published` 安全引用。默认仍是 `deterministic:local`；2026-09-06 的 D134 已用当前配置完成一次 Docker 真实 Embedding + Milvus + Chat AgentRun 引用闭环。D114 的 HTTP 401 是历史凭据边界，不再代表当前凭据；两个 profile 仍使用独立 Milvus collection，长稳、正式价格审计和生产 RAG 治理仍未完成。 |
