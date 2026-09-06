@@ -64,8 +64,8 @@
       "pixelCount": 1296000,
       "differentPixels": 49181,
       "differentRatio": 0.0379483024691358,
-      "meanAbsoluteError": 0.5646219135802469,
-      "rmse": 7.545320579956891,
+      "meanAbsoluteError": 0.5646253858024691,
+      "rmse": 7.545920250230551,
       "maxChannelDelta": 213
     },
     "register-page": {
@@ -75,8 +75,8 @@
       "pixelCount": 1296000,
       "differentPixels": 55443,
       "differentRatio": 0.04278009259259259,
-      "meanAbsoluteError": 0.5676884645061728,
-      "rmse": 6.677208144381532,
+      "meanAbsoluteError": 0.5676984953703703,
+      "rmse": 6.6772671364890765,
       "maxChannelDelta": 198
     },
     "forgot-password-page": {
@@ -141,8 +141,8 @@
       "pixelCount": 1296000,
       "differentPixels": 83365,
       "differentRatio": 0.06432484567901235,
-      "meanAbsoluteError": 1.1684502314814815,
-      "rmse": 10.882797527364227,
+      "meanAbsoluteError": 1.1684496527777777,
+      "rmse": 10.882794806524927,
       "maxChannelDelta": 213
     },
     "login-account-disabled": {

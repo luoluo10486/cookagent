@@ -2328,3 +2328,30 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 头像素材、字体光栅化和局部像素差异仍存在，两项继续保持 `DIFF_REVIEW`，不能标记为像素级 `PASS`。
 - [ ] 本节只复核两个 Admin 画板，不代表其余画板重新采集或完成 105 项全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [x] 本批次未创建虚构 iconfont 字体、glyph 或 Unicode 映射；iconfont 资源登记继续保持 `BLOCKED`。
+
+## 42. 2026-09-06 Auth 认证页面 DPR1 增量验收
+
+本节只重新采集 Auth 主页面、登录状态和 Token 状态共 13 个画板，不重新采集或人工验收其余画板。Figma 文件保持只读；本批次未基于不确定的像素差异猜测性修改认证页面 CSS。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---:|---:|---:|---:|---|
+| Login | `647:214` | `/login?state=v2` | `dpr1-login-v2-browser-2026-09-06.png` | 3.7948% | 0.564625 | 7.545920 | 213 | `DIFF_REVIEW` |
+| Register | `680:216` | `/register` | `dpr1-register-page-browser-2026-09-06.png` | 4.2780% | 0.567698 | 6.677267 | 198 | `DIFF_REVIEW` |
+| Forgot Password | `680:275` | `/forgot-password` | `dpr1-forgot-password-page-browser-2026-09-06.png` | 3.0128% | 0.648710 | 7.311507 | 188 | `DIFF_REVIEW` |
+| Reset Password | `680:307` | `/reset-password` | `dpr1-reset-password-page-browser-2026-09-06.png` | 3.3946% | 0.583890 | 6.760528 | 213 | `DIFF_REVIEW` |
+| Login Submitting | `680:408` | `/login?state=submitting` | `dpr1-login-submitting-browser-2026-09-06.png` | 6.5194% | 0.799224 | 7.580698 | 207 | `DIFF_REVIEW` |
+| Login Field Error | `680:445` | `/login?state=field-error` | `dpr1-login-field-error-browser-2026-09-06.png` | 6.0791% | 2.224975 | 15.282295 | 209 | `DIFF_REVIEW` |
+| Login Credential Error | `680:483` | `/login?state=credential-error` | `dpr1-login-credential-error-browser-2026-09-06.png` | 7.5809% | 2.493721 | 15.558759 | 213 | `DIFF_REVIEW` |
+| Login Account Locked | `680:524` | `/login?state=account-locked` | `dpr1-login-account-locked-browser-2026-09-06.png` | 6.4325% | 1.168450 | 10.882795 | 213 | `DIFF_REVIEW` |
+| Login Account Disabled | `680:564` | `/login?state=account-disabled` | `dpr1-login-account-disabled-browser-2026-09-06.png` | 8.4825% | 1.518840 | 11.574948 | 213 | `DIFF_REVIEW` |
+| Login Service Unavailable | `680:606` | `/login?state=service-unavailable` | `dpr1-login-service-unavailable-browser-2026-09-06.png` | 6.2605% | 1.147925 | 10.848658 | 213 | `DIFF_REVIEW` |
+| Token Invalid | `680:738` | `/token-status?state=invalid` | `dpr1-token-invalid-browser-2026-09-06.png` | 1.8195% | 0.101208 | 2.509056 | 204 | `DIFF_REVIEW` |
+| Token Expired | `680:757` | `/token-status?state=expired` | `dpr1-token-expired-browser-2026-09-06.png` | 1.8706% | 0.115650 | 2.707871 | 204 | `DIFF_REVIEW` |
+| Token Used | `680:776` | `/token-status?state=used` | `dpr1-token-used-browser-2026-09-06.png` | 1.9593% | 0.147349 | 3.025545 | 187 | `DIFF_REVIEW` |
+
+- [x] 13 张浏览器 PNG 均由 Chrome `152.0.7977.77` 在 `1440×900`、DPR `1`、字体 `loaded` 和无横向溢出条件下重新采集。
+- [x] `figma-105-mapping.json` 已将 13 项浏览器证据和运行时采集日期同步到 `2026-09-06`；`figma-105-diff-results.json` 已同步本批次可复现数值。
+- [x] 登录默认态、注册、找回密码和重置密码的主布局与 Figma 参考图保持一致；登录错误态和 Token 状态继续沿用既有真实认证服务边界。
+- [ ] 13 项均存在非零差异，仍需处理字体/图标光栅化和局部内容差异，全部保持 `DIFF_REVIEW`，不能标记为像素级 `PASS`。
+- [ ] 本节只复核 13 个 Auth 画板，不代表其余 92 个画板重新采集或完成 105 项全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [x] 本批次未创建虚构 iconfont 字体、glyph 或 Unicode 映射；iconfont 资源登记继续保持 `BLOCKED`。
