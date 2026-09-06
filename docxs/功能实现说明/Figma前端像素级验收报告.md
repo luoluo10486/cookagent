@@ -13,6 +13,22 @@
 - [x] 构建后的 JavaScript bundle 未包含旧 Figma 人物头像路径；历史 PNG 仍保留在 `public/assets/figma/**` 作为设计/验收证据，不代表运行时引用。
 - [ ] 本批次没有重采集全部 105 个画板；受影响画板的旧视觉 diff 仍不能作为头像策略变更后的最新像素证据。
 
+## 1.0.2 2026-09-06 共享壳层头像入口与 Figma Token 收口
+
+- [x] `WorkspaceLayout` 的三类头像入口均经过 `resolveAvatarUrl`；Admin 侧栏和 Chat 消息的显式头像参数也不能绕过历史 Figma 人物素材拦截。
+- [x] 共享壳层仍以 Figma `640:256`、`640:428` 的 `260px` 侧栏、`68px` 顶栏和既有语义颜色为基准，仅将残余共享色值映射到 FoodMate Token。
+- [x] 受影响回归为 4 个测试文件、`76/76` 个用例；lint、format、typecheck、生产构建、Figma 证据结构校验和 `git diff --check` 均通过。
+- [x] Chrome 实际检查 Workspace Home、Agent Chat 和 Admin Overview；运行时头像只有 `/assets/avatars/default-male.svg` 与 `/assets/avatars/default-female.svg`。男性 SHA-256 为 `EE00AF66515C1807ED24738774776C9EBCAAECCBD28F15B1B43B6DBBF67D0D`，女性 SHA-256 为 `6F12B013242789D28BA4D8949F7345986956D474F07442C3DC9B23FE634ACF34`。
+- [ ] 本批次未重新采集全部 105 个画板；全量汇总继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`，旧 Figma PNG 继续仅作为历史证据保留。
+
+## 1.0.2 2026-09-06 共享壳层头像入口与 Figma Token 收口
+
+- [x] `WorkspaceLayout` 的三类头像入口均经过 `resolveAvatarUrl`；Admin 侧栏和 Chat 消息的显式头像参数也不能绕过历史 Figma 人物素材拦截。
+- [x] 共享壳层仍以 Figma `640:256`、`640:428` 的 `260px` 侧栏、`68px` 顶栏和既有语义颜色为基准，仅将残余共享色值映射到 FoodMate Token。
+- [x] 受影响回归为 4 个测试文件、`76/76` 个用例；lint、format、typecheck、生产构建、Figma 证据结构校验和 `git diff --check` 均通过。
+- [x] Chrome 实际检查 Workspace Home、Agent Chat 和 Admin Overview；运行时头像只有 `/assets/avatars/default-male.svg` 与 `/assets/avatars/default-female.svg`。男性 SHA-256 为 `EE00AF66515C1807ED24738774776C9EBCAAECCBD28F15B1B43B6DBBF67D0D`，女性 SHA-256 为 `6F12B013242789D28BA4D8949F7345986956D474F07442C3DC9B23FE634ACF34`。
+- [ ] 本批次未重新采集全部 105 个画板；全量汇总继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`，旧 Figma PNG 继续仅作为历史证据保留。
+
 ## 1. 结论
 
 本报告记录两类不同验收结果：

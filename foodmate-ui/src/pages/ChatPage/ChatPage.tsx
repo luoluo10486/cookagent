@@ -95,8 +95,12 @@ function MessageBubble({
   userAvatarSrc?: string;
 }) {
   const isUser = message.role === 'user';
+  const authUser = getAuthUser();
+  // 消息头像也走统一解析，避免历史 Fixture 路径通过组件参数直接渲染。
   const userAvatar =
-    userAvatarSrc ?? resolveAvatarUrl(getAuthUser().avatarUrl, getAuthUser().gender) ?? DEFAULT_AVATARS.male;
+    resolveAvatarUrl(userAvatarSrc, authUser.gender) ??
+    resolveAvatarUrl(authUser.avatarUrl, authUser.gender) ??
+    DEFAULT_AVATARS.male;
   return (
     <article className={`${styles.message} ${isUser ? styles.user : styles.assistant}`}>
       {isUser ? (

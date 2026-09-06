@@ -133,8 +133,9 @@ export function WorkspaceLayout({
   const isAuthenticated = authStatus === 'authenticated';
   const canAccessAdmin = isAuthenticated && ['admin', 'operator', 'superadmin'].includes(authUser.role);
   const defaultAvatar = resolveAvatarUrl(avatarSrc ?? authUser.avatarUrl, authUser.gender) ?? DEFAULT_AVATARS.male;
-  const sidebarAvatar = sidebarAvatarSrc ?? defaultAvatar;
-  const topAvatar = topAvatarSrc ?? defaultAvatar;
+  // 所有布局覆盖头像都必须经过统一解析，阻断历史 Figma 人物素材绕过默认资源策略。
+  const sidebarAvatar = resolveAvatarUrl(sidebarAvatarSrc, authUser.gender) ?? defaultAvatar;
+  const topAvatar = resolveAvatarUrl(topAvatarSrc, authUser.gender) ?? defaultAvatar;
   const displayName = displayNameOverride ?? (isAuthenticated ? authUser.displayName : '登录');
   const profileId = profileIdOverride ?? (isAuthenticated ? authUser.id : currentAuth.code);
   const displayedSessions = sidebarFixture?.sessions ?? sessions;

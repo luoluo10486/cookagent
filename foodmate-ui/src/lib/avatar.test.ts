@@ -23,9 +23,18 @@ describe('avatar defaults', () => {
   });
 
   it('replaces legacy Figma person assets with the registered gender defaults', () => {
-    expect(resolveAvatarUrl('/assets/figma/profile/main-avatar.png', '女')).toBe(DEFAULT_AVATARS.female);
-    expect(resolveAvatarUrl('/assets/figma/agent-chat/user-avatar.png', '男')).toBe(DEFAULT_AVATARS.male);
-    expect(resolveAvatarUrl('/assets/figma/admin/user-detail-avatar.png', '-')).toBe(DEFAULT_AVATARS.male);
+    const legacySources = [
+      '/assets/figma/profile/main-avatar.png',
+      '/assets/figma/agent-chat/user-avatar.png',
+      '/assets/figma/admin/user-detail-avatar.png',
+      '/assets/figma/workspace/home-sidebar-avatar.png',
+      '/assets/figma/workspace/home-topbar-avatar.png',
+    ];
+
+    expect(resolveAvatarUrl(legacySources[0], '女')).toBe(DEFAULT_AVATARS.female);
+    expect(resolveAvatarUrl(legacySources[1], '男')).toBe(DEFAULT_AVATARS.male);
+    expect(resolveAvatarUrl(legacySources[2], '-')).toBe(DEFAULT_AVATARS.male);
+    expect(legacySources.every((source) => resolveAvatarUrl(source) === DEFAULT_AVATARS.male)).toBe(true);
   });
 
   it('uses the supplied SVG assets for all Figma fixture avatars', () => {

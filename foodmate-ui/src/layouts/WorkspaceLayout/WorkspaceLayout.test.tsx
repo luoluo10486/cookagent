@@ -152,6 +152,25 @@ describe('WorkspaceLayout shell controls', () => {
     );
   });
 
+  it('normalizes legacy avatar overrides before they reach the shared shell', () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={['/']}>
+        <WorkspaceLayout
+          sidebarAvatarSrc="/assets/figma/workspace/home-sidebar-avatar.png"
+          topAvatarSrc="/assets/figma/workspace/home-topbar-avatar.png"
+        >
+          <div>页面内容</div>
+        </WorkspaceLayout>
+      </MemoryRouter>,
+    );
+
+    expect(container.querySelector('aside .avatar img')).toHaveAttribute('src', '/assets/avatars/default-male.svg');
+    expect(container.querySelector('main header .topAvatar img')).toHaveAttribute(
+      'src',
+      '/assets/avatars/default-male.svg',
+    );
+  });
+
   it.each([
     ['records', '/analysis?view=records&state=v2'],
     ['analysis', '/analysis?state=v2'],
