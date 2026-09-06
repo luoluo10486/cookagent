@@ -28,9 +28,13 @@
   width: auto;
 }
 
-.stateFilterRow .filters,
-.stateFilterRow .exportButton {
+.stateFilterRow .filters {
   opacity: 0.6;
+}
+
+/* Figma 状态画板将导出操作进一步降到 50% 不透明度，与筛选组保持独立层级。 */
+.stateFilterRow .exportButton {
+  opacity: 0.5;
 }
 
 .filters {

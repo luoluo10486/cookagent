@@ -2456,18 +2456,18 @@
       "frontendRoute": "/analysis",
       "queryState": "state=loading",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/intake-analysis-loading.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-intake-analysis-loading-browser-2026-09-05.png",
+      "figmaPng": ".qa/figma-pixel-acceptance/recaptured-figma/intake-analysis-loading-live-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-intake-analysis-loading-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#intake-analysis-loading",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "evidenceNote": "2026-09-06 已按当前 Figma 节点和 DPR1 浏览器截图更新自动 diff；整页仍保留 DIFF_REVIEW",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -2486,8 +2486,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-26",
-        "conclusion": "Live Figma and browser screenshots confirm the loading metric, chart, insight, and skeleton geometry are aligned. Navigation context, avatar, icon treatment, typography, and rasterization still differ; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Figma 与 DPR1 浏览器截图确认指标、图表、洞察和骨架几何保持对齐；头像、图标处理、字体光栅化仍有差异，继续保留 DIFF_REVIEW。"
       }
     },
     {
@@ -2500,8 +2500,8 @@
       "frontendRoute": "/analysis",
       "queryState": "state=empty",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/intake-analysis-empty.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-intake-analysis-empty-browser-2026-09-05.png",
+      "figmaPng": ".qa/figma-pixel-acceptance/recaptured-figma/intake-analysis-empty-live-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-intake-analysis-empty-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#intake-analysis-empty",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -2511,9 +2511,9 @@
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.25,
+        "actualDpr": 1,
         "viewportPass": true,
-        "dprPass": false,
+        "dprPass": true,
         "bodyOverflow": false,
         "root": {
           "height": 1024,
@@ -2536,8 +2536,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-23",
-        "conclusion": "The Chromium fallback capture matches the Figma empty-state structure, metric-card height, chart-card y-position, 308px chart region, copy hierarchy, action dimensions, and chart-column asset. The frontend top-left window decoration candidate count is 0; business status dots are preserved. Avatar treatment, typography, and rasterization still differ; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Figma 与 DPR1 浏览器截图确认空态结构、指标卡高度、图表卡位置、308px 图表区域、文案层级、操作尺寸和图表列资源保持对齐；头像、字体和浏览器光栅化仍有差异，继续保留 DIFF_REVIEW。"
       }
     },
     {
@@ -2550,20 +2550,20 @@
       "frontendRoute": "/analysis",
       "queryState": "state=error",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/intake-analysis-error.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-intake-analysis-error-browser-2026-09-05.png",
+      "figmaPng": ".qa/figma-pixel-acceptance/recaptured-figma/intake-analysis-error-live-2026-09-06.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-intake-analysis-error-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#intake-analysis-error",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "evidenceNote": "2026-09-06 已按当前 Figma 节点和 DPR1 浏览器截图更新自动 diff；整页仍保留 DIFF_REVIEW",
       "geometryCheck": {
-        "status": "REVIEW",
+        "status": "PASS",
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.25,
+        "actualDpr": 1,
         "viewportPass": true,
-        "dprPass": false,
+        "dprPass": true,
         "bodyOverflow": false,
         "root": {
           "height": 1024,
@@ -2580,8 +2580,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-28",
-        "conclusion": "The current browser capture matches the Figma error-state structure, filter set, card spacing, 64px warning icon container, 17px description line box, 120x41px retry button, and inset card boundary more closely. The in-app browser capture used DPR 1.25, so the DPR 1 gate remains open; sidebar/avatar/icon rasterization and remaining typography differences remain. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "当前 Figma 与 DPR1 浏览器截图确认错误态结构、筛选组、卡片间距、64px 警告图标容器、17px 描述行盒、120x41px 重试按钮和内描边边界保持对齐；侧栏、头像、图标光栅化和字体差异仍存在，继续保留 DIFF_REVIEW。"
       }
     },
     {

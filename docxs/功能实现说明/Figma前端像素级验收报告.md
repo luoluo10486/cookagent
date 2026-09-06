@@ -2371,3 +2371,20 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] 自动差异相较上一次证据均下降，但仍为非零差异；残余差异主要来自头像素材、字体、图标光栅化和浏览器渲染，不能标记像素级 `PASS`。
 - [x] `figma-105-mapping.json`、`figma-105-diff-results.json` 和 `figma-105-runtime-checks.json` 已仅更新这三个画板的增量证据；全量汇总仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [ ] 本节不代表其它 102 个画板重新采集或完成全量人工视觉复核；shadcn 全页面迁移和 iconfont 实体资源登记仍未完成，iconfont 继续为 `BLOCKED`。
+
+## 44. 2026-09-06 Intake Analysis 当前 Figma 增量验收
+
+本节只复核 Intake Analysis 的 Loading、Empty、Error 三个状态画板，不重新采集或人工验收其余画板。Figma 文件保持只读；本批次只收口状态筛选组和导出操作的不透明度层级，并不宣称整页已经达到像素级 `PASS`。
+
+| 画板 | Figma 节点 | 前端入口 | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---:|---:|---:|---:|---|
+| Intake Analysis Loading | `692:1901` | `/analysis?state=loading` | `1440×1024 / 1` | 10.9146% | 0.939062 | 9.493559 | 204 | `DIFF_REVIEW` |
+| Intake Analysis Empty | `692:2026` | `/analysis?state=empty` | `1440×1024 / 1` | 4.5144% | 1.216185 | 11.820950 | 204 | `DIFF_REVIEW` |
+| Intake Analysis Error | `692:2139` | `/analysis?state=error` | `1440×1024 / 1` | 4.0445% | 0.927725 | 9.860458 | 204 | `DIFF_REVIEW` |
+
+- [x] 当前 Figma PNG 位于 `foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/`，浏览器 PNG 位于 `foodmate-ui/.qa/figma-pixel-acceptance/recaptured/`；映射、diff 和 runtime JSON 已关联到三个节点。
+- [x] 三项浏览器证据均使用 Chrome `152.0.7977.77`、`1440×1024`、DPR `1`、字体加载完成且页面无横向溢出；几何检查和文字溢出检查均通过。
+- [x] 筛选组与导出操作的层级不透明度已分别与当前 Figma 状态画板对齐：筛选组约 `0.6`，导出操作约 `0.5`。
+- [ ] 三项自动 diff 均为非零，且人工复核仍确认头像、图标处理、字体光栅化和局部像素差异，因此三项继续保持 `DIFF_REVIEW`，不能标记为 `PASS`。
+- [ ] 本节只复核三个画板，不代表其它 102 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [x] 本批次未创建虚构 iconfont 字体、glyph 或 Unicode 映射；iconfont 资源登记继续保持 `BLOCKED`。
