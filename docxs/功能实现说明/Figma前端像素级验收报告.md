@@ -2329,6 +2329,23 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 本节只复核两个 Admin 画板，不代表其余画板重新采集或完成 105 项全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [x] 本批次未创建虚构 iconfont 字体、glyph 或 Unicode 映射；iconfont 资源登记继续保持 `BLOCKED`。
 
+## 45. 2026-09-06 Agent SSE 客户端生命周期回归验收
+
+本节只记录 Agent SSE 客户端生命周期的测试证据，不新增 Figma 画板截图，也不改变后端 SSE 协议。视觉画板仍沿用各自已有的 Figma/浏览器证据和 `DIFF_REVIEW` 结论。
+
+| 验收项 | 代码入口 | 验证结果 |
+|---|---|---|
+| SSE 消息 ID 作为恢复游标 | `src/services/agentRunService.test.ts` | 通过 |
+| 相同事件 ID 去重 | `src/services/agentRunService.test.ts` | 通过 |
+| `run.failed` / `run.cancelled` / `run.superseded` 终态关闭 | `src/services/agentRunService.test.ts` | 通过 |
+| Chat 页面卸载关闭当前订阅 | `src/pages/ChatPage/ChatPage.real.test.tsx` | 通过 |
+
+- [x] 定向测试共 `9/9` 个用例通过；`npm run typecheck`、`npm run lint` 和 `npm run format:check` 均通过。
+- [x] 测试确认终态后不会安排新的重连，组件卸载会调用当前流句柄的 `close`；真实模式不会把 HTTP 接受响应直接当作运行终态。
+- [x] 本节未修改 Figma 设计稿、Java/Python 后端或 SSE 事件协议；`Last-Event-ID`/`lastEventId` 续接兼容和 `sse_event_id` 去重边界保持不变。
+- [ ] 本节不代表真实网络故障注入、后端跨服务闭环或 105 个画板全量像素验收完成；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [x] iconfont 实体资源、CSS/Unicode 映射、来源和许可证仍未提供，资源登记继续保持 `BLOCKED`。
+
 ## 42. 2026-09-06 Auth 认证页面 DPR1 增量验收
 
 本节只重新采集 Auth 主页面、登录状态和 Token 状态共 13 个画板，不重新采集或人工验收其余画板。Figma 文件保持只读；本批次未基于不确定的像素差异猜测性修改认证页面 CSS。

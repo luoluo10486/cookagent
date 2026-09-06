@@ -76,6 +76,53 @@ describe('openAgentRunStream', () => {
     expect(stream.getConnection().state).toBe('closed');
   });
 
+  it('uses the SSE message id as the resume cursor and ignores duplicate payload ids', () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('EventSource', FakeEventSource);
+    const received: string[] = [];
+    const stream = openAgentRunStream('42', (_eventType, _payload, eventId) => received.push(eventId), {
+      reconnectDelayMs: 10,
+      maxAttempts: 2,
+    });
+
+    const first = FakeEventSource.instances[0];
+    first.emit('run.answer_stream', { sse_event_id: 'payload-id', text: '第一段' }, 'message-id');
+    first.emit('run.answer_stream', { sse_event_id: 'another-payload-id', text: '重复事件' }, 'message-id');
+    first.fail();
+    vi.advanceTimersByTime(10);
+
+    expect(received).toEqual(['message-id']);
+    expect(FakeEventSource.instances[1].url).toContain('lastEventId=message-id');
+    expect(stream.getConnection().lastEventId).toBe('message-id');
+    stream.close();
+  });
+
+  it.each(['run.failed', 'run.cancelled', 'run.superseded'])(
+    'closes the stream for %s terminal events',
+    (eventType) => {
+      vi.useFakeTimers();
+      vi.stubGlobal('EventSource', FakeEventSource);
+      const received: string[] = [];
+      const stream = openAgentRunStream('42', (receivedType) => received.push(receivedType), {
+        reconnectDelayMs: 10,
+        maxAttempts: 2,
+      });
+
+      const source = FakeEventSource.instances[0];
+      source.emit(eventType, { event_type: eventType, sse_event_id: `${eventType}-id` });
+      source.fail();
+      vi.advanceTimersByTime(20);
+
+      expect(received).toEqual([eventType]);
+      expect(source.closed).toBe(true);
+      expect(FakeEventSource.instances).toHaveLength(1);
+      expect(stream.getConnection()).toMatchObject({
+        state: 'closed',
+        lastEventId: `${eventType}-id`,
+      });
+    },
+  );
+
   it('enters exhausted after the bounded number of attempts', () => {
     vi.useFakeTimers();
     vi.stubGlobal('EventSource', FakeEventSource);
