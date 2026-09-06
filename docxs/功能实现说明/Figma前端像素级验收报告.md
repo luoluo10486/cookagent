@@ -11,7 +11,7 @@
 1. Figma 文件内部结构、组件系统、Prototype 和画板截图回读已完成。
 2. 前端代码与 Figma 画板的自动化像素差异已覆盖 105 个已建立映射的页面/状态，105 个结果均为 `DIFF_REVIEW`，不能标记为像素级通过。
 
-因此当前不能宣称“Figma 105 张画板已全部像素级通过”。已经完成的是可复核的 Figma 全量结构验收、105 个画板的路由/状态映射、差异证据收集，以及运行时几何、可见文字和 DPR 检查；当前 mapping 中 89 项已完成人工复核，16 项仍为 `PENDING`，并且已复核项仍存在可见差异，结果继续保留为 `DIFF_REVIEW`。
+因此当前不能宣称“Figma 105 张画板已全部像素级通过”。已经完成的是可复核的 Figma 全量结构验收、105 个画板的路由/状态映射、差异证据收集，以及运行时几何、可见文字和 DPR 检查；当前 mapping 的 105 项均保留 `DIFF_REVIEW`，其中 `manualReview.status` 为 2 项 `MINOR_RENDERING_DIFF_CONFIRMED`、103 项 `VISUAL_DIFFERENCES_CONFIRMED`。runtime 汇总另显示 `manualPending=19`，与 mapping 字段的统计口径尚未统一，因此这 19 项不能被视为已完成最终人工复核；本报告继续保留 `DIFF_REVIEW`。
 
 ## 1.1 2026-09-06 Workspace/Home 与 Agent Chat 资源收口
 

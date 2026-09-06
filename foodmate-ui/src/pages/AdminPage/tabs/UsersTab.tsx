@@ -198,6 +198,7 @@ export function UsersSection({ onAction }: { onAction: (payload: AdminActionPayl
   const [selectedDetail, setSelectedDetail] = useState<AdminUserDetail>();
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState('');
+  const selectedUserId = selectedUser?.userId;
 
   useEffect(() => {
     if (isMockMode) return;
@@ -214,14 +215,14 @@ export function UsersSection({ onAction }: { onAction: (payload: AdminActionPayl
   }, []);
 
   useEffect(() => {
-    if (isMockMode || !selectedUser) return;
+    if (isMockMode || !selectedUserId) return;
     let active = true;
     // 详情单独加载，避免用户列表接口被迫携带会话和审计明细。
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setDetailLoading(true);
     setDetailError('');
     setSelectedDetail(undefined);
-    loadAdminUserDetail(selectedUser.userId)
+    loadAdminUserDetail(selectedUserId)
       .then((detail) => {
         if (active) setSelectedDetail(detail);
       })
@@ -234,7 +235,7 @@ export function UsersSection({ onAction }: { onAction: (payload: AdminActionPayl
     return () => {
       active = false;
     };
-  }, [selectedUser?.userId]);
+  }, [selectedUserId]);
 
   const visibleUsers = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -653,11 +654,19 @@ function UserDetailCard({
               ['饮食目标', profile?.diet_goal || user.dietGoal],
               [
                 '热量目标',
-                profile?.calorie_target ? `${profile.calorie_target} kcal` : user.calorieTarget ? `${user.calorieTarget} kcal` : '-',
+                profile?.calorie_target
+                  ? `${profile.calorie_target} kcal`
+                  : user.calorieTarget
+                    ? `${user.calorieTarget} kcal`
+                    : '-',
               ],
               [
                 '蛋白质目标',
-                profile?.protein_target ? `${profile.protein_target} g` : user.proteinTarget ? `${user.proteinTarget} g` : '-',
+                profile?.protein_target
+                  ? `${profile.protein_target} g`
+                  : user.proteinTarget
+                    ? `${user.proteinTarget} g`
+                    : '-',
               ],
               ['过敏原', profile?.allergens || user.allergens],
               ['忌口', profile?.dislikes || user.dislikes],
