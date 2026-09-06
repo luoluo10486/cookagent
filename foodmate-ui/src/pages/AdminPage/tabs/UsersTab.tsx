@@ -49,6 +49,7 @@ import {
   updateAdminUserStatus,
 } from '../../../services/adminService';
 import { FIGMA_ADMIN_AVATARS, resolveAvatarUrl } from '../../../lib/avatar';
+import { AvatarImage } from '../../../components/common/AvatarImage';
 
 const isMockMode = import.meta.env.VITE_AGENT_MODE !== 'real';
 
@@ -593,7 +594,6 @@ function UserDetailCard({
         createdAt: item.created_at || '-',
       }));
   const displayName = profile?.display_name || user.displayName;
-  const initials = displayName.slice(0, 1) || user.username.slice(0, 1).toUpperCase();
   const avatarSource = resolveAvatarUrl(user.avatarUrl, profile?.gender || user.gender);
 
   return (
@@ -617,7 +617,7 @@ function UserDetailCard({
       </div>
       <div className={styles.userDetailIdentity}>
         <div className={styles.userDetailAvatar} aria-hidden="true">
-          {avatarSource ? <img src={avatarSource} alt="" /> : initials}
+          <AvatarImage avatarUrl={avatarSource} gender={profile?.gender || user.gender} alt="" />
         </div>
         <div className={styles.userDetailName}>
           <strong>{displayName}</strong>

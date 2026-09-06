@@ -4,6 +4,16 @@
 
 > 资源策略说明（2026-09-06）：本轮已将前端默认/fixture 人物头像统一切换为项目登记的 `default-male.svg` 与 `default-female.svg`。本报告及 `.qa/figma-pixel-acceptance/` 中已有的包含旧真人头像的 PNG 仍属于历史验收证据；本轮没有对 105 个画板全量复采集，因此相关 diff 不能用于证明头像策略变更后的最新像素结果。
 
+## 1.0.3 2026-09-06 头像运行时统一渲染与回退收口
+
+- [x] 新增 `foodmate-ui/src/components/common/AvatarImage.tsx`，Workspace、Chat 专用状态、Profile、Admin 侧栏和 Admin 用户详情的运行时人物头像均通过统一组件渲染。
+- [x] 统一解析层拦截历史 `/assets/figma/**` 人物素材；空头像和未知性别使用 `default-male.svg`，已知女性使用 `default-female.svg`，有效真实用户头像仍优先保留。
+- [x] 统一组件补充真实头像加载失败回退；Profile 不再渲染首字母，Admin Fixture 用户不再因空头像显示首字母。
+- [x] Chrome 实际检查 `/`、`/chat?state=figma-v2`、`/chat?state=write-confirmation`、`/chat?state=sse-reconnecting`、`/profile?state=basic`、`/admin?state=user-detail` 和 `/admin?state=overview`；头像 DOM 来源仅出现两份登记 SVG。
+- [x] 默认男性 SVG SHA-256 为 `EE00AF66515C1807ED24738774776C9EBCAAECCBDCD28F15B1B43B6DBBF67D0D`，默认女性 SVG SHA-256 为 `6F12B013242789D28BA4D8949F7345986956D474F07442C3DC9B23FE634ACF34`；`foodmate-ui/dist` 未发现旧 Figma 人物头像路径。
+- [x] 本大点统一验证通过：Vitest `44/44` 个测试文件、`274/274` 个用例，typecheck、lint、format、production build、Figma 证据结构校验和 `git diff --check` 均通过。
+- [ ] 本大点只确认运行时头像入口，没有重新采集全部 105 个画板；旧 PNG 仍仅作为历史 Figma/验收证据，105 项视觉聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+
 ## 1.0.1 2026-09-06 默认头像运行时资源收口
 
 - [x] 男性和女性 SVG 已与用户提供的两份附件逐字节核对，SHA-256 分别为 `EE00AF66515C1807ED24738774776C9EBCAAECCBDCD28F15B1B43B6DBBF67D0D` 和 `6F12B013242789D28BA4D8949F7345986956D474F07442C3DC9B23FE634ACF34`。

@@ -35,8 +35,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { FigmaWorkspaceAsset } from '@/components/workspace/FigmaWorkspaceAsset';
+import { AvatarImage } from '@/components/common/AvatarImage';
 import { cn } from '@/lib/utils';
-import { DEFAULT_AVATARS, FIGMA_PROFILE_AVATARS, resolveAvatarUrl } from '@/lib/avatar';
+import { FIGMA_PROFILE_AVATARS, resolveAvatarUrl } from '@/lib/avatar';
 import { getAuthUser, logout } from '@/services/authService';
 import {
   changePassword,
@@ -769,8 +770,7 @@ function BasicTab({
   if (loading) return <div className={styles.loadingPanel}>正在加载个人资料...</div>;
 
   // 头像统一经过运行时资源解析，避免历史 Figma 人物素材绕过默认资源策略。
-  const avatarSource =
-    resolveAvatarUrl(avatarPreview, profileForm.gender) ?? (figmaFixture ? DEFAULT_AVATARS.male : undefined);
+  const avatarSource = resolveAvatarUrl(avatarPreview, profileForm.gender);
 
   return (
     <div className={styles.basicLayout}>
@@ -779,11 +779,12 @@ function BasicTab({
           <p className={styles.overline}>头像与账号概览</p>
           <div className={styles.avatarShell}>
             <div className={styles.avatarRing}>
-              {avatarSource ? (
-                <img className={styles.avatarImage} src={avatarSource} alt="个人头像" />
-              ) : (
-                <span>{authUser.displayName.slice(0, 1)}</span>
-              )}
+              <AvatarImage
+                className={styles.avatarImage}
+                avatarUrl={avatarSource}
+                gender={profileForm.gender}
+                alt="个人头像"
+              />
             </div>
           </div>
           <div className={styles.avatarActions}>

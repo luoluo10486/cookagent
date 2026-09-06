@@ -45,12 +45,11 @@ export function getDefaultAvatarForGender(gender?: string): string | undefined {
   return undefined;
 }
 
-export function resolveAvatarUrl(avatarUrl?: string, gender?: string): string | undefined {
+export function resolveAvatarUrl(avatarUrl?: string, gender?: string): string {
+  const genderDefault = getDefaultAvatarForGender(gender) ?? DEFAULT_AVATARS.male;
   const candidate = avatarUrl?.trim();
-  if (candidate && !legacyFigmaAvatarPattern.test(candidate)) return candidate;
-  if (candidate) {
-    // 遗留素材无法作为默认头像继续展示；性别未知时使用项目统一男性占位头像。
-    return getDefaultAvatarForGender(gender) ?? DEFAULT_AVATARS.male;
-  }
-  return getDefaultAvatarForGender(gender);
+  if (!candidate) return genderDefault;
+  if (!legacyFigmaAvatarPattern.test(candidate)) return candidate;
+  // 遗留素材无法作为默认头像继续展示；性别未知时使用项目统一男性默认头像。
+  return genderDefault;
 }

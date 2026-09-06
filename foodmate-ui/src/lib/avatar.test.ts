@@ -20,6 +20,7 @@ describe('avatar defaults', () => {
     expect(getDefaultAvatarForGender('-')).toBeUndefined();
     expect(resolveAvatarUrl('/uploads/profile.png', '女')).toBe('/uploads/profile.png');
     expect(resolveAvatarUrl('', '女')).toBe(DEFAULT_AVATARS.female);
+    expect(resolveAvatarUrl('', '-')).toBe(DEFAULT_AVATARS.male);
   });
 
   it('replaces legacy Figma person assets with the registered gender defaults', () => {

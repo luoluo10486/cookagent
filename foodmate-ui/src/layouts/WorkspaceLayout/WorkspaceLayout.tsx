@@ -34,7 +34,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { DEFAULT_AVATARS, resolveAvatarUrl } from '../../lib/avatar';
+import { resolveAvatarUrl } from '../../lib/avatar';
+import { AvatarImage } from '../../components/common/AvatarImage';
 import { SidebarSessionList, type SessionAction } from '../../components/workspace/SidebarSessionList';
 import {
   FigmaWorkspaceAsset,
@@ -132,10 +133,10 @@ export function WorkspaceLayout({
   const currentAuth = authScenarios.find((item) => item.status === authStatus) ?? authScenarios[0];
   const isAuthenticated = authStatus === 'authenticated';
   const canAccessAdmin = isAuthenticated && ['admin', 'operator', 'superadmin'].includes(authUser.role);
-  const defaultAvatar = resolveAvatarUrl(avatarSrc ?? authUser.avatarUrl, authUser.gender) ?? DEFAULT_AVATARS.male;
+  const defaultAvatar = resolveAvatarUrl(avatarSrc ?? authUser.avatarUrl, authUser.gender);
   // 所有布局覆盖头像都必须经过统一解析，阻断历史 Figma 人物素材绕过默认资源策略。
-  const sidebarAvatar = resolveAvatarUrl(sidebarAvatarSrc, authUser.gender) ?? defaultAvatar;
-  const topAvatar = resolveAvatarUrl(topAvatarSrc, authUser.gender) ?? defaultAvatar;
+  const sidebarAvatar = resolveAvatarUrl(sidebarAvatarSrc, authUser.gender) || defaultAvatar;
+  const topAvatar = resolveAvatarUrl(topAvatarSrc, authUser.gender) || defaultAvatar;
   const displayName = displayNameOverride ?? (isAuthenticated ? authUser.displayName : '登录');
   const profileId = profileIdOverride ?? (isAuthenticated ? authUser.id : currentAuth.code);
   const displayedSessions = sidebarFixture?.sessions ?? sessions;
@@ -361,7 +362,7 @@ export function WorkspaceLayout({
             </div>
             <Link className={styles.profile} to={isAuthenticated ? ROUTES.PROFILE : ROUTES.LOGIN}>
               <div className={styles.avatar}>
-                <img src={sidebarAvatar} alt="" />
+                <AvatarImage avatarUrl={sidebarAvatar} gender={authUser.gender} alt="" />
               </div>
               <div>
                 <strong>
@@ -469,7 +470,7 @@ export function WorkspaceLayout({
                 <DropdownMenuTrigger asChild>
                   <Button className={styles.userButton} variant="ghost" type="button">
                     <span className={styles.topAvatar}>
-                      <img src={topAvatar} alt="" />
+                      <AvatarImage avatarUrl={topAvatar} gender={authUser.gender} alt="" />
                     </span>
                     <span>{displayName}</span>
                   </Button>

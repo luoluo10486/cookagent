@@ -7,7 +7,8 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ROUTES } from '../../constants/routes';
-import { DEFAULT_AVATARS, FIGMA_ADMIN_AVATARS, resolveAvatarUrl } from '../../lib/avatar';
+import { FIGMA_ADMIN_AVATARS, resolveAvatarUrl } from '../../lib/avatar';
+import { AvatarImage } from '../../components/common/AvatarImage';
 import { adminOperationAuditRows } from '../../services/adminService';
 import { getAuthUser } from '../../services/authService';
 import styles from './AdminPage.module.css';
@@ -807,9 +808,10 @@ export function AdminPage() {
     ? { displayName: 'Anddy', id: '1234567' }
     : { displayName: authUser.displayName, id: authUser.id };
   // 管理后台的 Fixture 和真实用户头像都统一从解析层进入 DOM。
-  const adminAvatarSource =
-    resolveAvatarUrl(requestedFixture ? FIGMA_ADMIN_AVATARS.sidebar : authUser.avatarUrl, authUser.gender) ??
-    DEFAULT_AVATARS.male;
+  const adminAvatarSource = resolveAvatarUrl(
+    requestedFixture ? FIGMA_ADMIN_AVATARS.sidebar : authUser.avatarUrl,
+    authUser.gender,
+  );
   const fixtureOperationStatus: AdminOperationState | undefined = requestedFixture?.startsWith('op-')
     ? requestedFixture.replace('op-', '') === 'no-permission'
       ? 'no-permission'
@@ -979,7 +981,7 @@ export function AdminPage() {
           </Link>
           <div className={styles.userSection}>
             <div className={styles.userAvatar}>
-              <img alt="" src={adminAvatarSource} />
+              <AvatarImage avatarUrl={adminAvatarSource} gender={authUser.gender} alt="" />
             </div>
             <div className={styles.userMetadata}>
               <strong>{fixtureUser.displayName}&apos;s Lab</strong>

@@ -28,6 +28,7 @@ import { ResultCard } from '../../components/agent/ResultCard';
 import { ClarificationCard } from '../../components/agent/ClarificationCard';
 import { ConfirmationCard } from '../../components/agent/ConfirmationCard';
 import { ErrorState } from '../../components/common/ErrorState';
+import { AvatarImage } from '../../components/common/AvatarImage';
 import { DEFAULT_AVATARS, FIGMA_CHAT_AVATARS, resolveAvatarUrl } from '../../lib/avatar';
 import { getAuthUser } from '../../services/authService';
 import { useAgentReplay } from '../../services/agentService';
@@ -97,10 +98,7 @@ function MessageBubble({
   const isUser = message.role === 'user';
   const authUser = getAuthUser();
   // 消息头像也走统一解析，避免历史 Fixture 路径通过组件参数直接渲染。
-  const userAvatar =
-    resolveAvatarUrl(userAvatarSrc, authUser.gender) ??
-    resolveAvatarUrl(authUser.avatarUrl, authUser.gender) ??
-    DEFAULT_AVATARS.male;
+  const userAvatar = resolveAvatarUrl(userAvatarSrc ?? authUser.avatarUrl, authUser.gender);
   return (
     <article className={`${styles.message} ${isUser ? styles.user : styles.assistant}`}>
       {isUser ? (
@@ -109,7 +107,7 @@ function MessageBubble({
             <div className={styles.messageBubble}>{message.content}</div>
             <span className={styles.srOnly}>你</span>
             <span className={styles.userAvatar} aria-hidden="true">
-              <img src={userAvatar} alt="" />
+              <AvatarImage avatarUrl={userAvatar} gender={authUser.gender} alt="" />
             </span>
           </div>
           <div className={styles.messageMeta}>Anddy · {formatMessageTime(message.time)} PM</div>
@@ -459,7 +457,7 @@ function PlanningStatePage() {
         <div className={styles.planningUserLine}>
           <div className={styles.planningUserBubble}>帮我分析这周的蛋白质摄入情况</div>
           <span className={styles.planningUserAvatar} aria-hidden="true">
-            <img src={planningAvatarSrc} alt="" />
+            <AvatarImage avatarUrl={planningAvatarSrc} gender="男" alt="" />
           </span>
         </div>
         <div className={styles.planningMessageMeta}>Anddy · 12:45 PM</div>
@@ -573,7 +571,7 @@ function ToolExecutingStatePage() {
         <div className={styles.executingUserLine}>
           <div className={styles.executingUserBubble}>帮我分析这周的蛋白质摄入情况</div>
           <span className={styles.executingUserAvatar} aria-hidden="true">
-            <img src={executingAvatarSrc} alt="" />
+            <AvatarImage avatarUrl={executingAvatarSrc} gender="男" alt="" />
           </span>
         </div>
         <div className={styles.executingMessageMeta}>Anddy · 12:45 PM</div>
@@ -645,7 +643,7 @@ function AwaitingClarificationStatePage() {
         <div className={styles.awaitingUserLine}>
           <div className={styles.awaitingUserBubble}>记录一下我的午餐</div>
           <span className={styles.awaitingUserAvatar} aria-hidden="true">
-            <img src={awaitingMessageAvatarSrc} alt="" />
+            <AvatarImage avatarUrl={awaitingMessageAvatarSrc} gender="男" alt="" />
           </span>
         </div>
         <div className={styles.awaitingMessageMeta}>Anddy · 12:45 PM</div>
@@ -1648,7 +1646,7 @@ function AgentStatePage({ state }: { state: AgentFixtureState }) {
           </div>
           {fixtureMessageAvatarSrc ? (
             <span className={styles.fixtureUserAvatar} aria-hidden="true">
-              <img src={fixtureMessageAvatarSrc} alt="" />
+              <AvatarImage avatarUrl={fixtureMessageAvatarSrc} gender="男" alt="" />
             </span>
           ) : null}
         </div>
