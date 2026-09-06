@@ -134,6 +134,13 @@ npm run dev
 - 数据库只读复核：明确的 `codex_*` 探针账号为 `0`，管理员账号为 `1` 且密码字段仍为 BCrypt 哈希；营养目录为 `1,009` 条，知识库文档为 `3` 条，知识导入批次为 `1` 条。
 - 本轮没有执行性能压测、组件重启矩阵、ACK/重复投递故障注入、备份恢复、生产操作或发布回滚；未把 Docker 启动复核扩展为完整 M1-6 故障验收。
 
+## 2026-09-06 本地测试事实清理
+
+- 工具注册表已复核为 7 个正式工具，`e2e_tool_*` 测试残留和无引用注册均为 0；工具用途、注册表查看入口和具体执行事实入口见 [`工具注册与执行链路说明`](./docxs/实现/工具注册与执行链路说明.md)。
+- 本地公共知识 RAG 的历史测试向量和 stub 索引已按保护脚本清理，当前公共 Milvus 实际可查询记录为 0，Redis `foodmate:rag:stub:chunks` 为 0；Milvus 集合定义保留，便于后续重新导入正式知识。
+- 营养目录 Milvus `foodmate_nutrition_foods` 保持 1,000 条真实向量，PostgreSQL 营养食材和单位换算参考数据保持可用；本轮未清理营养数据。
+- 后续可使用 `script/sql/FoodMate/maintenance/cleanup-local-rag-indexes.ps1` 的 dry-run/确认执行模式维护外部索引，不使用 `docker compose down -v`。
+
 ## M1-5 / M1-6 收尾边界
 
 已完成本地真实基础链路、跨进程 checkpoint 恢复、RocketMQ Proposal/Result、Eval Gate、饮食记录与餐食计划、M2-1 公共知识库 RAG、M2-2 Tool/SQL、M2-3 管理核心切片、写确认和本地营养目录扩展。当前仍不能宣称生产完成：真实云模型/embedding 长时间稳定性、生产资源长压与容量结论、队列防饥饿、多实例业务流量、完整依赖故障矩阵、正式价格/账单对账，以及人工校准驱动的生产 Eval 指标告警仍需在目标环境执行。

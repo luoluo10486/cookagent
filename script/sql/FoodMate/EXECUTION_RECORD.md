@@ -2216,3 +2216,17 @@
 | 权威边界 | PostgreSQL 继续保存和提供标准名称、营养数值、来源版本及单位换算；饮食记录写入仍使用 Java 精确 SQL 匹配，向量检索只作为独立候选入口，不直接替代营养事实。公共知识 `knowledge_search` 继续查询普通知识 collection。 |
 | 数据与费用边界 | 本轮产生真实 Embedding 供应商请求并写入 Milvus；未调用 Chat，未写入 PostgreSQL/Redis/RocketMQ 业务事实，未输出或记录 API Key、向量正文或完整查询。性能压测、组件重启、ACK/重复投递故障注入、备份恢复和生产操作继续后置。 |
 | 结论 | 全量营养目录已完成真实向量构建并取得 Milvus 数量和查询证据；营养精确匹配业务保持不变，后续如需将语义候选用于未知食材自动匹配，仍需单独增加 Java 置信度门槛和人工确认策略。 |
+
+## D143 本地工具注册表与 RAG 测试事实清理（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；Docker PostgreSQL、Redis、Milvus 均运行；未执行迁移、truncate、备份恢复或生产操作。 |
+| 工具注册表 | 执行 `cleanup-local-tool-registry.ps1` dry-run：正式工具 `7` 条，活动正式工具 `7` 条，`e2e_tool_*` 注册 `0` 条，工具调用引用 `0` 条；未修改正式工具定义。 |
+| 本地业务数据 | 复核 `reset-local-business-data.ps1` 的保留范围：营养目录活动数据 `1,000` 条，单位换算 `1,518` 条；用户账户、模型配置、SQL Catalog 和正式工具保留。此前本地业务清理已生成 PostgreSQL 逻辑备份，未执行额外宽泛删除。 |
+| RAG 清理入口 | 新增 `maintenance/cleanup-local-rag-indexes.ps1`，要求 PostgreSQL 活动知识文档和切片均为 `0`，并以确认短语启用删除；只处理当前公共知识集合、三个明确命名的 `codex` 测试集合和 stub `foodmate:rag:stub:chunks`。 |
+| 实际命令 | `cleanup-local-rag-indexes.ps1` dry-run；`cleanup-local-rag-indexes.ps1 -Execute -Confirmation CLEAN_LOCAL_RAG_INDEXES`；执行后再次 dry-run 复核。Redis 索引从 `9` 条降为 `0`；公共 Milvus 实际可查询记录为 `0`。 |
+| Milvus 校验 | 首轮执行后 Milvus `get_collection_stats` 仍显示旧的 `7/29`，但直接查询已无记录；脚本随后改为 `query_iterator` 实际计数并重新复核为 `0`，不把 eventual consistency 的旧统计误报为残留。营养集合 `foodmate_nutrition_foods` 执行前后均为 `1,000` 条，未被清理。 |
+| 文档 | 更新工具注册与执行链路说明、本地开发指南、SQL README；补充工具用途、注册表入口、执行事实入口、清理命令和营养索引保护边界。 |
+| 缓存与安全 | 维护脚本使用 `agent-runtime\\.venv` 的 `python -B`，未向仓库写入 API Key、密码、向量正文或业务原文；项目级 Python 缓存按收尾步骤清理，`.venv` 依赖缓存不纳入删除范围。 |
+| 结论 | 当前 PostgreSQL 正式工具和参考数据可用，公共知识测试索引事实已清空，营养向量保持完整；后续重新导入公共知识时仍需走批次上传、索引、显式发布流程。 |
