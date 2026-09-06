@@ -2,6 +2,8 @@
 
 更新时间：2026-09-06
 
+> 资源策略说明（2026-09-06）：本轮已将前端默认/fixture 人物头像统一切换为项目登记的 `default-male.svg` 与 `default-female.svg`。本报告及 `.qa/figma-pixel-acceptance/` 中已有的包含旧真人头像的 PNG 仍属于历史验收证据；本轮没有对 105 个画板全量复采集，因此相关 diff 不能用于证明头像策略变更后的最新像素结果。
+
 ## 1. 结论
 
 本报告记录两类不同验收结果：
@@ -26,6 +28,25 @@
 - [ ] 本批次没有重新验收其余画板；105 项汇总仍不能被解释为本次全量重采集结果。
 - [ ] 两页仍存在可见的字体、局部布局、内容密度和图标光栅化差异，因此保持 `DIFF_REVIEW`，没有标记 `PASS`。
 - [ ] iconfont 仍为 `BLOCKED`，本批次继续使用真实已登记 SVG 和 Lucide fallback。
+
+## 1.1.1 2026-09-06 Workspace/Home 四个状态画板收口
+
+本批次只针对 Workspace/Home 的 Loading、Empty、Error 和 Input States 四个状态画板进行实现、截图和差异复核，没有重新采集或重新判定其余 101 个画板。Figma 文件保持只读。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器证据 | 视口 / DPR | diff 比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Workspace Home Loading | `692:1049` | `/?state=loading` | `recaptured/dpr1-workspace-home-loading-browser-2026-09-06.png` | `1440×1024 / 1` | 28.6855% | 2.840815 | 15.845699 | 242 | `DIFF_REVIEW` |
+| Workspace Home Empty | `692:1208` | `/?view=records&state=empty` | `recaptured/dpr1-workspace-home-empty-browser-2026-09-06.png` | `1440×1024 / 1` | 14.0877% | 2.790551 | 17.911125 | 255 | `DIFF_REVIEW` |
+| Workspace Home Error | `692:1313` | `/?view=records&state=error` | `recaptured/dpr1-workspace-home-error-browser-2026-09-06.png` | `1440×1024 / 1` | 63.7491% | 4.709468 | 18.429956 | 255 | `DIFF_REVIEW` |
+| Workspace Home Input States | `1015:4` | `/?state=input-states` | `recaptured/dpr1-workspace-home-input-states-browser-2026-09-06.png` | `1440×1024 / 1` | 19.1847% | 2.949158 | 17.665746 | 244 | `DIFF_REVIEW` |
+
+- [x] 四个状态均已接入 Figma Workspace 壳层；Loading 使用专用骨架，Empty/Error 使用独立状态容器，Input States 使用三列状态面板。
+- [x] 四项证据均为 `1440×1024`、DPR `1`、字体 `loaded`、页面无横向溢出；`figma-105-mapping.json`、`figma-105-diff-results.json` 和 `figma-105-runtime-checks.json` 已同步。
+- [x] `scripts/png-diff.mjs` 已产生四项同尺寸结果；运行时几何、可见文字边界和 DPR 记录通过。
+- [x] 已完成人工视觉复核；Empty 和 Input States 差异比例下降，但四项仍有字体、局部布局和浏览器光栅化差异。
+- [ ] 四项均继续保持 `DIFF_REVIEW`，不能标记像素级 `PASS`。
+- [ ] 本批次没有重新验收其余 101 个画板；全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍缺失，继续保持 `BLOCKED`。
 
 ## 1.2 2026-09-06 Figma 验收证据路径基线修复
 

@@ -52,7 +52,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#workspace-home-v2",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "MINOR_RENDERING_DIFF_CONFIRMED",
-      "evidenceNote": "2026-09-06 Workspace Figma Token 基线已同步；自动 diff 仍存在，查看人工视觉复核结论",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -106,7 +106,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#agent-chat-v2",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "2026-09-06 Workspace Figma Token 基线已同步；自动 diff 仍存在，查看人工视觉复核结论",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -2060,11 +2060,11 @@
       "queryState": "state=loading",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/workspace-home-loading.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/workspace-home-loading-browser.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-workspace-home-loading-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#workspace-home-loading",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "evidenceNote": "2026-09-06 浏览器截图已完成人工视觉复核；仍存在字体、局部几何和浏览器光栅化差异，保留 DIFF_REVIEW",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -2104,11 +2104,11 @@
       "queryState": "view=records&state=empty",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/workspace-home-empty.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/workspace-home-empty-browser.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-workspace-home-empty-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#workspace-home-empty",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "evidenceNote": "2026-09-06 浏览器截图已完成人工视觉复核；仍存在字体、局部几何和浏览器光栅化差异，保留 DIFF_REVIEW",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -2148,11 +2148,11 @@
       "queryState": "view=records&state=error",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/workspace-home-error.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/workspace-home-error-browser.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-workspace-home-error-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#workspace-home-error",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "evidenceNote": "2026-09-06 浏览器截图已完成人工视觉复核；仍存在字体、局部几何和浏览器光栅化差异，保留 DIFF_REVIEW",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -2328,7 +2328,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#meal-planning-loading",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "2026-09-06 已按当前 Loading 状态重新采集；自动 diff 仍存在，保留 DIFF_REVIEW",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "lastVerifiedAt": "2026-09-06",
       "geometryCheck": {
         "status": "PASS",
@@ -2373,7 +2373,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#meal-planning-empty",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "2026-09-06 已按当前前端状态壳层重新采集；自动 diff 仍存在，保留 DIFF_REVIEW",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "lastVerifiedAt": "2026-09-06",
       "geometryCheck": {
         "status": "PASS",
@@ -2418,7 +2418,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#meal-planning-error",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "2026-09-06 已收口 Error 状态侧栏和错误色值并重新采集；自动 diff 仍存在，保留 DIFF_REVIEW",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "lastVerifiedAt": "2026-09-06",
       "geometryCheck": {
         "status": "PASS",
@@ -2463,7 +2463,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#intake-analysis-loading",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "2026-09-06 已按当前 Figma 节点和 DPR1 浏览器截图更新自动 diff；整页仍保留 DIFF_REVIEW",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -2557,7 +2557,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#intake-analysis-error",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "2026-09-06 已按当前 Figma 节点和 DPR1 浏览器截图更新自动 diff；整页仍保留 DIFF_REVIEW",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -4882,7 +4882,12 @@
           "computedStyle": {
             "failedFilterColor": "rgb(214, 118, 118)",
             "successFilterColor": "rgb(137, 178, 124)",
-            "stageColors": ["rgb(93, 169, 178)", "rgb(181, 140, 196)", "rgb(199, 150, 84)", "rgb(214, 118, 118)"],
+            "stageColors": [
+              "rgb(93, 169, 178)",
+              "rgb(181, 140, 196)",
+              "rgb(199, 150, 84)",
+              "rgb(214, 118, 118)"
+            ],
             "failedFilterFontSize": "11px",
             "successFilterFontSize": "11px"
           },
@@ -6146,11 +6151,11 @@
       "queryState": "state=input-states",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/workspace-home-input-states.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/workspace-home-input-states-browser.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-workspace-home-input-states-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#workspace-home-input-states",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "evidenceNote": "2026-09-06 浏览器截图已完成人工视觉复核；仍存在字体、局部几何和浏览器光栅化差异，保留 DIFF_REVIEW",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",

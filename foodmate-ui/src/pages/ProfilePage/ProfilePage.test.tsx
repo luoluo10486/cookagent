@@ -66,15 +66,12 @@ describe('ProfilePage', () => {
     expect(screen.getByText('早餐奶昔配方')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '下一页' })).toBeInTheDocument();
     expect(screen.getByText('饮食与身体目标')).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: '个人头像' })).toHaveAttribute(
-      'src',
-      '/assets/figma/profile/main-avatar.png',
-    );
+    expect(screen.getByRole('img', { name: '个人头像' })).toHaveAttribute('src', '/assets/avatars/default-male.svg');
     expect(screen.getByRole('button', { name: 'Anddy' }).querySelector('img')).toHaveAttribute(
       'src',
-      '/assets/figma/profile/topbar-avatar.png',
+      '/assets/avatars/default-male.svg',
     );
-    expect(container.querySelector('.profile img')).toHaveAttribute('src', '/assets/figma/profile/sidebar-avatar.png');
+    expect(container.querySelector('.profile img')).toHaveAttribute('src', '/assets/avatars/default-male.svg');
     expect(container.querySelector('img[src="/assets/figma/workspace/profile/home.svg"]')).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/figma/workspace/profile/topbar-search.svg"]')).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/figma/workspace/profile/notification.svg"]')).toBeInTheDocument();

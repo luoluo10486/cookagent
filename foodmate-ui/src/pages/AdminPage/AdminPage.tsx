@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ROUTES } from '../../constants/routes';
-import { FIGMA_ADMIN_AVATARS } from '../../lib/avatar';
+import { DEFAULT_AVATARS, FIGMA_ADMIN_AVATARS } from '../../lib/avatar';
 import { adminOperationAuditRows } from '../../services/adminService';
 import { getAuthUser } from '../../services/authService';
 import styles from './AdminPage.module.css';
@@ -975,7 +975,7 @@ export function AdminPage() {
           </Link>
           <div className={styles.userSection}>
             <div className={styles.userAvatar}>
-              <img alt="" src={requestedFixture ? FIGMA_ADMIN_AVATARS.sidebar : '/assets/avatars/default-male.svg'} />
+              <img alt="" src={requestedFixture ? FIGMA_ADMIN_AVATARS.sidebar : DEFAULT_AVATARS.male} />
             </div>
             <div className={styles.userMetadata}>
               <strong>{fixtureUser.displayName}&apos;s Lab</strong>

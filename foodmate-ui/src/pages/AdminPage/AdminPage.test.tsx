@@ -80,13 +80,10 @@ describe('AdminPage overview', () => {
     ).toBe(true);
   });
 
-  it('uses Figma fixture avatars and the registered overview copy asset', () => {
+  it('uses the registered default avatar and the registered overview copy asset', () => {
     renderAdmin('/admin?state=overview');
 
-    expect(document.querySelector('.userAvatar img')).toHaveAttribute(
-      'src',
-      '/assets/figma/admin/admin-sidebar-avatar.png',
-    );
+    expect(document.querySelector('.userAvatar img')).toHaveAttribute('src', '/assets/avatars/default-male.svg');
     expect(document.querySelectorAll('[data-figma-asset="admin-overview-copy"]')).toHaveLength(6);
   });
 
@@ -191,16 +188,13 @@ describe('AdminPage overview', () => {
     expect(screen.queryByRole('button', { name: '删除文档' })).not.toBeInTheDocument();
   });
 
-  it('uses the Figma user-detail close affordance and registered fixture avatar', () => {
+  it('uses the Figma user-detail close affordance and registered default avatar', () => {
     renderAdmin('/admin?state=user-detail');
 
     const closeButton = screen.getByRole('button', { name: '关闭用户详情' });
     expect(closeButton).toHaveAttribute('data-figma-asset', 'admin-user-detail-close');
     expect(closeButton.querySelector('svg circle')).toBeInTheDocument();
-    expect(document.querySelector('.userDetailAvatar img')).toHaveAttribute(
-      'src',
-      '/assets/figma/admin/user-detail-avatar.png',
-    );
+    expect(document.querySelector('.userDetailAvatar img')).toHaveAttribute('src', '/assets/avatars/default-male.svg');
   });
 
   it('limits operation-state fixtures to the four Figma registry rows', () => {

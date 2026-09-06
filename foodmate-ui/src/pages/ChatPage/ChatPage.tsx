@@ -28,7 +28,7 @@ import { ResultCard } from '../../components/agent/ResultCard';
 import { ClarificationCard } from '../../components/agent/ClarificationCard';
 import { ConfirmationCard } from '../../components/agent/ConfirmationCard';
 import { ErrorState } from '../../components/common/ErrorState';
-import { DEFAULT_AVATARS, resolveAvatarUrl } from '../../lib/avatar';
+import { DEFAULT_AVATARS, FIGMA_CHAT_AVATARS, resolveAvatarUrl } from '../../lib/avatar';
 import { getAuthUser } from '../../services/authService';
 import { useAgentReplay } from '../../services/agentService';
 import { ApiError } from '../../services/apiClient';
@@ -45,9 +45,9 @@ import {
 } from '../../services/agentRunService';
 import styles from './ChatPage.module.css';
 
-const FIGMA_CHAT_SIDEBAR_AVATAR = '/assets/figma/workspace/home-sidebar-avatar.png';
-const FIGMA_CHAT_TOPBAR_AVATAR = '/assets/figma/agent-chat/figma-v2-topbar-avatar.png';
-const FIGMA_CHAT_MESSAGE_AVATAR = '/assets/figma/agent-chat/figma-v2-message-avatar.png';
+const FIGMA_CHAT_SIDEBAR_AVATAR = FIGMA_CHAT_AVATARS.sidebar;
+const FIGMA_CHAT_TOPBAR_AVATAR = FIGMA_CHAT_AVATARS.topbar;
+const FIGMA_CHAT_MESSAGE_AVATAR = FIGMA_CHAT_AVATARS.message;
 
 type ChatMessage = {
   id: string;

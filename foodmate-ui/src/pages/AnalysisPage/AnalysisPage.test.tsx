@@ -60,8 +60,7 @@ describe('AnalysisPage', () => {
     expect(screen.getByPlaceholderText('搜索会话...')).toBeInTheDocument();
     expect(screen.getByText('每周饮食微调')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '下一页' })).toBeInTheDocument();
-    expect(document.querySelector('img[src="/assets/figma/workspace/home-sidebar-avatar.png"]')).toBeInTheDocument();
-    expect(document.querySelector('img[src="/assets/figma/workspace/home-topbar-avatar.png"]')).toBeInTheDocument();
+    expect(document.querySelectorAll('img[src="/assets/avatars/default-male.svg"]')).toHaveLength(2);
     expect(
       document.querySelector('img[src="/assets/figma/workspace/analysis/intake-analysis.svg"]'),
     ).toBeInTheDocument();

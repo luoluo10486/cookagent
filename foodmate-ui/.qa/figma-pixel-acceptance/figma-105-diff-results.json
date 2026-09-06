@@ -65,7 +65,7 @@
       "differentPixels": 49181,
       "differentRatio": 0.0379483024691358,
       "meanAbsoluteError": 0.5646253858024691,
-      "rmse": 7.545920250230551,
+      "rmse": 7.545339166181733,
       "maxChannelDelta": 213
     },
     "register-page": {
@@ -370,21 +370,21 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 768310,
-      "differentRatio": 0.5210435655381944,
-      "meanAbsoluteError": 4.4282550387912325,
-      "rmse": 18.316663503834594,
-      "maxChannelDelta": 249
+      "differentPixels": 422985,
+      "differentRatio": 0.2868550618489583,
+      "meanAbsoluteError": 2.84081539577908,
+      "rmse": 15.845699286531268,
+      "maxChannelDelta": 242
     },
     "workspace-home-empty": {
       "status": "COMPARED",
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 1038884,
-      "differentRatio": 0.7045383029513889,
-      "meanAbsoluteError": 5.007300991482205,
-      "rmse": 21.085803636821137,
+      "differentPixels": 207731,
+      "differentRatio": 0.14087660047743056,
+      "meanAbsoluteError": 2.7905507405598957,
+      "rmse": 17.911124631141963,
       "maxChannelDelta": 255
     },
     "workspace-home-error": {
@@ -392,10 +392,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 1052029,
-      "differentRatio": 0.7134528266059028,
-      "meanAbsoluteError": 4.4367116292317705,
-      "rmse": 19.790817064755142,
+      "differentPixels": 940019,
+      "differentRatio": 0.6374911838107639,
+      "meanAbsoluteError": 4.709468417697483,
+      "rmse": 18.4299564931458,
       "maxChannelDelta": 255
     },
     "diet-records-loading": {
@@ -726,8 +726,7 @@
       "differentRatio": 0.584063720703125,
       "meanAbsoluteError": 2.9224541558159722,
       "rmse": 12.409107872209681,
-      "maxChannelDelta": 204,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "profile-basic-avatar-failed": {
       "status": "COMPARED",
@@ -738,8 +737,7 @@
       "differentRatio": 0.5823859320746527,
       "meanAbsoluteError": 3.0122809516059026,
       "rmse": 13.555829157612994,
-      "maxChannelDelta": 204,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "profile-basic-unsaved-leave-confirmation": {
       "status": "COMPARED",
@@ -750,8 +748,7 @@
       "differentRatio": 0.8486572265625,
       "meanAbsoluteError": 49.328287251790364,
       "rmse": 65.94134800036632,
-      "maxChannelDelta": 233,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 233
     },
     "profile-security-password-submitting": {
       "status": "COMPARED",
@@ -762,8 +759,7 @@
       "differentRatio": 0.534625244140625,
       "meanAbsoluteError": 2.874095662434896,
       "rmse": 13.042846704301546,
-      "maxChannelDelta": 204,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "profile-security-password-success": {
       "status": "COMPARED",
@@ -774,8 +770,7 @@
       "differentRatio": 0.534625244140625,
       "meanAbsoluteError": 2.7371419270833335,
       "rmse": 12.131022471493676,
-      "maxChannelDelta": 223,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 223
     },
     "profile-security-password-failed": {
       "status": "COMPARED",
@@ -786,8 +781,7 @@
       "differentRatio": 0.5400892469618056,
       "meanAbsoluteError": 2.928490702311198,
       "rmse": 12.777795676251099,
-      "maxChannelDelta": 204,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "profile-privacy-export-queued": {
       "status": "COMPARED",
@@ -798,8 +792,7 @@
       "differentRatio": 0.2583163791232639,
       "meanAbsoluteError": 1.428060065375434,
       "rmse": 9.860943196140122,
-      "maxChannelDelta": 204,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "profile-privacy-export-running": {
       "status": "COMPARED",
@@ -810,8 +803,7 @@
       "differentRatio": 0.25149468315972223,
       "meanAbsoluteError": 1.5716422186957466,
       "rmse": 11.004093441183324,
-      "maxChannelDelta": 204,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "profile-privacy-export-expired": {
       "status": "COMPARED",
@@ -822,8 +814,7 @@
       "differentRatio": 0.2583428276909722,
       "meanAbsoluteError": 1.4653806898328994,
       "rmse": 10.195571740996863,
-      "maxChannelDelta": 204,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "profile-privacy-deletion-submitting": {
       "status": "COMPARED",
@@ -834,8 +825,7 @@
       "differentRatio": 0.8483249240451389,
       "meanAbsoluteError": 46.888039652506514,
       "rmse": 62.83190694146124,
-      "maxChannelDelta": 232,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 232
     },
     "profile-privacy-deletion-success": {
       "status": "COMPARED",
@@ -846,8 +836,7 @@
       "differentRatio": 0.266510009765625,
       "meanAbsoluteError": 1.4963412814670138,
       "rmse": 10.230111959355815,
-      "maxChannelDelta": 223,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 223
     },
     "profile-privacy-deletion-failed": {
       "status": "COMPARED",
@@ -858,8 +847,7 @@
       "differentRatio": 0.3588344997829861,
       "meanAbsoluteError": 2.5852951049804687,
       "rmse": 11.953824792571423,
-      "maxChannelDelta": 204,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "user-knowledge-empty": {
       "status": "COMPARED",
@@ -870,11 +858,7 @@
       "differentRatio": 0.4038750542534722,
       "meanAbsoluteError": 1.4861787584092883,
       "rmse": 9.587398571288569,
-      "maxChannelDelta": 204,
-      "expectedPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/user-knowledge-empty-795-786-2026-09-06.png",
-      "actualPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-user-knowledge-empty-browser-2026-09-06.png",
-      "figmaNodeId": "795:786",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "user-knowledge-search-failed": {
       "status": "COMPARED",
@@ -885,11 +869,7 @@
       "differentRatio": 0.3942287868923611,
       "meanAbsoluteError": 1.5856765747070312,
       "rmse": 10.442787180513328,
-      "maxChannelDelta": 204,
-      "expectedPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/user-knowledge-search-failed-795-968-2026-09-06.png",
-      "actualPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-user-knowledge-search-failed-browser-2026-09-06.png",
-      "figmaNodeId": "795:968",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "user-knowledge-source-unavailable": {
       "status": "COMPARED",
@@ -900,11 +880,7 @@
       "differentRatio": 0.3940178765190972,
       "meanAbsoluteError": 1.575112067328559,
       "rmse": 10.423397133907145,
-      "maxChannelDelta": 204,
-      "expectedPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/user-knowledge-source-unavailable-795-1151-2026-09-06.png",
-      "actualPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-user-knowledge-source-unavailable-browser-2026-09-06.png",
-      "figmaNodeId": "795:1151",
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 204
     },
     "admin-run-detail": {
       "status": "COMPARED",
@@ -1036,8 +1012,7 @@
       "differentRatio": 0.5035542805989583,
       "meanAbsoluteError": 5.253111267089844,
       "rmse": 21.838486992606605,
-      "maxChannelDelta": 226,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 226
     },
     "profile-privacy": {
       "status": "COMPARED",
@@ -1048,8 +1023,7 @@
       "differentRatio": 0.07840915256076389,
       "meanAbsoluteError": 2.4729131062825522,
       "rmse": 16.208989617954295,
-      "maxChannelDelta": 226,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 226
     },
     "admin-knowledge-upload-success": {
       "status": "COMPARED",
@@ -1137,8 +1111,7 @@
       "differentRatio": 0.53790283203125,
       "meanAbsoluteError": 4.505440775553385,
       "rmse": 19.367628828037446,
-      "maxChannelDelta": 226,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 226
     },
     "profile-privacy-delete-confirm": {
       "status": "COMPARED",
@@ -1149,8 +1122,7 @@
       "differentRatio": 0.5288262261284722,
       "meanAbsoluteError": 2.991497124565972,
       "rmse": 16.894073020840978,
-      "maxChannelDelta": 226,
-      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED"
+      "maxChannelDelta": 226
     },
     "agent-chat-running-stop": {
       "status": "COMPARED",
@@ -1168,11 +1140,11 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 653571,
-      "differentRatio": 0.443231201171875,
-      "meanAbsoluteError": 4.894244893391927,
-      "rmse": 20.388093450669256,
-      "maxChannelDelta": 253
+      "differentPixels": 282890,
+      "differentRatio": 0.19184705946180555,
+      "meanAbsoluteError": 2.949157545301649,
+      "rmse": 17.66574690721783,
+      "maxChannelDelta": 244
     },
     "agent-chat-viewport-1366x768": {
       "status": "COMPARED",

@@ -71,8 +71,7 @@ describe('DietRecordsPage', () => {
     expect(screen.getByText('每周饮食微调')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '下一页' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '记录详情 · 待确认记录可在这里补充后保存' })).toBeInTheDocument();
-    expect(document.querySelector('img[src="/assets/figma/workspace/home-sidebar-avatar.png"]')).toBeInTheDocument();
-    expect(document.querySelector('img[src="/assets/figma/workspace/home-topbar-avatar.png"]')).toBeInTheDocument();
+    expect(document.querySelectorAll('img[src="/assets/avatars/default-male.svg"]')).toHaveLength(2);
     expect(document.querySelector('img[src="/assets/figma/diet-records/metric-ring-energy.svg"]')).toBeInTheDocument();
     expect(
       document.querySelector('img[src="/assets/figma/workspace/diet-records/intake-analysis.svg"]'),

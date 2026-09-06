@@ -4,8 +4,8 @@ import {
   CalendarDays,
   Calculator,
   Check,
-  CircleAlert,
   Leaf,
+  OctagonAlert,
   Paperclip,
   Search,
   SendHorizontal,
@@ -17,6 +17,7 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { FigmaWorkspaceAsset } from '../../components/workspace/FigmaWorkspaceAsset';
 import { WorkspaceLayout } from '../../layouts/WorkspaceLayout/WorkspaceLayout';
+import { FIGMA_WORKSPACE_AVATARS } from '../../lib/avatar';
 import { getAuthUser } from '../../services/authService';
 import { getHomeSessions, getRecommendedPrompts, getTaskCards } from '../../services/sessionService';
 import type { SessionSummary } from '../../types/session';
@@ -58,8 +59,13 @@ const figmaSidebarSessions: SessionSummary[] = [
   { id: 'breakfast-smoothie', title: '早餐奶昔配方', subtitle: '12:45' },
 ];
 
-const FIGMA_HOME_SIDEBAR_AVATAR = '/assets/figma/workspace/home-sidebar-avatar.png';
-const FIGMA_HOME_TOPBAR_AVATAR = '/assets/figma/workspace/home-topbar-avatar.png';
+const figmaHomeStateSidebarSessions: SessionSummary[] = [
+  ...figmaSidebarSessions,
+  { id: 'hydration-electrolytes', title: '补水与电解质', subtitle: '12:45' },
+];
+
+const FIGMA_HOME_SIDEBAR_AVATAR = FIGMA_WORKSPACE_AVATARS.sidebar;
+const FIGMA_HOME_TOPBAR_AVATAR = FIGMA_WORKSPACE_AVATARS.topbar;
 
 type HomeState = 'default' | 'loading' | 'empty' | 'error' | 'input-states';
 
@@ -79,15 +85,8 @@ function HomeStatePanel({
       <section
         className={`${styles.homeStatePanel} ${styles.homeStateLoading}`}
         aria-busy="true"
-        aria-label="工作台正在加载"
+        aria-label="工作台加载骨架"
       >
-        <div className={styles.loadingHeading}>
-          <div>
-            <h2>工作台正在加载</h2>
-            <p>正在整理你的营养摘要和任务数据</p>
-          </div>
-          <span>加载中</span>
-        </div>
         <div className={styles.homeStateSkeletonChips}>
           {[1, 2, 3, 4, 5].map((item) => (
             <span key={item} />
@@ -95,19 +94,32 @@ function HomeStatePanel({
         </div>
         <div className={styles.homeStateMetricSkeletons}>
           {[1, 2, 3, 4].map((item) => (
-            <span key={item} />
+            <span key={item}>
+              <div>
+                <i />
+                <i />
+              </div>
+              <b />
+            </span>
           ))}
         </div>
         <div className={styles.homeStateGridSkeletons}>
-          <span />
-          <span />
+          <span>
+            <i />
+            <i />
+            <i />
+          </span>
+          <span>
+            <i />
+            <i />
+          </span>
         </div>
       </section>
     );
   }
 
   const isError = state === 'error';
-  const Icon = isError ? CircleAlert : Leaf;
+  const Icon = isError ? OctagonAlert : Leaf;
   return (
     <section
       className={`${styles.homeStatePanel} ${isError ? styles.homeStateError : styles.homeStateEmpty}`}
@@ -129,11 +141,50 @@ function HomeStatePanel({
   );
 }
 
+function HomeInputStatesPanel() {
+  return (
+    <section className={`${styles.statusPanel} ${styles.inputStatesPanel}`} aria-labelledby="input-states-title">
+      <h2 id="input-states-title">输入器状态</h2>
+      <div className={styles.inputStateCards}>
+        <article className={styles.inputStateCard}>
+          <div>
+            <strong>空输入 · 发送禁用</strong>
+            <span>请先输入任务内容</span>
+          </div>
+          <Button className={styles.inputStateControl} variant="ghost" size="sm" disabled>
+            发送
+          </Button>
+        </article>
+        <article className={styles.inputStateCard}>
+          <div>
+            <strong>模板已带入 · 可发送</strong>
+            <span>分析早餐营养并记录今日饮食</span>
+          </div>
+          <Button className={`${styles.inputStateControl} ${styles.inputStateReady}`} variant="ghost" size="sm">
+            发送
+          </Button>
+        </article>
+        <article className={styles.inputStateCard}>
+          <div>
+            <strong>运行中 · 可停止</strong>
+            <span>正在执行：早餐营养分析</span>
+          </div>
+          <Button className={`${styles.inputStateControl} ${styles.inputStateRunning}`} variant="ghost" size="sm">
+            停止
+          </Button>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 export function HomePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const homeState = getHomeState(searchParams.get('state'));
-  const isFigmaFixture = searchParams.get('state') === 'figma-v2';
+  // Home 的四个状态画板都来自 Figma，不能只有默认态使用设计稿壳层。
+  const isFigmaFixture = searchParams.get('state') === 'figma-v2' || homeState !== 'default';
+  const isHomeStateFixture = homeState !== 'default';
   const [prompt, setPrompt] = useState('');
   const [confirmedItems, setConfirmedItems] = useState<string[]>([]);
   const [attachmentName, setAttachmentName] = useState('');
@@ -142,6 +193,15 @@ export function HomePage() {
   const taskCards = getTaskCards();
   const recommendedPrompts = getRecommendedPrompts();
   const sessions = getHomeSessions();
+  const stateSessions = isHomeStateFixture ? figmaHomeStateSidebarSessions : figmaSidebarSessions;
+  const greetingName = homeState === 'empty' ? '新用户' : 'Anddy';
+  const introTitle =
+    homeState === 'loading'
+      ? '工作台正在加载'
+      : `👋 早上好，${isFigmaFixture ? greetingName : currentUser.displayName}！`;
+  const introSubtitle =
+    homeState === 'loading' ? '正在同步今日营养摘要、近期任务和待确认记录' : '今天是 2024年3月14日 星期二';
+  const introEnvironment = homeState === 'loading' ? '加载中' : '生产环境';
 
   const quickActions = useMemo(
     () => [
@@ -193,15 +253,17 @@ export function HomePage() {
       sidebarAvatarSrc={isFigmaFixture ? FIGMA_HOME_SIDEBAR_AVATAR : undefined}
       topAvatarSrc={isFigmaFixture ? FIGMA_HOME_TOPBAR_AVATAR : undefined}
       showKnowledgeTopNav={!isFigmaFixture}
-      sidebarFixture={isFigmaFixture ? { sessions: figmaSidebarSessions } : undefined}
+      sidebarFixture={
+        isFigmaFixture ? { currentPage: 1, sessionCountLabel: '共 15 条会话', sessions: stateSessions } : undefined
+      }
     >
       <div className={`${styles.page} ${isFigmaFixture ? styles.figmaHomePage : ''} fm-enter`}>
         <section className={styles.intro}>
           <div>
-            <h1>👋 早上好，{isFigmaFixture ? 'Anddy' : currentUser.displayName}！</h1>
-            <p>今天是 2024年3月14日 星期二</p>
+            <h1>{introTitle}</h1>
+            <p>{introSubtitle}</p>
           </div>
-          <span className={styles.environment}>生产环境</span>
+          <span className={styles.introEnvironment}>{introEnvironment}</span>
         </section>
 
         <section className={styles.taskComposer} aria-label="开始一个新任务">
@@ -229,7 +291,11 @@ export function HomePage() {
           <Input
             className={styles.taskInput}
             value={prompt}
-            placeholder="分析早餐照片，计算热量摄入并记录营养指标..."
+            placeholder={
+              homeState === 'loading'
+                ? '正在准备工作台数据，稍后可创建新任务...'
+                : '分析早餐照片，计算热量摄入并记录营养指标...'
+            }
             aria-label="任务内容"
             onChange={(event) => setPrompt(event.target.value)}
             onKeyDown={(event) => {
@@ -376,6 +442,8 @@ export function HomePage() {
                 </div>
               </article>
             </section>
+
+            {isHomeStateFixture ? <HomeInputStatesPanel /> : null}
 
             {isFigmaFixture ? (
               <section className={styles.statusPanel} aria-labelledby="status-title">

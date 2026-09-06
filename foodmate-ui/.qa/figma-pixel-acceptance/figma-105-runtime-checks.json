@@ -1782,7 +1782,7 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/?view=records&state=loading",
+      "url": "/?state=loading",
       "viewport": {
         "height": 1024,
         "width": 1440
