@@ -75,6 +75,10 @@ describe('ProfilePage', () => {
       '/assets/figma/profile/topbar-avatar.png',
     );
     expect(container.querySelector('.profile img')).toHaveAttribute('src', '/assets/figma/profile/sidebar-avatar.png');
+    expect(container.querySelector('img[src="/assets/figma/workspace/profile/home.svg"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/figma/workspace/profile/topbar-search.svg"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/figma/workspace/profile/notification.svg"]')).toBeInTheDocument();
+    expect(screen.getByText('首席运营')).toBeInTheDocument();
     expect(document.querySelector('[data-name="window-controls"]')).toBeInTheDocument();
   });
 
@@ -90,8 +94,10 @@ describe('ProfilePage', () => {
     expect(screen.getByRole('textbox', { name: '每日热量目标 (千卡)' })).toHaveValue('2500');
     expect(screen.getByRole('textbox', { name: '每日蛋白质目标 (g)' })).toHaveValue('150');
     expect(screen.getByRole('heading', { name: '饮食与身体目标' }).closest('div')).toHaveClass(styles.figmaGoalsCard);
-    expect(screen.queryByText('偏好速览')).not.toBeInTheDocument();
-    expect(screen.queryByText('头像与账号概览')).not.toBeInTheDocument();
+    expect(screen.getByText('偏好速览')).toBeInTheDocument();
+    expect(screen.getByText('头像与账号概览')).toBeInTheDocument();
+    expect(screen.getByText('账号状态')).toBeInTheDocument();
+    expect(screen.getByText('头像与账号概览').closest('div')).toHaveClass(styles.figmaProfileCard);
   });
 
   it('marks the memories page with its Figma-only geometry contract', () => {

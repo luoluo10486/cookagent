@@ -787,8 +787,8 @@ function BasicTab({
   return (
     <div className={styles.basicLayout}>
       <div className={styles.basicLeft}>
-        <Card className={styles.profileCard}>
-          {!figmaFixture ? <p className={styles.overline}>头像与账号概览</p> : null}
+        <Card className={cn(styles.profileCard, figmaFixture && styles.figmaProfileCard)}>
+          <p className={styles.overline}>头像与账号概览</p>
           <div className={styles.avatarShell}>
             <div className={styles.avatarRing}>
               {avatarSource ? (
@@ -833,26 +833,22 @@ function BasicTab({
               </span>
             </div>
           ) : null}
-          {!figmaFixture ? (
-            <>
-              <div className={cn(styles.avatarSummary, styles.summaryStatus)}>
-                <span>账号状态</span>
-                <strong>{statusLabel(authUser.status)}</strong>
-              </div>
-              <div className={cn(styles.avatarSummary, styles.summaryLogin)}>
-                <span>最近登录</span>
-                <strong>{realMode ? authUser.lastLoginAt : '今天 09:42'}</strong>
-              </div>
-              <div className={cn(styles.avatarSummary, styles.summaryUnits)}>
-                <span>常用单位</span>
-                <strong>公制</strong>
-              </div>
-              <div className={cn(styles.avatarSummary, styles.summaryTimezone)}>
-                <span>时区</span>
-                <strong>UTC+08:00</strong>
-              </div>
-            </>
-          ) : null}
+          <div className={cn(styles.avatarSummary, styles.summaryStatus)}>
+            <span>账号状态</span>
+            <strong>{statusLabel(authUser.status)}</strong>
+          </div>
+          <div className={cn(styles.avatarSummary, styles.summaryLogin)}>
+            <span>最近登录</span>
+            <strong>{realMode ? authUser.lastLoginAt : '今天 09:42'}</strong>
+          </div>
+          <div className={cn(styles.avatarSummary, styles.summaryUnits)}>
+            <span>常用单位</span>
+            <strong>公制</strong>
+          </div>
+          <div className={cn(styles.avatarSummary, styles.summaryTimezone)}>
+            <span>时区</span>
+            <strong>UTC+08:00</strong>
+          </div>
         </Card>
 
         <Card className={styles.profileCard + ' ' + styles.credentialCard}>
@@ -864,7 +860,10 @@ function BasicTab({
             </div>
             <div>
               <span>角色</span>
-              <StatusChip tone="orange">{roleLabel(authUser.role)}</StatusChip>
+              <StatusChip tone="orange">
+                {/* Figma Basic 的示例角色文案仅覆盖 fixture 展示，不改变真实权限角色。 */}
+                {roleLabel(figmaFixture ? 'admin' : authUser.role)}
+              </StatusChip>
             </div>
             <div>
               <span>邮箱地址</span>
@@ -877,22 +876,20 @@ function BasicTab({
           </div>
         </Card>
 
-        {!figmaFixture ? (
-          <Card className={styles.profileCard + ' ' + styles.preferenceCard}>
-            <h2>偏好速览</h2>
-            <p>用于生成更贴合你的饮食建议</p>
-            <div className={styles.preferenceGrid}>
-              <SummaryTile label="常用餐型" value="三餐 + 加餐" />
-              <SummaryTile label="当前目标" value={profileForm.dietGoal || '精益增肌'} />
-              <SummaryTile
-                label="已记录过敏原"
-                value={profileForm.allergens.length ? profileForm.allergens.join(' · ') : '暂无'}
-                tone="red"
-              />
-              <SummaryTile label="最近更新" value="今天 12:45" tone="green" />
-            </div>
-          </Card>
-        ) : null}
+        <Card className={styles.profileCard + ' ' + styles.preferenceCard}>
+          <h2>偏好速览</h2>
+          <p>用于生成更贴合你的饮食建议</p>
+          <div className={styles.preferenceGrid}>
+            <SummaryTile label="常用餐型" value="三餐 + 加餐" />
+            <SummaryTile label="当前目标" value={profileForm.dietGoal || '精益增肌'} />
+            <SummaryTile
+              label="已记录过敏原"
+              value={profileForm.allergens.length ? profileForm.allergens.join(' · ') : '暂无'}
+              tone="red"
+            />
+            <SummaryTile label="最近更新" value="今天 12:45" tone="green" />
+          </div>
+        </Card>
       </div>
 
       <Card className={cn(styles.goalsCard, figmaFixture && styles.figmaGoalsCard)}>
@@ -2107,12 +2104,13 @@ export function ProfilePage() {
       topAvatarSrc={isFigmaFixture ? FIGMA_PROFILE_AVATARS.topbar : undefined}
       topbarShowMarkLetter={!isFigmaFixture}
       showWindowControls={isFigmaFixture}
+      // Profile 画板使用独立导出的壳层资源，真实模式继续使用 Lucide fallback。
+      fixtureVariant={isFigmaFixture ? 'profile' : undefined}
       sidebarFixture={
         isFigmaFixture
           ? {
               currentPage: 1,
               sessions: figmaSidebarSessions,
-              showTopStatus: true,
             }
           : undefined
       }

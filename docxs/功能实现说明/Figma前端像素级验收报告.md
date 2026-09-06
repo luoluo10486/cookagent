@@ -9,7 +9,7 @@
 1. Figma 文件内部结构、组件系统、Prototype 和画板截图回读已完成。
 2. 前端代码与 Figma 画板的自动化像素差异已覆盖 105 个已建立映射的页面/状态，105 个结果均为 `DIFF_REVIEW`，不能标记为像素级通过。
 
-因此当前不能宣称“Figma 105 张画板已全部像素级通过”。已经完成的是可复核的 Figma 全量结构验收、105 个画板的路由/状态映射、差异证据收集，以及运行时几何、可见文字和 DPR 检查；当前 mapping 中 86 项已完成人工复核，19 项仍为 `PENDING`，并且已复核项仍存在可见差异，结果继续保留为 `DIFF_REVIEW`。
+因此当前不能宣称“Figma 105 张画板已全部像素级通过”。已经完成的是可复核的 Figma 全量结构验收、105 个画板的路由/状态映射、差异证据收集，以及运行时几何、可见文字和 DPR 检查；当前 mapping 中 87 项已完成人工复核，18 项仍为 `PENDING`，并且已复核项仍存在可见差异，结果继续保留为 `DIFF_REVIEW`。
 
 ## 1.1 2026-09-06 Workspace/Home 与 Agent Chat 资源收口
 
@@ -2449,3 +2449,21 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 三项仍存在头像素材、图标轮廓、字体光栅化和局部组合差异，继续保持 `DIFF_REVIEW`，不能标记为像素级 `PASS`。
 - [ ] 本节不代表其它 102 个画板重新采集或完成 105 项全量人工视觉复核；全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍缺失，资源登记继续保持 `BLOCKED`。
+
+## 48. 2026-09-06 Profile Basic Figma 增量验收
+
+本节只处理 Profile Basic 画板 `806:1119`，不重新采集或重新判定其它画板。Figma 文件保持只读；本批次只调整 Profile fixture 的壳层资源、Figma 可见字段和局部间距，真实模式的权限与 Profile 服务逻辑未改变。
+
+| 画板 | Figma 节点 | 前端入口 | Figma PNG | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---|---:|---:|---:|---:|---|
+| Profile Basic | `806:1119` | `/profile?state=basic` | `recaptured-figma/profile-basic-live-2026-09-06.png` | `recaptured/dpr1-profile-basic-browser-2026-09-06.png` | `1440×1024 / 1` | 60.2509% | 3.464978 | 18.459664 | 230 | `DIFF_REVIEW` |
+
+- [x] Figma Basic 的搜索和通知图标已登记到 Profile 独立资源目录，并由 `FigmaWorkspaceAsset` 统一加载；真实模式继续使用 Lucide fallback。
+- [x] Profile Basic fixture 已恢复 Figma 画板中可见的账号概览、状态摘要和偏好速览；“首席运营”只作为 fixture 展示文案，不改变真实角色权限。
+- [x] 上传说明的局部间距调整限定在 `figmaProfileCard`，不改变真实模式的 Profile 卡片布局。
+- [x] Figma 原始 PNG 与浏览器 PNG 均为 `1440×1024`；浏览器使用 Chrome `152.0.7977.77`、DPR `1`、字体 `loaded` 且无横向溢出；文字边界检查通过。
+- [x] `scripts/png-diff.mjs` 同尺寸结果为 `differentPixels=888436`、差异比例 `60.2509%`、`MAE=3.464978`、`RMSE=18.459664`、最大通道差异 `230`。
+- [x] 已完成人工视觉复核；顶栏资源、内容字段和主要几何已确认，字体、头像、图标和局部光栅化差异仍存在，因此继续保持 `DIFF_REVIEW`。
+- [x] 本批次统一验证通过：Vitest `40/40` 个测试文件、`257/257` 个用例，`typecheck`、`lint`、`format:check`、`build`、`qa:figma:validate` 和 `git diff --check` 均通过；证据校验为 `structuralPass=true`、`strictDprPass=true`。
+- [ ] 本节只复核一个 Profile 画板，不代表其余 104 个画板重新采集或完成全量人工视觉复核；全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍未提供，资源登记继续保持 `BLOCKED`。
