@@ -2346,3 +2346,13 @@
 | 真实模式收口 | 工具注册表、工具调用、用户详情、知识库批次、运行治理使用真实接口；加载中、空数据、错误和重试状态均不回退到 fixture。聊天页消费 `run.completed.citations`，批次进度和 SSE 继续支持恢复。 |
 | 业务边界 | M2-1/M2-2/M2-3 继续以业务正确性作为完成口径；性能压测、长稳、依赖重启、ACK 丢失、重复投递、生产容量、备份恢复、Kubernetes 和发布回滚不在本轮。 |
 | 结论 | 前端当前业务门禁通过，已与后端真实查询/写入契约对齐；下一阶段若继续开发，应优先处理用户明确的新业务范围，而不是重复开展同一页面验证。 |
+
+## D153 管理端真实数据源边界修正（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 问题 | 发现管理概览在真实接口返回前无条件使用 Figma fixture 初始 state，可能在加载瞬间展示假数据；管理页统一审计回调也会在真实模式修改前端 fixture 数组。 |
+| 修正 | 概览页 real 模式以空指标/空列表/零总数起步；管理操作成功或失败后仅 fixture 模式追加本地样例审计，real 模式完全以服务端审计和刷新结果为准。 |
+| 业务验证 | `cd foodmate-ui; npm.cmd test -- --maxWorkers=1 --run src/pages/AdminPage/AdminPage.test.tsx src/pages/AdminPage/tabs/ToolsTab.real.test.tsx src/pages/AdminPage/tabs/UsersTab.test.tsx`：3 个测试文件、`32/32` 通过；`npm.cmd run typecheck` 通过。 |
+| 数据边界 | 未修改 PostgreSQL、Redis、Milvus、RocketMQ、`.env` 或任何用户已有 Figma QA 文件；未增加测试数据。 |
+| 结论 | 管理端 real 模式的页面事实来源统一为服务端接口，fixture 仅保留给显式设计预览/测试状态。 |
