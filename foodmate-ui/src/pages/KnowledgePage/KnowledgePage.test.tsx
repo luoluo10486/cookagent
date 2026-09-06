@@ -48,7 +48,9 @@ describe('KnowledgePage', () => {
 
     expect(screen.getByRole('button', { name: 'Anddy' })).toBeInTheDocument();
     expect(screen.getByText('Anddy 的工作区')).toBeInTheDocument();
-    expect(container.querySelectorAll('img[src="/assets/figma/knowledge/user-avatar.png"]')).toHaveLength(2);
+    expect(container.querySelector('img[src="/assets/figma/knowledge/sidebar-avatar.png"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/figma/knowledge/topbar-avatar.png"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/figma/workspace/knowledge/knowledge.svg"]')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('搜索会话...')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /每周饮食微调/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '下一页' })).toBeInTheDocument();

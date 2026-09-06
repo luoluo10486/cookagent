@@ -4328,8 +4328,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-22",
-        "conclusion": "Figma-aligned empty card geometry, badge, and accent are present. The frontend does not render the Figma-only red, yellow, and green window controls; business status dots remain. Broad shell, sidebar, avatar, and typography differences remain in the screenshot diff; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "2026-09-06 已使用 Knowledge 专属 Figma 壳层 SVG、侧栏头像和顶栏头像重新复核；空态卡片几何、徽标和强调色保持对齐。自动 diff 仍存在字体、头像、图标和浏览器光栅化差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -4382,8 +4382,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-29",
-        "conclusion": "Figma-aligned error card geometry and visual treatment are present. Broad shell, sidebar, avatar, and typography differences remain in the screenshot diff; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "2026-09-06 已使用 Knowledge 专属 Figma 壳层 SVG、侧栏头像和顶栏头像重新复核；检索失败卡片几何和视觉层级保持对齐。自动 diff 仍存在字体、头像、图标和浏览器光栅化差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -4436,8 +4436,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-29",
-        "conclusion": "Figma-aligned partial-access card geometry and visual treatment are present. Broad shell, sidebar, avatar, and typography differences remain in the screenshot diff; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "2026-09-06 已使用 Knowledge 专属 Figma 壳层 SVG、侧栏头像和顶栏头像重新复核；来源不可用卡片几何和局部访问提示保持对齐。自动 diff 仍存在字体、头像、图标和浏览器光栅化差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",

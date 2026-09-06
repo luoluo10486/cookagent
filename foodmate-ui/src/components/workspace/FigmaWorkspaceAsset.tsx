@@ -1,6 +1,6 @@
 import type { ImgHTMLAttributes } from 'react';
 
-export type WorkspaceFixtureVariant = 'home' | 'chat' | 'diet-records' | 'analysis' | 'planning';
+export type WorkspaceFixtureVariant = 'home' | 'chat' | 'diet-records' | 'analysis' | 'planning' | 'knowledge';
 
 export type FigmaWorkspaceAssetName =
   | 'windowControls'
@@ -133,6 +133,23 @@ const assetFileNames: Record<WorkspaceFixtureVariant, Partial<Record<FigmaWorksp
     statusDot: 'status-dot.svg',
     topbarSearch: 'topbar-search.svg',
     notification: 'notification.svg',
+    sessionDotActive: 'session-dot-active.svg',
+    sessionDotDefault: 'session-dot-default.svg',
+  },
+  knowledge: {
+    windowControls: 'window-controls.svg',
+    newTask: 'new-task.svg',
+    sessionSearch: 'session-search.svg',
+    home: 'home.svg',
+    agentChat: 'agent-chat.svg',
+    dietRecords: 'diet-records.svg',
+    intakeAnalysis: 'intake-analysis.svg',
+    mealPlanning: 'meal-planning.svg',
+    knowledge: 'knowledge.svg',
+    settings: 'settings.svg',
+    topbarSearch: 'topbar-search.svg',
+    notification: 'notification.svg',
+    statusDot: 'status-dot.svg',
     sessionDotActive: 'session-dot-active.svg',
     sessionDotDefault: 'session-dot-default.svg',
   },

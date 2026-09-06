@@ -7,6 +7,11 @@
   background: var(--fm-figma-workspace-bg);
 }
 
+/* Figma Knowledge 顶栏字标为 20px，不能沿用 compact 默认值。 */
+.knowledgeLayout {
+  --fm-brand-wordmark-size: 20px;
+}
+
 /* Figma fixture 只覆盖设计稿专属的表面颜色。 */
 .figmaFixture {
   --fm-fixture-sidebar-active-surface: var(--fm-figma-workspace-sidebar-active);

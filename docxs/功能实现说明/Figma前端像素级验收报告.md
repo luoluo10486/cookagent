@@ -9,7 +9,7 @@
 1. Figma 文件内部结构、组件系统、Prototype 和画板截图回读已完成。
 2. 前端代码与 Figma 画板的自动化像素差异已覆盖 105 个已建立映射的页面/状态，105 个结果均为 `DIFF_REVIEW`，不能标记为像素级通过。
 
-因此当前不能宣称“Figma 105 张画板已全部像素级通过”。已经完成的是可复核的 Figma 全量结构验收、105 个画板的路由/状态映射、差异证据收集，以及运行时几何、可见文字、DPR 和 105/105 人工视觉复核登记；由于仍存在可见差异，结果继续保留为 `DIFF_REVIEW`。
+因此当前不能宣称“Figma 105 张画板已全部像素级通过”。已经完成的是可复核的 Figma 全量结构验收、105 个画板的路由/状态映射、差异证据收集，以及运行时几何、可见文字和 DPR 检查；当前 mapping 中 86 项已完成人工复核，19 项仍为 `PENDING`，并且已复核项仍存在可见差异，结果继续保留为 `DIFF_REVIEW`。
 
 ## 1.1 2026-09-06 Workspace/Home 与 Agent Chat 资源收口
 
@@ -35,6 +35,24 @@
 - [x] `npm run qa:figma:validate` 返回 `total=105`、`structuralPass=true`、`strictDprPass=true`、`errors=[]`。
 - [x] `figma-105-mapping.json` 仍记录 `mappedPass=0`、`diffReview=105`、`unmapped=0`、`sizeMismatch=0`；结构校验恢复不改变任何视觉结论。
 - [ ] 105 个画板仍未全部达到像素级 `PASS`，后续继续按受影响画板逐页处理，不进行无必要的全量重新验收。
+
+## 1.3 2026-09-06 Knowledge 三种状态资源收口
+
+本批次只处理 Knowledge 默认工作台、检索失败和来源不可用三个状态，不重新采集或重新判定全部 105 个画板。Figma 节点为 `795:786`、`795:968` 和 `795:1151`，设计稿保持只读。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器证据 | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Knowledge Empty | `795:786` | `/knowledge?state=empty` | `recaptured/dpr1-user-knowledge-empty-browser-2026-09-06.png` | `1440×1024 / 1` | 40.3875% | 1.486179 | 9.587399 | 204 | `DIFF_REVIEW` |
+| Knowledge Search Failed | `795:968` | `/knowledge?state=search-failed` | `recaptured/dpr1-user-knowledge-search-failed-browser-2026-09-06.png` | `1440×1024 / 1` | 39.4229% | 1.585677 | 10.442787 | 204 | `DIFF_REVIEW` |
+| Knowledge Source Unavailable | `795:1151` | `/knowledge?state=source-unavailable` | `recaptured/dpr1-user-knowledge-source-unavailable-browser-2026-09-06.png` | `1440×1024 / 1` | 39.4018% | 1.575112 | 10.423397 | 204 | `DIFF_REVIEW` |
+
+- [x] Knowledge fixture 已通过 `FigmaWorkspaceAsset` 使用独立 `foodmate-ui/public/assets/figma/workspace/knowledge/` SVG 目录，避免把其它工作台画板资源混入当前页面。
+- [x] 新增 `foodmate-ui/public/assets/figma/knowledge/sidebar-avatar.png` 和 `topbar-avatar.png`，分别对应 Figma 侧栏和顶栏示例头像。
+- [x] 三项浏览器截图均使用 Chrome `152.0.7977.77`、`1440×1024`、DPR `1`、字体加载完成且无横向溢出；三项 mapping、diff JSON 和运行时记录已同步到 2026-09-06。
+- [x] 本批次统一门禁通过：Vitest `40/40` 个测试文件、`257/257` 个用例，`typecheck`、`lint`、`format:check`、`build`、`qa:figma:validate` 和 `git diff --check`。
+- [ ] 三项自动 diff 均为非零，且人工复核确认字体、头像、图标和浏览器光栅化差异仍存在，全部继续保持 `DIFF_REVIEW`，不能标记像素级 `PASS`。
+- [ ] 本批次不代表其余画板重新采集或完成 105 项全量人工复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍未提供，资源登记继续保持 `BLOCKED`。
 
 ## 2. Figma 文件内部验收
 
