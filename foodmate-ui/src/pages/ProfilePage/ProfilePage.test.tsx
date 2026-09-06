@@ -113,6 +113,17 @@ describe('ProfilePage', () => {
     ).toBeInTheDocument();
   });
 
+  it('renders the Figma memories empty page instead of an overlay', () => {
+    renderPage('/profile?state=memories-empty');
+
+    const memoryPage = screen.getByRole('heading', { name: '暂无长期记忆' }).closest('[data-figma-layout]');
+
+    expect(memoryPage).toHaveAttribute('data-figma-layout', 'profile-memories-empty');
+    expect(screen.getByRole('button', { name: '去会话确认' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: '长期记忆管理' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
   it('limits the security Figma fixture to the two reference cards', () => {
     renderPage('/profile?state=security');
 

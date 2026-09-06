@@ -5948,8 +5948,8 @@
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-memories-empty-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-memories-empty",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -5972,10 +5972,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "空态卡已按 Figma 对齐至 x=500、y=270、width=680、height=320；介绍卡和筛选区几何已对齐。壳层导航、头像、控件箭头、文字光栅化和局部颜色仍存在差异，继续保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",

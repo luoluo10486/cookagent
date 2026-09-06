@@ -683,6 +683,13 @@
   color: #333;
 }
 
+.figmaMemoriesEmptyPage .memoryEmpty {
+  margin-top: -15px;
+  margin-right: auto;
+  margin-left: 208px;
+  padding: 28px 32px;
+}
+
 .figmaMemoryIcon {
   width: 16px;
   height: 16px;

@@ -1108,11 +1108,11 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 1207381,
-      "differentRatio": 0.8188076443142361,
-      "meanAbsoluteError": 4.934674072265625,
-      "rmse": 20.223494534180908,
-      "maxChannelDelta": 227
+      "differentPixels": 211349,
+      "differentRatio": 0.14333021375868055,
+      "meanAbsoluteError": 2.5248033311631946,
+      "rmse": 15.902037901938192,
+      "maxChannelDelta": 226
     },
     "profile-security-logout-confirm": {
       "status": "COMPARED",

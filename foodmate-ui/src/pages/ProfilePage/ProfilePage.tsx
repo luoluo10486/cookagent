@@ -278,21 +278,6 @@ function getProfileFixtureState(value: string | null): ProfileFixtureState | und
 }
 
 function ProfileFixtureOverlay({ state, onDismiss }: { state: ProfileFixtureState; onDismiss: () => void }) {
-  if (state === 'memories-empty') {
-    return (
-      <div className={styles.fixturePanel}>
-        <div className={styles.fixturePanelCard}>
-          <span>MEMORY / EMPTY</span>
-          <h2>暂无长期记忆</h2>
-          <p>当你在 Agent 会话中确认一条偏好后，它会出现在这里。临时偏好不会自动保存。</p>
-          <Button type="button" onClick={onDismiss}>
-            去会话确认
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   const isError = state.includes('failed');
   const isSuccess = state.includes('success');
   const title =
@@ -1125,9 +1110,15 @@ function SummaryTile({
   );
 }
 
-function MemoriesTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
+function MemoriesTab({
+  figmaFixture = false,
+  emptyFixture = false,
+}: {
+  figmaFixture?: boolean;
+  emptyFixture?: boolean;
+}) {
   const navigate = useNavigate();
-  const [memories, setMemories] = useState(memorySeed);
+  const [memories, setMemories] = useState(emptyFixture ? [] : memorySeed);
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed'>('all');
   const [category, setCategory] = useState('全部分类');
   const [deleting, setDeleting] = useState<Memory>();
@@ -1149,8 +1140,12 @@ function MemoriesTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
 
   return (
     <div
-      className={cn(styles.memoryPage, figmaFixture && styles.figmaMemoriesPage)}
-      data-figma-layout={figmaFixture ? 'profile-memories' : undefined}
+      className={cn(
+        styles.memoryPage,
+        figmaFixture && styles.figmaMemoriesPage,
+        emptyFixture && styles.figmaMemoriesEmptyPage,
+      )}
+      data-figma-layout={figmaFixture ? (emptyFixture ? 'profile-memories-empty' : 'profile-memories') : undefined}
     >
       <Card className={styles.memoryIntro}>
         <h1>记忆系统</h1>
@@ -1225,14 +1220,16 @@ function MemoriesTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
           </Button>
         </Card>
       )}
-      <Card className={styles.memoryGuidance}>
-        <h2>长期记忆管理</h2>
-        <p>仅在你明确确认后，才会保存为长期记忆；会话中的临时偏好不会自动写入。</p>
-        <p>每条记忆展示：类别 · 创建时间 · 更新时间 · 最近使用时间 · 来源会话</p>
-        <p>支持类别：忌口 · 过敏原 · 目标 · 单位 · 常用餐型；来源会话可追溯且可撤回。</p>
-        <p className={styles.guidanceAction}>操作：编辑 · 删除并二次确认 · 查看来源会话 · 取消保存</p>
-        <p>无记忆时显示空态：去会话中确认一条偏好，或清除全部记忆。</p>
-      </Card>
+      {!emptyFixture ? (
+        <Card className={styles.memoryGuidance}>
+          <h2>长期记忆管理</h2>
+          <p>仅在你明确确认后，才会保存为长期记忆；会话中的临时偏好不会自动写入。</p>
+          <p>每条记忆展示：类别 · 创建时间 · 更新时间 · 最近使用时间 · 来源会话</p>
+          <p>支持类别：忌口 · 过敏原 · 目标 · 单位 · 常用餐型；来源会话可追溯且可撤回。</p>
+          <p className={styles.guidanceAction}>操作：编辑 · 删除并二次确认 · 查看来源会话 · 取消保存</p>
+          <p>无记忆时显示空态：去会话中确认一条偏好，或清除全部记忆。</p>
+        </Card>
+      ) : null}
       <Dialog open={Boolean(deleting)} onOpenChange={(open) => !open && setDeleting(undefined)}>
         <DialogContent className={styles.dialogContent}>
           <DialogHeader>
@@ -2131,7 +2128,9 @@ export function ProfilePage() {
           : undefined
       }
       pageOverlay={
-        fixtureState ? <ProfileFixtureOverlay state={fixtureState} onDismiss={() => navigate('/profile')} /> : null
+        fixtureState && fixtureState !== 'memories-empty' ? (
+          <ProfileFixtureOverlay state={fixtureState} onDismiss={() => navigate('/profile')} />
+        ) : null
       }
     >
       <div className={cn(styles.page, 'fm-enter')}>
@@ -2147,7 +2146,7 @@ export function ProfilePage() {
           realMode ? (
             <RealMemoriesTab />
           ) : (
-            <MemoriesTab figmaFixture={isFigmaFixture} />
+            <MemoriesTab figmaFixture={isFigmaFixture} emptyFixture={fixtureState === 'memories-empty'} />
           )
         ) : null}
         {activeTab === 'security' ? <SecurityTab figmaFixture={securityFigmaFixture} /> : null}
