@@ -3648,12 +3648,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=basic-avatar-uploading",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-basic-avatar-uploading.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-basic-avatar-uploading-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-avatar-uploading-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-basic-avatar-uploading",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -3676,10 +3676,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 792:212 的Profile Basic 头像或离开确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -3702,12 +3702,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=basic-avatar-failed",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-basic-avatar-failed.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-basic-avatar-failed-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-avatar-failed-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-basic-avatar-failed",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -3730,10 +3730,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 794:212 的Profile Basic 头像或离开确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -3756,14 +3756,14 @@
       "frontendRoute": "/profile",
       "queryState": "state=basic-unsaved-leave-confirmation",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-basic-unsaved-leave-confirmation.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-basic-unsaved-leave-confirmation-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-basic-unsaved-leave-confirmation-browser-2026-09-06.png",
       "mobileBrowserPng": ".qa/figma-pixel-acceptance/recaptured/profile-basic-unsaved-leave-confirmation-figma-modal-browser-390x844-2026-08-30.png",
       "mobileBrowserViewport": "390x844",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-basic-unsaved-leave-confirmation",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -3786,10 +3786,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 794:380 的Profile Basic 头像或离开确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -3812,12 +3812,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=security-password-submitting",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-security-password-submitting.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-security-password-submitting-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-submitting-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security-password-submitting",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -3840,10 +3840,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 794:548 的Profile Security 页面和安全操作状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -3866,12 +3866,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=security-password-success",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-security-password-success.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-security-password-success-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-success-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security-password-success",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -3894,10 +3894,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 794:693 的Profile Security 页面和安全操作状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -3920,12 +3920,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=security-password-failed",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-security-password-failed.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-security-password-failed-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-password-failed-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security-password-failed",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -3948,10 +3948,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 794:838 的Profile Security 页面和安全操作状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -3974,12 +3974,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=privacy-export-queued",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-privacy-export-queued.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-privacy-export-queued-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-queued-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-export-queued",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -4002,10 +4002,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 794:984 的Profile Privacy 导出、注销和确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -4028,12 +4028,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=privacy-export-running",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-privacy-export-running.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-privacy-export-running-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-running-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-export-running",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -4056,10 +4056,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 794:1127 的Profile Privacy 导出、注销和确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -4082,12 +4082,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=privacy-export-expired",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-privacy-export-expired.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-privacy-export-expired-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-export-expired-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-export-expired",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -4110,10 +4110,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 795:212 的Profile Privacy 导出、注销和确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -4136,12 +4136,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=privacy-deletion-submitting",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-privacy-deletion-submitting.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-privacy-deletion-submitting-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-submitting-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-deletion-submitting",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -4164,10 +4164,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 795:356 的Profile Privacy 导出、注销和确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -4190,12 +4190,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=privacy-deletion-success",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-privacy-deletion-success.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-privacy-deletion-success-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-success-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-deletion-success",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -4218,10 +4218,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 795:499 的Profile Privacy 导出、注销和确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -4244,12 +4244,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=privacy-deletion-failed",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-privacy-deletion-failed.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-privacy-deletion-failed-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-deletion-failed-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-deletion-failed",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -4272,10 +4272,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 795:642 的Profile Privacy 导出、注销和确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -4882,12 +4882,7 @@
           "computedStyle": {
             "failedFilterColor": "rgb(214, 118, 118)",
             "successFilterColor": "rgb(137, 178, 124)",
-            "stageColors": [
-              "rgb(93, 169, 178)",
-              "rgb(181, 140, 196)",
-              "rgb(199, 150, 84)",
-              "rgb(214, 118, 118)"
-            ],
+            "stageColors": ["rgb(93, 169, 178)", "rgb(181, 140, 196)", "rgb(199, 150, 84)", "rgb(214, 118, 118)"],
             "failedFilterFontSize": "11px",
             "successFilterFontSize": "11px"
           },
@@ -5234,7 +5229,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-basic",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff and manual visual review completed; visible differences remain",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -5288,7 +5283,7 @@
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-memories",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff and manual visual review completed; visible differences remain",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -5337,12 +5332,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=security",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-security.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-security-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -5365,10 +5360,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 806:1445 的Profile Security 页面和安全操作状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -5391,12 +5386,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=privacy",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-privacy.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-privacy-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -5419,10 +5414,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 806:1585 的Profile Privacy 导出、注销和确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -5998,12 +5993,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=security-logout-confirm",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-security-logout-confirm.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-security-logout-confirm-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-security-logout-confirm-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-security-logout-confirm",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -6026,10 +6021,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 1013:235 的Profile Security 页面和安全操作状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",
@@ -6052,12 +6047,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=privacy-delete-confirm",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-privacy-delete-confirm.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-privacy-delete-confirm-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-privacy-delete-confirm-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-privacy-delete-confirm",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -6080,10 +6075,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "实时 Figma 节点 1013:465 的Profile Privacy 导出、注销和确认状态已与 1440×1024、DPR 1 浏览器证据完成人工复核；主要结构和状态语义一致，但仍存在弹层位置或尺寸、字体光栅化、头像素材、遮罩和局部颜色差异，保留 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",

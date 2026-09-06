@@ -124,19 +124,19 @@ describe('ProfilePage', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
-  it('limits the security Figma fixture to the two reference cards', () => {
+  it('renders the complete live Figma security fixture', () => {
     renderPage('/profile?state=security');
 
     const securityPage = screen.getByRole('heading', { name: '修改账号密码' }).closest('[data-figma-layout]');
 
     expect(securityPage).toHaveAttribute('data-figma-layout', 'profile-security');
     expect(securityPage).toHaveClass(styles.figmaSecurityPage);
-    expect(screen.queryByRole('heading', { name: '最近安全活动' })).not.toBeInTheDocument();
-    expect(screen.queryByText('SECURE')).not.toBeInTheDocument();
-    expect(screen.queryByText('2 ACTIVE DEVICES')).not.toBeInTheDocument();
-    expect(screen.queryByText('设备状态在每次登录后更新')).not.toBeInTheDocument();
-    expect(securityPage?.querySelector(`.${styles.securityAccent}`)).not.toBeInTheDocument();
-    expect(securityPage?.querySelector(`.${styles.sessionAccent}`)).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '最近安全活动' })).toBeInTheDocument();
+    expect(screen.getByText('2 ACTIVE DEVICES')).toBeInTheDocument();
+    expect(screen.getByText('设备状态在每次登录后更新')).toBeInTheDocument();
+    expect(securityPage?.querySelector(`.${styles.securityAccent}`)).toBeInTheDocument();
+    expect(securityPage?.querySelector(`.${styles.sessionAccent}`)).toBeInTheDocument();
+    expect(securityPage?.querySelector(`.${styles.activityAccent}`)).toBeInTheDocument();
   });
 
   it('renders the Figma logout confirmation fixture with the target devices', async () => {
@@ -199,6 +199,7 @@ describe('ProfilePage', () => {
     expect(screen.getByText('任务已创建，后台整理完成后提供一次性下载。')).toBeInTheDocument();
     expect(screen.getByText('状态: queued · 预计等待 1-2 分钟 · export_id: exp_20260731_01')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '关闭' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '创建数据导出' }).querySelector('svg')).not.toBeInTheDocument();
     expect(screen.queryByText('状态：queued')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '关闭' }));

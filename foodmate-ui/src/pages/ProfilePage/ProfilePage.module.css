@@ -998,7 +998,7 @@
 }
 
 .figmaSecurityPage {
-  background: #fff;
+  background: #fcfcfc;
 }
 
 .figmaSecurityCard {
@@ -1008,13 +1008,18 @@
 }
 
 .figmaSecurityPage .passwordCard {
-  height: 464px;
-  min-height: 464px;
+  height: 540px;
+  min-height: 540px;
 }
 
 .figmaSecurityPage .sessionCard {
-  height: 378px;
-  min-height: 378px;
+  height: 500px;
+  min-height: 500px;
+}
+
+/* 实时 Figma Security 画板在双卡下方保留安全活动区。 */
+.figmaSecurityPage .activityCard {
+  margin-top: 18px;
 }
 
 .securityAccent,

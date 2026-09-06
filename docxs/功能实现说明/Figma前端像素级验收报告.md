@@ -2497,3 +2497,33 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [x] 本批次统一验证通过：Vitest `40/40` 个测试文件、`257/257` 个用例，`typecheck`、`lint`、`format:check`、`build`、`qa:figma:validate` 和 `git diff --check` 均通过；证据校验为 `structuralPass=true`、`strictDprPass=true`。
 - [ ] 本节只复核一个 Profile 画板，不代表其余 104 个画板重新采集或完成全量人工视觉复核；全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍未提供，资源登记继续保持 `BLOCKED`。
+
+## 49. 2026-09-06 Profile Security / Privacy 状态组人工复核
+
+本节只处理 Profile Security / Privacy 的 16 个实时 Figma 画板，不重新验收其它画板。实时设计节点来自文件 `MX18RZCfAmgprNzxItkHUH` 的 `🎨 :: Design` 页面；浏览器证据使用相同的 `1440×1024` 视口、DPR `1` 和已加载字体条件。
+
+| 画板 | Figma 节点 | 前端入口 | 差异比例 | MAE | RMSE | 结论 |
+|---|---|---|---:|---:|---:|---|
+| profile-basic-avatar-uploading | `792:212` | `/profile?state=basic-avatar-uploading` | 58.4064% | 2.922454 | 12.409108 | `DIFF_REVIEW` |
+| profile-basic-avatar-failed | `794:212` | `/profile?state=basic-avatar-failed` | 58.2386% | 3.012281 | 13.555829 | `DIFF_REVIEW` |
+| profile-basic-unsaved-leave-confirmation | `794:380` | `/profile?state=basic-unsaved-leave-confirmation` | 84.8657% | 49.328287 | 65.941348 | `DIFF_REVIEW` |
+| profile-security-password-submitting | `794:548` | `/profile?state=security-password-submitting` | 53.4625% | 2.874096 | 13.042847 | `DIFF_REVIEW` |
+| profile-security-password-success | `794:693` | `/profile?state=security-password-success` | 53.4625% | 2.737142 | 12.131022 | `DIFF_REVIEW` |
+| profile-security-password-failed | `794:838` | `/profile?state=security-password-failed` | 54.0089% | 2.928491 | 12.777796 | `DIFF_REVIEW` |
+| profile-privacy-export-queued | `794:984` | `/profile?state=privacy-export-queued` | 25.8316% | 1.428060 | 9.860943 | `DIFF_REVIEW` |
+| profile-privacy-export-running | `794:1127` | `/profile?state=privacy-export-running` | 25.1495% | 1.571642 | 11.004093 | `DIFF_REVIEW` |
+| profile-privacy-export-expired | `795:212` | `/profile?state=privacy-export-expired` | 25.8343% | 1.465381 | 10.195572 | `DIFF_REVIEW` |
+| profile-privacy-deletion-submitting | `795:356` | `/profile?state=privacy-deletion-submitting` | 84.8325% | 46.888040 | 62.831907 | `DIFF_REVIEW` |
+| profile-privacy-deletion-success | `795:499` | `/profile?state=privacy-deletion-success` | 26.6510% | 1.496341 | 10.230112 | `DIFF_REVIEW` |
+| profile-privacy-deletion-failed | `795:642` | `/profile?state=privacy-deletion-failed` | 35.8834% | 2.585295 | 11.953825 | `DIFF_REVIEW` |
+| profile-security | `806:1445` | `/profile?state=security` | 50.3554% | 5.253111 | 21.838487 | `DIFF_REVIEW` |
+| profile-privacy | `806:1585` | `/profile?state=privacy` | 7.8409% | 2.472913 | 16.208990 | `DIFF_REVIEW` |
+| profile-security-logout-confirm | `1013:235` | `/profile?state=security-logout-confirm` | 53.7903% | 4.505441 | 19.367629 | `DIFF_REVIEW` |
+| profile-privacy-delete-confirm | `1013:465` | `/profile?state=privacy-delete-confirm` | 52.8826% | 2.991497 | 16.894073 | `DIFF_REVIEW` |
+
+- [x] Security 实时稿包含密码卡、活跃工作区会话卡、`2 ACTIVE DEVICES`、设备状态提示和“最近安全活动”卡；代码已按该结构恢复 fixture。
+- [x] Privacy 实时稿保留导出状态、危险区域以及注销影响与二次确认区域；fixture 操作按钮的图标边界已按 Figma 修正，真实模式仍保留 Lucide 图标和既有请求。
+- [x] 16 个 Figma PNG 和 16 个浏览器 PNG 均存在且尺寸一致；mapping、diff JSON 和人工复核字段已同步，自动 diff、几何检查、文字检查和人工视觉结论均可追溯。
+- [x] 人工复核确认主要结构、状态语义和交互入口存在；弹层位置/尺寸、字体光栅化、头像、遮罩和局部颜色仍存在差异，因此全部保持 `DIFF_REVIEW`。
+- [ ] 本节不代表其余画板重新采集或完成 105 项全量人工视觉复核；全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍未提供，继续保持 `BLOCKED`。

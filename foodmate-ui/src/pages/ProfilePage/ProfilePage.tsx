@@ -1448,7 +1448,7 @@ function SecurityTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
     >
       <div className={styles.securityTopGrid}>
         <Card className={cn(styles.securityCard, styles.passwordCard, figmaFixture && styles.figmaSecurityCard)}>
-          {!figmaFixture ? <div className={styles.securityAccent} /> : null}
+          <div className={styles.securityAccent} />
           <h1>修改账号密码</h1>
           <form className={styles.passwordForm} onSubmit={submitPassword}>
             <Field label="当前密码">
@@ -1517,7 +1517,7 @@ function SecurityTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
         </Card>
 
         <Card className={cn(styles.securityCard, styles.sessionCard, figmaFixture && styles.figmaSecurityCard)}>
-          {!figmaFixture ? <div className={styles.sessionAccent} /> : null}
+          <div className={styles.sessionAccent} />
           <div className={styles.securityCardHeader}>
             <h1>活跃工作区会话</h1>
             <Button
@@ -1538,41 +1538,35 @@ function SecurityTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
               ))}
             </div>
           )}
-          {!figmaFixture ? (
-            <>
-              <StatusChip tone="blue">{Math.max(0, sessions.length - 1)} ACTIVE DEVICES</StatusChip>
-              <p className={styles.securityHint}>设备状态在每次登录后更新</p>
-            </>
-          ) : null}
+          <StatusChip tone="blue">{Math.max(0, sessions.length - 1)} ACTIVE DEVICES</StatusChip>
+          <p className={styles.securityHint}>设备状态在每次登录后更新</p>
         </Card>
       </div>
-      {!figmaFixture ? (
-        <Card className={styles.activityCard}>
-          <div className={styles.activityAccent} />
-          <div className={styles.activityHeader}>
-            <div>
-              <h2>最近安全活动</h2>
-              <p>查看最近的登录、密码和设备状态变化</p>
-            </div>
-            <Button type="button" className={styles.textLink} variant="ghost">
-              查看登录历史 &gt;
-            </Button>
+      <Card className={styles.activityCard}>
+        <div className={styles.activityAccent} />
+        <div className={styles.activityHeader}>
+          <div>
+            <h2>最近安全活动</h2>
+            <p>查看最近的登录、密码和设备状态变化</p>
           </div>
-          <div className={styles.activityList}>
-            <ActivityRow dot="green" title="密码更新" detail="今天 09:42 · 当前设备" status="已完成" />
-            <ActivityRow dot="blue" title="新设备登录" detail="iPhone 15 Pro · 3月12日" status="已验证" />
-            <ActivityRow
-              dot="green"
-              title="设备会话检查"
-              detail={`已检查 ${sessions.length} 台设备，未发现异常`}
-              status="正常"
-            />
-          </div>
-          <p className={styles.securityHint}>
-            设备详情包含创建时间 / 过期时间 / 当前状态；单设备退出需确认，退出全部设备时保留当前会话并二次确认。
-          </p>
-        </Card>
-      ) : null}
+          <Button type="button" className={styles.textLink} variant="ghost">
+            查看登录历史 &gt;
+          </Button>
+        </div>
+        <div className={styles.activityList}>
+          <ActivityRow dot="green" title="密码更新" detail="今天 09:42 · 当前设备" status="已完成" />
+          <ActivityRow dot="blue" title="新设备登录" detail="iPhone 15 Pro · 3月12日" status="已验证" />
+          <ActivityRow
+            dot="green"
+            title="设备会话检查"
+            detail={`已检查 ${sessions.length} 台设备，未发现异常`}
+            status="正常"
+          />
+        </div>
+        <p className={styles.securityHint}>
+          设备详情包含创建时间 / 过期时间 / 当前状态；单设备退出需确认，退出全部设备时保留当前会话并二次确认。
+        </p>
+      </Card>
       <Dialog open={Boolean(logoutTarget)} onOpenChange={(open) => !open && setLogoutTarget(undefined)}>
         <DialogContent className={styles.dialogContent}>
           <DialogHeader>
@@ -1649,7 +1643,7 @@ function ActivityRow({
   );
 }
 
-function PrivacyTab() {
+function PrivacyTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
   const realMode = import.meta.env.VITE_AGENT_MODE === 'real';
   const [exportRows, setExportRows] = useState(exportSeed);
   const [exportJobId, setExportJobId] = useState<number>();
@@ -1768,7 +1762,7 @@ function PrivacyTab() {
             onClick={() => void createExport()}
             disabled={exportStatus === 'queued' || exportStatus === 'running'}
           >
-            <Download aria-hidden="true" /> 创建数据导出
+            {!figmaFixture ? <Download aria-hidden="true" /> : null} 创建数据导出
           </Button>
         </div>
         {exportStatus && exportStatus !== 'completed' ? (
@@ -1812,7 +1806,7 @@ function PrivacyTab() {
                     type="button"
                     onClick={() => void downloadExport(row)}
                   >
-                    <Download aria-hidden="true" />
+                    {!figmaFixture ? <Download aria-hidden="true" /> : null}
                     下载归档
                   </Button>
                 ) : row.status === 'expired' ? (
@@ -1822,7 +1816,7 @@ function PrivacyTab() {
                     type="button"
                     onClick={() => void createExport()}
                   >
-                    <RefreshCw aria-hidden="true" />
+                    {!figmaFixture ? <RefreshCw aria-hidden="true" /> : null}
                     重新创建
                   </Button>
                 ) : row.status === 'failed' ? (
@@ -1832,7 +1826,7 @@ function PrivacyTab() {
                     type="button"
                     onClick={() => void createExport()}
                   >
-                    <RefreshCw aria-hidden="true" />
+                    {!figmaFixture ? <RefreshCw aria-hidden="true" /> : null}
                     重新创建
                   </Button>
                 ) : (
@@ -2186,7 +2180,7 @@ export function ProfilePage() {
           )
         ) : null}
         {activeTab === 'security' ? <SecurityTab figmaFixture={securityFigmaFixture} /> : null}
-        {activeTab === 'privacy' ? <PrivacyTab /> : null}
+        {activeTab === 'privacy' ? <PrivacyTab figmaFixture={isFigmaFixture} /> : null}
       </div>
     </WorkspaceLayout>
   );
