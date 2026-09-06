@@ -27,6 +27,15 @@
 - [ ] 两页仍存在可见的字体、局部布局、内容密度和图标光栅化差异，因此保持 `DIFF_REVIEW`，没有标记 `PASS`。
 - [ ] iconfont 仍为 `BLOCKED`，本批次继续使用真实已登记 SVG 和 Lucide fallback。
 
+## 1.2 2026-09-06 Figma 验收证据路径基线修复
+
+本次只修复三项 Intake Analysis 映射中的 Figma PNG 相对路径。对应 PNG 实体已经存在于 `foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/`，不需要重新截图，也不代表重新验收全部 105 个画板。
+
+- [x] `intake-analysis-loading`、`intake-analysis-empty` 和 `intake-analysis-error` 的 `figmaPng` 已统一使用仓库根目录可解析的 `foodmate-ui/.qa/...` 路径。
+- [x] `npm run qa:figma:validate` 返回 `total=105`、`structuralPass=true`、`strictDprPass=true`、`errors=[]`。
+- [x] `figma-105-mapping.json` 仍记录 `mappedPass=0`、`diffReview=105`、`unmapped=0`、`sizeMismatch=0`；结构校验恢复不改变任何视觉结论。
+- [ ] 105 个画板仍未全部达到像素级 `PASS`，后续继续按受影响画板逐页处理，不进行无必要的全量重新验收。
+
 ## 2. Figma 文件内部验收
 
 来源文件：[Fintech dashboard Community](https://www.figma.com/design/MX18RZCfAmgprNzxItkHUH/Fintech-dashboard--Community-?node-id=0-1)
