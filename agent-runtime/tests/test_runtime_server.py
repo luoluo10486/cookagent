@@ -13,6 +13,7 @@ import runtime_server
 from agent_core import BudgetSnapshot, Context, ContextBuilder, InMemoryCheckpoint, Plan, Reflector, RouteDecision, StepValidator, Usage, WorkflowGraph, budget_mode, budget_policy, run_deterministic, split_answer
 from model_provider import ModelProvider, ModelResponse, ModelRouter
 from knowledge_rag import Citation, PUBLIC_SCOPE
+from nutrition_catalog_rag import NutritionMatch
 from proposal_protocol import Proposal, validate_proposal
 from recovery_protocol import checkpoint_digest, validate_recovery_command
 from langgraph_adapter import build_graph
@@ -189,6 +190,28 @@ class RuntimeContractTests(unittest.TestCase):
         responses = []
         handler._json = lambda status, payload: responses.append((status, payload))
         handler._knowledge_search({"knowledge_scope": "private", "query": "protein"})
+        self.assertEqual((403, {"code": "RAG_SCOPE_DENIED"}), responses[0])
+
+    def test_nutrition_search_endpoint_returns_candidate_ids_without_scope_widening(self):
+        handler = runtime_server.Handler.__new__(runtime_server.Handler)
+        responses = []
+        handler._json = lambda status, payload: responses.append((status, payload))
+        match = NutritionMatch(
+            "42", "chicken breast", "鸡胸肉", "raw", "g", "USDA", "2026", "catalog-1", 0.91, "safe"
+        )
+        with patch.object(runtime_server, "search_nutrition_catalog", return_value=[match]):
+            handler._nutrition_search({"knowledge_scope": PUBLIC_SCOPE, "query": "鸡胸肉"})
+
+        self.assertEqual(200, responses[0][0])
+        self.assertEqual(PUBLIC_SCOPE, responses[0][1]["knowledge_scope"])
+        self.assertEqual("42", responses[0][1]["matches"][0]["nutrition_food_id"])
+        self.assertEqual("safe", responses[0][1]["matches"][0]["snippet"])
+
+    def test_nutrition_search_endpoint_cannot_widen_scope(self):
+        handler = runtime_server.Handler.__new__(runtime_server.Handler)
+        responses = []
+        handler._json = lambda status, payload: responses.append((status, payload))
+        handler._nutrition_search({"knowledge_scope": "private", "query": "鸡胸肉"})
         self.assertEqual((403, {"code": "RAG_SCOPE_DENIED"}), responses[0])
 
     def test_missing_parameter_enters_waiting_user_without_answer_body(self):

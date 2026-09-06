@@ -25,6 +25,7 @@ from model_provider import ModelProviderError, ModelRouter
 from sql_planner import SqlPlannerError
 from recovery_protocol import checkpoint_digest, validate_recovery_command
 from knowledge_rag import MilvusIndex, PUBLIC_SCOPE, RagError, RagSettings, RedisStubIndex, build_local_embedder
+from nutrition_catalog_rag import search_nutrition_catalog
 
 JAVA_CALLBACK_URL = os.getenv("JAVA_CALLBACK_URL", "http://localhost:8080")
 CONTRACT_VERSION = os.getenv("FOODMATE_CONTRACT_VERSION", "v1")
@@ -872,6 +873,24 @@ def _citation_payload(citations) -> list[dict[str, str]]:
     ]
 
 
+def _nutrition_match_payload(matches) -> list[dict[str, object]]:
+    return [
+        {
+            "nutrition_food_id": item.nutrition_food_id,
+            "standard_name": item.standard_name,
+            "chinese_name": item.chinese_name,
+            "food_form": item.food_form,
+            "basis_unit": item.basis_unit,
+            "source_name": item.source_name,
+            "source_version": item.source_version,
+            "catalog_version": item.catalog_version,
+            "score": item.score,
+            "snippet": item.snippet,
+        }
+        for item in matches
+    ]
+
+
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/foodmate/internal/metrics":
@@ -901,7 +920,8 @@ class Handler(BaseHTTPRequestHandler):
         is_dispatch = self.path == "/foodmate/internal/v1/runs"
         is_cancel = self.path.startswith("/foodmate/internal/v1/runs/") and self.path.endswith("/cancel")
         is_knowledge_search = self.path == "/foodmate/internal/v1/knowledge/search"
-        if not is_dispatch and not is_cancel and not is_knowledge_search:
+        is_nutrition_search = self.path == "/foodmate/internal/v1/nutrition/search"
+        if not is_dispatch and not is_cancel and not is_knowledge_search and not is_nutrition_search:
             self.send_error(404)
             return
         if not self._authenticated() or self.headers.get("X-Contract-Version", CONTRACT_VERSION) != CONTRACT_VERSION:
@@ -913,6 +933,8 @@ class Handler(BaseHTTPRequestHandler):
                 self._dispatch(command)
             elif is_knowledge_search:
                 self._knowledge_search(command)
+            elif is_nutrition_search:
+                self._nutrition_search(command)
             else:
                 self._cancel(command, self.path.split("/")[-2])
         except (KeyError, ValueError, json.JSONDecodeError):
@@ -938,6 +960,32 @@ class Handler(BaseHTTPRequestHandler):
         self._json(
             200,
             {"knowledge_scope": PUBLIC_SCOPE, "citations": _citation_payload(citations)},
+        )
+
+    def _nutrition_search(self, command):
+        """只查询营养向量候选，营养写入仍由 Java 回源 PostgreSQL 决定。"""
+        if not isinstance(command, dict):
+            self._json(400, {"code": "RUNTIME_CONTRACT_INVALID"})
+            return
+        if command.get("knowledge_scope") != PUBLIC_SCOPE:
+            self._json(403, {"code": "RAG_SCOPE_DENIED"})
+            return
+        query = command.get("query")
+        if not isinstance(query, str) or not query.strip() or len(query) > 255:
+            self._json(400, {"code": "RAG_QUERY_INVALID"})
+            return
+        try:
+            matches = search_nutrition_catalog(query.strip())
+        except RagError as error:
+            status = 403 if error.code == "RAG_SCOPE_DENIED" else 503
+            self._json(status, {"code": error.code})
+            return
+        self._json(
+            200,
+            {
+                "knowledge_scope": PUBLIC_SCOPE,
+                "matches": _nutrition_match_payload(matches),
+            },
         )
 
     def _dispatch(self, command):
@@ -981,6 +1029,8 @@ class Handler(BaseHTTPRequestHandler):
             if self.path.endswith("/runs")
             else "runtime:knowledge-search"
             if self.path == "/foodmate/internal/v1/knowledge/search"
+            else "runtime:nutrition-search"
+            if self.path == "/foodmate/internal/v1/nutrition/search"
             else "runtime:metrics"
             if self.path == "/foodmate/internal/metrics"
             else "runtime:cancel"
