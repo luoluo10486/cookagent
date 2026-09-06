@@ -2335,3 +2335,14 @@
 | 前端业务验证 | `npm.cmd run test -- --run src/pages/AdminPage/tabs/UsersTab.test.tsx src/services/adminToolRegistry.test.ts`：`5/5` 通过；`npm.cmd run typecheck`：通过。 |
 | 格式与边界 | 本轮 8 个 Java 文件分别执行 Spotless `check`，均通过；`git diff --check` 通过；未修改数据库数据，未调用真实付费 Chat/Embedding，未执行性能、重启、故障注入或生产操作。 |
 | 结论 | 管理端用户详情不再依赖 mock 会话/历史空态，已与真实后端查询契约对齐；K7 其他页面体验和最终集中回归继续后置。 |
+
+## D152 G0 前端真实业务状态集中复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行范围 | 在保留 `foodmate-ui/src/pages/HomePage/HomePage.tsx` 用户未提交改动的前提下，集中复核管理端真实查询状态、知识库批次、聊天引用和既有用户业务页面；未修改 PostgreSQL、Redis、Milvus、RocketMQ 或 `.env`。 |
+| 前端测试 | `cd foodmate-ui; npm.cmd test -- --maxWorkers=1`：`43` 个测试文件、`264/264` 测试通过。单 worker 用于避免本机并发资源争用导致的 5 秒超时，不代表吞吐或性能结论。 |
+| 前端构建 | `cd foodmate-ui; npm.cmd run build`：TypeScript 检查通过，Vite 转换 `2015` 个模块并成功生成生产构建。 |
+| 真实模式收口 | 工具注册表、工具调用、用户详情、知识库批次、运行治理使用真实接口；加载中、空数据、错误和重试状态均不回退到 fixture。聊天页消费 `run.completed.citations`，批次进度和 SSE 继续支持恢复。 |
+| 业务边界 | M2-1/M2-2/M2-3 继续以业务正确性作为完成口径；性能压测、长稳、依赖重启、ACK 丢失、重复投递、生产容量、备份恢复、Kubernetes 和发布回滚不在本轮。 |
+| 结论 | 前端当前业务门禁通过，已与后端真实查询/写入契约对齐；下一阶段若继续开发，应优先处理用户明确的新业务范围，而不是重复开展同一页面验证。 |

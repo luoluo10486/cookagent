@@ -48,9 +48,9 @@ FoodMate 是面向饮食记录、营养分析与备餐规划的任务型 Agent �
 | Agent、Eval 与 RAG | `run.eval_decided`、预算、checkpoint、continuation、追问和安全降级已进入运行路径；公共知识库已完成批量上传、异步索引、发布可见性和 `public_published` 安全引用。默认仍是 `deterministic:local`；2026-09-06 的 D134 已用当前配置完成一次 Docker 真实 Embedding + Milvus + Chat AgentRun 引用闭环。D114 的 HTTP 401 是历史凭据边界，不再代表当前凭据；两个 profile 仍使用独立 Milvus collection，长稳、正式价格审计和生产 RAG 治理仍未完成。 |
 | 结构化记忆与上下文 | 已支持稳定偏好、忌口、预算、烹饪能力、用餐时间和回答偏好候选；Java 对来源、类型、敏感内容和同 key 冲突负责，Context 按意图白名单注入最近 8 条有效消息、摘要和最多 8 条长期记忆。一次性请求、完整计划、营养目标和医疗事实不会进入普通长期记忆。 |
 | 恢复与 M1-6 本地门禁 | 已验证 Runtime readiness、Redis AOF 探针恢复、RocketMQ 重启/Topic 初始化、双 JVM 有界读取和 Java 重启回读；完整 PostgreSQL/Outbox/Inbox/SSE 故障矩阵仍未完成。 |
-| 前端 | G1-G6 页面代码边界、追问/确认/失败/取消/SSE 状态、真实管理查询和知识库批次/RAG 引用接入已完成；真实聊天历史会话现在会恢复最近 Run 并回放终态引用，新增定向测试通过。2026-09-06 G0 复核中 `ChatPage.test.tsx` 32/32、typecheck 和 build 通过；D137 对 `RunsTab` 两个测试文件定向验证为 4/4 通过。完整 Vitest 套件未在本轮重跑。 |
+| 前端 | G1-G6 页面代码边界、追问/确认/失败/取消/SSE 状态、真实管理查询和知识库批次/RAG 引用接入已完成；真实聊天历史会话现在会恢复最近 Run 并回放终态引用，新增定向测试通过。2026-09-06 G0 复核中，Vitest 单 worker 为 `43` 个测试文件、`264/264` 通过，typecheck 和 build 通过；D137 对 `RunsTab` 两个测试文件定向验证为 4/4 通过。 |
 | Java 回归 | 当前 Java 全量业务门禁、Spotless、ArchUnit 和 Alibaba 可执行规范子集均通过；HTTP 与 RocketMQ `food_log_writer` 回归各 11/11，包含官方 foodPortions 换算 matched/pending 数据库断言。具体运行批次和跳过项以 [`EXECUTION_RECORD.md`](./script/sql/FoodMate/EXECUTION_RECORD.md) 为准。 |
-| 本轮容器复核 | 2026-09-06 使用 `.env` 成功构建并启动 `foodmate` 镜像；容器 readiness 为 healthy，`admin@foodmate.local` 登录返回 admin 会话；数据库只读复核确认探针账号为 0、管理员密码哈希为 BCrypt，现有营养目录和知识库记录仍保留。 |
+| 本轮容器复核 | D150（2026-09-06）使用 `.env` 成功构建并启动 `foodmate` 镜像；容器 readiness 为 healthy，`admin@foodmate.local` 登录返回 admin 会话；数据库只读复核确认探针账号为 0、管理员密码哈希为 BCrypt，复核时的营养目录和知识库记录仍保留。 |
 
 当前不能宣称完成的内容：
 
@@ -59,6 +59,13 @@ FoodMate 是面向饮食记录、营养分析与备餐规划的任务型 Agent �
 - 生产资源上的长时间压测、P95/P99 容量结论、跨节点故障切换、PostgreSQL 进程故障和持续业务 Agent 流量验证。
 - 供应商正式价格表核准、账单抽样对账、人工 Eval 校准样本、成本异常告警和完整生产监控治理。
 - 真实付费 embedding/模型的长稳与成本对账、生产浏览器兼容矩阵和发布级知识库运维验收。
+
+## 2026-09-06 业务闭环收口复核
+
+- 管理端真实模式已覆盖工具注册表、工具调用、用户详情、知识库批次和运行治理的加载中、空数据、接口错误与重试；真实接口无 fixture 回退。知识库批次仍使用真实上传、详情、SSE、失败重试、发布、下线、恢复和软删除接口。
+- 聊天页真实模式已消费 `run.completed.citations`，引用区域可展开；SSE 重连继续使用 `Last-Event-ID` 去重。饮食记录、餐食计划、公共知识库 RAG、只读 SQL Agent 和管理核心切片均以业务正确性作为当前完成口径。
+- 本次前端集中复核命令为 `cd foodmate-ui; npm.cmd test -- --maxWorkers=1` 和 `npm.cmd run build`，分别得到 `43/43` 测试文件、`264/264` 测试通过及 Vite 构建通过。单 worker 是本机资源受限时的稳定复核方式，不代表性能结论。
+- 性能压测、长稳、依赖重启、ACK 丢失、重复投递、生产容量、备份恢复、Kubernetes、发布回滚和正式生产监控仍明确后置。
 
 ## 本地启动
 
@@ -122,13 +129,13 @@ npm run dev
 - Python 使用项目 `agent-runtime/.venv` 的全量 pytest 为 `189 passed、2 skipped、6 subtests passed`；前端此前记录为 `38` 个测试文件、`236/237` 通过，D137 对 `RunsTab` 两个测试文件定向验证为 `4/4` 通过，完整 Vitest 套件未在本轮重跑，typecheck/build 通过。local RAG Worker 启动前会等待 Milvus `/healthz`，stub 模式不会探测 Milvus；这些结果不等于生产人工校准、统一指标系统或长期稳定性结论。
 - 营养目录 V8 已新增 USDA 食材 `12/12` 和 `foodPortions` 规则 `12/12`；V8 validation 的无效食材、无效规则、食材外键不匹配和规则形状错误均为 `0`。当前本地目录为 `60` 条 approved 食材、`60` 条 approved USDA foodPortion 规则、`75` 条精确质量换算，active conversion 合计 `135` 条；V8 定向 Java 测试为 `2/2` 通过。
 
-## 2026-09-06 真实营养目录基线
+## 2026-09-06 历史中间记录：真实营养目录基线
 
 - 使用 USDA FoodData Central SR Legacy 数据集生成 V33 目录，清单记录源文件 SHA-256、筛选数量、分类分布和版本快照；原始压缩包未保留在仓库或数据库中。
 - V32 结构契约与 V33 seed 已在本地 Docker PostgreSQL `FoodMate` 执行；当前活动数据为 `1,000` 条 approved/official 食材和 `1,518` 条 approved foodPortion 换算。
 - V33 validation：活动食材与规范键均为 `1,000`，活动换算与食材/单位组合均为 `1,518`，非法目录值、重复规范键、非法换算值均为 `0`；rollback 前置检查显示本版本暂无饮食明细引用。
 - 重新筛选时淘汰的旧生成记录仅做软删除（食材 `9` 条、换算 `12` 条），没有执行 `TRUNCATE` 或宽泛删除；清理前备份保存在 Git 忽略目录 `script/sql/FoodMate/backups/`。
-- 本轮只完成真实营养目录数据基线，不调用真实 Chat/Embedding，不写入 Milvus，也不代表 RAG 发布或生产质量验收已完成。
+- 本条记录对应营养目录重建阶段；当时只完成目录数据基线，不调用真实 Chat/Embedding，不写入 Milvus。后续 D134 已补充真实 M2-1 云业务闭环，当前状态以文档顶部“当前真实状态”为准。
 
 ## 2026-09-06 本地容器与账号复核
 
@@ -148,17 +155,17 @@ npm run dev
 
 已完成本地真实基础链路、跨进程 checkpoint 恢复、RocketMQ Proposal/Result、Eval Gate、饮食记录与餐食计划、M2-1 公共知识库 RAG、M2-2 Tool/SQL、M2-3 管理核心切片、写确认和本地营养目录扩展。当前仍不能宣称生产完成：真实云模型/embedding 长时间稳定性、生产资源长压与容量结论、队列防饥饿、多实例业务流量、完整依赖故障矩阵、正式价格/账单对账，以及人工校准驱动的生产 Eval 指标告警仍需在目标环境执行。
 
-## 2026-09-06 K1 正式公共知识库资料基线
+## 2026-09-06 历史中间记录：K1 正式公共知识库资料基线
 
 - 新增 9 份 WHO 中文公共营养资料及 `manifest.json`，每份资料均保留来源、版本、检索日期和 SHA-256；未保留临时下载包，未发现重复或敏感信息。
 - 批次 `354847677655027712` 已完成 `9/9` 条目索引和显式发布，PostgreSQL 共 58 个有效 chunk，Redis `foodmate:rag:stub:chunks` 共 58 条，metadata 均为公共已发布当前版本。
-- 业务检索和批次 SSE 回放已实际核验；完全随机查询返回 0 条，SSE 18 条事件以首游标回放得到 17 条后续事件。真实 Embedding、Milvus 写入、性能压测和故障矩阵仍未执行。
+- 业务检索和批次 SSE 回放已实际核验；完全随机查询返回 0 条，SSE 18 条事件以首游标回放得到 17 条后续事件。这里的“真实 Embedding、Milvus 写入未执行”仅指 K1 这轮；后续 D134 已完成真实云 RAG 业务闭环，性能压测和故障矩阵仍未执行。
 
-## 2026-09-06 K2 知识切分与检索质量
+## 2026-09-06 历史中间记录：K2 知识切分与检索质量
 
 - 知识切分已支持完整 Markdown 标题路径、段落优先合并、句末边界拆分和有限重叠，默认目标 `700` 字符、硬上限 `1000` 字符、重叠 `80` 字符；`embedding_id` 仍按文档、版本和序号稳定生成。
 - stub/Redis stub 关键词检索同时覆盖标题、章节和正文，中文分词支持单字主题和二元短语；检索边界保持候选最多 12、重排最多 6、最终引用最多 4、每文档最多 2 条。
-- K2 业务测试 `70 passed`、`4` 个子断言通过。现有正式批次未重复重索引，数据库和 Redis 的 58 个 chunk 仍为 K1 快照；真实 Embedding、Milvus 写入、性能和故障矩阵仍后置。
+- K2 业务测试 `70 passed`、`4` 个子断言通过。现有正式批次未重复重索引，数据库和 Redis 的 58 个 chunk 仍为 K1 快照；该阶段的真实向量结论由后续记录覆盖，性能和故障矩阵仍后置。
 
 ## 2026-09-06 K3 结构化记忆与上下文
 

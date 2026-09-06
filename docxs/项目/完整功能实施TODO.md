@@ -19,7 +19,7 @@
 - [x] Proposal -> Java Tool Gateway -> 只读 SQL / 审计 -> Result：成功、失败 `SQL_EXECUTION_FAILED` 和重复 Proposal 幂等已验证。
 - [x] Proposal Inbox claim lease：超过 5 分钟的 `claimed` 记录可回收，避免旧失败消息造成消费者饥饿。
 - [x] 浏览器真实登录、会话、消息、RocketMQ command/event、Java PostgreSQL Inbox、最终 SSE E2E 已通过；恢复入口也已完成一次 Python 重启后的跨进程验证。
-- [x] Python deterministic Runtime、知识索引 Worker、Eval Gate、Proposal/Result 回注和 Java Tool Gateway 的本地真实跨进程链路已通过；生产 RAG 和完整业务 Tool 仍不属于本轮已完成范围。
+- [x] Python deterministic Runtime、知识索引 Worker、Eval Gate、Proposal/Result 回注和 Java Tool Gateway 的本地真实跨进程链路已通过；M2-1 公共知识库 RAG、M2-2 只读 SQL Agent 和 M2-3 管理核心业务已取得当前业务证据，生产强化仍后置。
 - [x] 本地双 JVM 子项已复验：`script/local/m1-6-dual-jvm.ps1` 启动 `18080/18081` 两个独立 Java JVM，共享 PostgreSQL 完成认证会话读取；最近一次 160/160 成功、错误率 0%、吞吐 51.538 req/s、P50/P95/P99 为 17.107/57.937/94.523 ms，并完成 Java 重启后的 PostgreSQL 回读。
 - [x] 本地依赖恢复子项已验证：Python readiness HTTP 200，Redis checkpoint、Redis、RocketMQ event/proposal producer、command/result consumer 均 ready；Redis AOF 探针在容器重启后保留，RocketMQ NameServer/Broker/Proxy 重启后 healthy 且 Topic/group 初始化成功。
 - [ ] 生产级长压、多实例 Agent 业务吞吐、队列积压/重复执行、PostgreSQL 进程重启，以及 Outbox/Inbox ACK 丢失、租约接管和 SSE 故障恢复仍待执行。
@@ -33,6 +33,13 @@
 - [x] 完成 M1-5 写确认扩展的真实 HTTP/MQ 跨进程回归：HTTP 与 RocketMQ 各 11 个用例通过，覆盖 rejected、failed 回滚与失败审计、superseded、update/delete/restore、revision 冲突、成功 Proposal 幂等重放，以及官方 foodPortions 换算 matched/pending 和数据库快照断言；每个用例使用随机用户、Session、AgentRun、Proposal 和幂等键隔离。
 - [x] M2-1/M2-2/M2-3 业务范围已完成：公共知识库真实 Embedding/Milvus 上传/索引/发布/检索/引用、真实云只读 SQL Agent、多数核心管理查询/写操作/模型治理和受控脱敏导出均已有代码与业务证据；性能和故障验证不属于当前完成门槛。
 - [x] M3 业务治理代码切片已完成：运营审计快照、DLQ 安全摘要/人工重放契约、保留策略、legal hold、审批、对象/向量清理、失败补偿和受控数据库清理已具备定向业务测试；`hard_delete_enabled=false` 默认关闭。
+
+### 当前前端业务复核（2026-09-06）
+
+- [x] 管理端真实模式已收口工具注册表、工具调用、用户详情、知识库批次和运行治理的真实数据路径，覆盖加载中、空数据、错误和重试；真实接口失败不会回退到 fixture。
+- [x] 聊天页真实模式已展示 `run.completed.citations`，并保留 SSE `Last-Event-ID` 去重恢复；知识库批次上传、进度恢复、失败重试、发布/下线/恢复和软删除继续由真实 API 驱动。
+- [x] 前端集中业务复核：`npm.cmd test -- --maxWorkers=1` 为 `43/43` 测试文件、`264/264` 测试通过；`npm.cmd run build` 通过。
+- [ ] 本项不包含性能压测、长稳、依赖故障矩阵、生产部署、备份恢复、Kubernetes 或发布回滚。
 - [ ] M3 真实生产依赖清理、数据库不可逆硬删除、生产压测、漏洞扫描、密钥轮换、渗透测试、发布回滚和生产告警仍未完成；本地隔离 PostgreSQL 硬删除和 Docker 备份恢复已有证据，但不得替代生产演练。
 
 本文不替代现有 ADR、外部 API 契约、Java/Python 内部契约和数据库设计。发生冲突时，优先级为：实际代码与测试事实 > ADR/契约 > 本 TODO > 其他设计文档。

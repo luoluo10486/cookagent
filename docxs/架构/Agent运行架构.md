@@ -1,18 +1,18 @@
 # FoodMate Agent 运行架构
 
 版本：v1.1 目标架构与实现对齐
-维护基线：2026-09-02
+维护基线：2026-09-06
 文档定位：本文是 Workflow、Agent 局部决策、在线 Eval Gate 和退回规则的架构依据；目标能力与当前代码状态必须同时阅读本节的实现对齐说明和 M1-4 实现逻辑文档，不能只根据目标设计推断完成情况。
 
-## 当前实现对齐（2026-09-02）
+## 当前实现对齐（2026-09-06）
 
 - 当前 Python 主执行图由 agent_core.py 的固定 WorkflowGraph 实现，状态边不可由模型动态增加；langgraph_adapter.py 是可选白名单编译适配层，未安装 LangGraph 时不会伪装成已安装。
 - 当前 Runtime 使用标准库 HTTP Handler，不是完整 FastAPI/Pydantic 目标工程；Java/Python 仍通过现有 V1 envelope、request_hash、event_seq 和 Inbox 交换事实。
-- 当前已实现本地 deterministic Composer、独立 Eval、预算动作、Redis checkpoint、RocketMQ Event/Proposal/Result、Tool Result 回注、Java 恢复入口、浏览器 SSE 和公共知识库 RAG；M2-1 的批次索引/可见性、M2-2 的 Tool/SQL 业务闭环均已有本地业务证据。真实云 RAG/模型长稳、生产级长压、多实例业务流量和完整故障矩阵仍未完成。
+- 当前已实现本地 deterministic Composer、独立 Eval、预算动作、Redis checkpoint、RocketMQ Event/Proposal/Result、Tool Result 回注、Java 恢复入口、浏览器 SSE 和公共知识库 RAG；M2-1 的批次索引/可见性、M2-2 的 Tool/SQL 业务闭环和 M2-3 的管理核心切片均已有业务证据，且 M2-1/R2/R3/R4 已取得单次真实云业务闭环。真实云 RAG/模型长稳、生产级长压、多实例业务流量和完整故障矩阵仍未完成。
 - 当前没有实际审核人员。高风险 request_review 不进入 waiting_review，而是安全降级、提示医生或注册营养师并记录原因。Human Approval 仍作为未来具备审核人员后的目标架构能力保留。
 - 当前代码默认使用 deterministic:local；云模型、真实价格和 Judge 必须显式配置，生产价格审计和人工校准尚未完成。
-- M1-5 核心业务已进入代码并通过本地验证：手工饮食记录创建/查询/编辑/删除/恢复、当前目录 matched/pending 营养分析、60 条 USDA foodPortions 换算、餐食计划完整资源生命周期和 `meal_plan.save_plan` 写确认统一由 Java application 用例编排；`food_log_writer` 的 create/update/delete/restore 已完成 Proposal/Confirm/Execute，并通过真实 PostgreSQL HTTP/RocketMQ 各 11/11 跨进程回归，覆盖 rejected/failed/superseded、revision 冲突和幂等重放。计划生命周期已完成 PostgreSQL HTTP 回归，营养目录和确认事实落 PostgreSQL，当前有 60 条 approved 食材 seed、60 条 approved 换算规则和 75 条精确质量换算；V8 seed/validation 已验证。M2-1 公共知识库、M2-2 Tool/SQL 和 M2-3 管理核心切片已分别完成当前业务门禁。详细表结构以 [M1-5 实施方案](../项目/M1-5核心饮食业务与写确认实施方案.md) 为准。
-- Docker Runtime 的启动和 readiness 已验证；D112 的 SiliconFlow 双 Embedding 成功证据使用历史凭据，D114 的当前 Embedding 凭据请求均返回 HTTP 401 `Api key is invalid`。因此当前配置链路可用，但当前供应商认证尚未通过。
+- M1-5 核心业务已进入代码并通过本地验证：手工饮食记录创建/查询/编辑/删除/恢复、当前目录 matched/pending 营养分析、1,518 条 USDA foodPortions 换算、餐食计划完整资源生命周期和 `meal_plan.save_plan` 写确认统一由 Java application 用例编排；`food_log_writer` 的 create/update/delete/restore 已完成 Proposal/Confirm/Execute，并通过真实 PostgreSQL HTTP/RocketMQ 各 11/11 跨进程回归，覆盖 rejected/failed/superseded、revision 冲突和幂等重放。M2-1 公共知识库、M2-2 Tool/SQL 和 M2-3 管理核心切片已分别完成当前业务门禁。详细表结构以 [M1-5 实施方案](../项目/M1-5核心饮食业务与写确认实施方案.md) 为准。
+- Docker Runtime 的启动和 readiness 已验证；D134 已取得当前配置下真实 Embedding + Milvus + Chat 的单次业务闭环，D114 的 401 属于历史凭据记录。该证据不代表云模型长稳、正式价格对账或生产容量。
 - M1-5 的 Agent 写操作必须经过 Proposal/Confirm 和幂等、`revision`、审计校验；当前 `meal_plan.save_plan` 和 `food_log_writer` 的 create/update/delete/restore 已实现本地切片并完成 HTTP/MQ 回归。手工页面保存可以直接提交，但仍复用同一 Java application 用例。模型不得直接估算并写入营养数值。
 - 当前运行和验证优先级是本地：M1-6 已完成本地 Actuator、基础 metrics、双 Java JVM、Runtime readiness、Redis AOF 探针恢复和 RocketMQ 重启恢复子项；PostgreSQL 进程重启、完整业务故障矩阵、生产压测和恢复指标仍待执行。staging/production、Kubernetes、完整生产监控、数据库备份恢复、云模型长期稳定性和账单审计均后置。
 
