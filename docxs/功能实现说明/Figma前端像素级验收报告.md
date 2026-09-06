@@ -2414,3 +2414,20 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 三项自动 diff 均为非零，且人工复核仍确认头像、图标处理、字体光栅化和局部像素差异，因此三项继续保持 `DIFF_REVIEW`，不能标记为 `PASS`。
 - [ ] 本节只复核三个画板，不代表其它 102 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [x] 本批次未创建虚构 iconfont 字体、glyph 或 Unicode 映射；iconfont 资源登记继续保持 `BLOCKED`。
+
+## 46. 2026-09-06 Meal Planning 三态视觉增量验收
+
+本节只复核 Meal Planning 的 Loading、Empty、Error 三个状态画板，不重新采集或人工验收其它画板。Figma 文件保持只读；本批次只调整 Error fixture 壳层和错误态视觉，真实餐食规划服务边界未改变。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Meal Planning Loading | `692:2256` | `/planning?state=loading` | `dpr1-meal-planning-loading-browser-2026-09-06.png` | `1440×1024 / 1` | 7.1500% | 0.910384 | 9.423521 | 204 | `DIFF_REVIEW` |
+| Meal Planning Empty | `692:2446` | `/planning?state=empty` | `dpr1-meal-planning-empty-browser-2026-09-06.png` | `1440×1024 / 1` | 5.1309% | 1.018983 | 10.102858 | 204 | `DIFF_REVIEW` |
+| Meal Planning Error | `692:2542` | `/planning?state=error` | `dpr1-meal-planning-error-browser-2026-09-06.png` | `1440×1024 / 1` | 8.5620% | 1.678509 | 13.648686 | 229 | `DIFF_REVIEW` |
+
+- [x] Error 状态已隐藏 Figma 画板中不存在的会话搜索、历史列表和分页；错误图标背景/描边及重新加载按钮色值已按参考图收口。
+- [x] 三项浏览器证据均由 Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体 `loaded` 和无横向溢出条件下采集；几何和文字边界仍通过既有运行时记录。
+- [x] 最新同尺寸 PNG diff 已由 `scripts/png-diff.mjs` 生成，三项差异均较上一份 `2026-09-05` 浏览器证据下降；`figma-105-mapping.json`、`figma-105-diff-results.json` 和 `figma-105-runtime-checks.json` 仅同步这三个画板。
+- [ ] 三项仍存在头像素材、图标轮廓、字体光栅化和局部组合差异，继续保持 `DIFF_REVIEW`，不能标记为像素级 `PASS`。
+- [ ] 本节不代表其它 102 个画板重新采集或完成 105 项全量人工视觉复核；全量聚合仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍缺失，资源登记继续保持 `BLOCKED`。

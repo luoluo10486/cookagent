@@ -86,6 +86,15 @@ describe('PlanningPage', () => {
     expect(screen.getByRole('heading', { name: '增肌计划 v3' })).toBeInTheDocument();
   });
 
+  it('keeps the error fixture shell free of session history', () => {
+    renderPage('/planning?state=error');
+
+    expect(screen.getByText('Agent 对话')).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('搜索会话...')).not.toBeInTheDocument();
+    expect(document.querySelector('.sidebar-session-list')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '重新加载' })).toHaveClass('inline-flex');
+  });
+
   it('keeps plan list filters and the wizard progression aligned', async () => {
     const user = userEvent.setup();
     renderPage('/planning?state=list');

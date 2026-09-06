@@ -41,7 +41,13 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-meal-planning-empty-browser-2026-09-06.png"
+      }
     },
     "agent-budget-limit": {
       "artboardName": "agent-budget-limit",
@@ -555,7 +561,13 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-meal-planning-loading-browser-2026-09-06.png"
+      }
     },
     "intake-analysis-error": {
       "artboardName": "intake-analysis-error",
@@ -888,7 +900,13 @@
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-meal-planning-error-browser-2026-09-06.png"
+      }
     },
     "workspace-home-empty": {
       "artboardName": "workspace-home-empty",

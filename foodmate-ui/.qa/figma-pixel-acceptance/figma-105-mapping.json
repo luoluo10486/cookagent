@@ -2324,12 +2324,12 @@
       "queryState": "state=loading",
       "browserViewport": "1440x1024",
       "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/meal-planning-loading-figma-live-2026-08-26.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-meal-planning-loading-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-meal-planning-loading-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#meal-planning-loading",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
-      "lastVerifiedAt": "2026-08-28",
+      "evidenceNote": "2026-09-06 已按当前 Loading 状态重新采集；自动 diff 仍存在，保留 DIFF_REVIEW",
+      "lastVerifiedAt": "2026-09-06",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -2354,8 +2354,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-28",
-        "conclusion": "Loading semantics and primary geometry are aligned with the live Figma node. The title and action skeleton radii now match the node; the frontend intentionally omits the Figma window-control dots. Remaining avatar, shell, icon and raster differences require DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "Loading 语义、主内容几何和骨架圆角与当前 Figma 参考保持对齐；前端按约束省略窗口控制点。头像、侧栏资源和字体光栅化仍存在差异，继续保留 DIFF_REVIEW。"
       }
     },
     {
@@ -2369,11 +2369,12 @@
       "queryState": "state=empty",
       "browserViewport": "1440x1024",
       "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/meal-planning-empty-figma-live.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-meal-planning-empty-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-meal-planning-empty-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#meal-planning-empty",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "evidenceNote": "2026-09-06 已按当前前端状态壳层重新采集；自动 diff 仍存在，保留 DIFF_REVIEW",
+      "lastVerifiedAt": "2026-09-06",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -2398,8 +2399,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-28",
-        "conclusion": "Current empty-card geometry and hint row align with the live Figma node; the empty-state icon background and stroke color now match #EBF7ED and #89B27C. Iconography shape, typography, avatar and shell rasterization still differ. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "空态卡片几何、提示行、图标背景和图标颜色与当前 Figma 参考保持对齐；图标轮廓、字体、头像和壳层光栅化仍存在差异，继续保留 DIFF_REVIEW。"
       }
     },
     {
@@ -2413,11 +2414,12 @@
       "queryState": "state=error",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/meal-planning-error.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-meal-planning-error-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-meal-planning-error-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#meal-planning-error",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
-      "evidenceNote": "Automated diff exists; see manual visual review conclusion",
+      "evidenceNote": "2026-09-06 已收口 Error 状态侧栏和错误色值并重新采集；自动 diff 仍存在，保留 DIFF_REVIEW",
+      "lastVerifiedAt": "2026-09-06",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -2442,8 +2444,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-26",
-        "conclusion": "Live Figma and browser screenshots confirm the error card geometry and hierarchy are aligned; shell, avatar, icon, and rasterization differences remain. Retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "Error 卡片几何、层级、错误图标色值、主操作色值以及不含会话历史的侧栏结构已与 Figma 参考复核；头像、图标轮廓和字体光栅化仍存在差异，继续保留 DIFF_REVIEW。"
       }
     },
     {
