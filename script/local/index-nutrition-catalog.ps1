@@ -78,8 +78,7 @@ SELECT COALESCE(
 FROM nutrition_foods
 WHERE is_deleted = FALSE
   AND review_status = 'approved'
-  AND data_type = 'official'
-  AND tenant_id = 0;
+  AND data_type = 'official';
 "@
 
 $catalogLines = & docker exec foodmate-postgres psql -U postgres -d FoodMate -At -v ON_ERROR_STOP=1 -c $query 2>&1

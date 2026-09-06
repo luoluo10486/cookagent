@@ -2204,3 +2204,15 @@
 | 命令修正 | 首次 Python 测试命令错误引用不存在的 `test_recovery_protocol.py`，随后按实际测试清单修正；该问题是命令路径错误，不是业务代码失败。 |
 | 数据与费用边界 | 未执行迁移、truncate、删除、备份恢复、性能压测、组件重启、ACK/重复投递故障注入或真实付费业务；未输出或记录任何 API Key、密码、Prompt、完整回答、原文或对象存储地址。 |
 | 结论 | 当前计划范围内的真实业务实现和业务门禁已有历史直接证据，本轮复核与历史证据一致；下一步不重复付费执行，继续保持性能、故障矩阵、生产部署和备份恢复后置。 |
+
+## D142 全量营养目录真实 Embedding 索引（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 代码与容器 | 新增独立营养目录 Milvus/Redis 索引适配器、Runtime `POST /foodmate/internal/v1/nutrition/search` 和 `script/local/index-nutrition-catalog.ps1`；Python 定向测试 `55 passed`，Docker `agent-runtime` 镜像构建成功并恢复 healthy。 |
+| 数据读取 | 脚本从当前 PostgreSQL `nutrition_foods` 读取 `approved + official + is_deleted=false` 记录，共 `1,000` 条；未修改营养表、未迁移、未清理业务数据。首次运行因误带不存在的 `tenant_id` 条件在读取阶段失败，未产生外部请求；修正后重新执行成功。 |
+| 真实索引 | 使用 `Qwen/Qwen3-Embedding-0.6B`，分 `32` 批写入 Milvus 集合 `foodmate_nutrition_foods`；供应商返回累计 `113,538` tokens；Milvus 复核得到 `1,000` 个实体和 `1,000` 个唯一 `nutrition_food_id`。稳定 `nutr_<sha256>` ID 支持重复 upsert。 |
+| 真实检索 | Runtime 对“鸡胸肉”执行一次真实 Embedding + Milvus 查询，返回对应 `nutrition_food_id=171474` 的鸡胸肉候选及其他 raw/cooked 形态候选；查询固定过滤营养目录的公共、已发布、已索引、当前版本和未删除 metadata。 |
+| 权威边界 | PostgreSQL 继续保存和提供标准名称、营养数值、来源版本及单位换算；饮食记录写入仍使用 Java 精确 SQL 匹配，向量检索只作为独立候选入口，不直接替代营养事实。公共知识 `knowledge_search` 继续查询普通知识 collection。 |
+| 数据与费用边界 | 本轮产生真实 Embedding 供应商请求并写入 Milvus；未调用 Chat，未写入 PostgreSQL/Redis/RocketMQ 业务事实，未输出或记录 API Key、向量正文或完整查询。性能压测、组件重启、ACK/重复投递故障注入、备份恢复和生产操作继续后置。 |
+| 结论 | 全量营养目录已完成真实向量构建并取得 Milvus 数量和查询证据；营养精确匹配业务保持不变，后续如需将语义候选用于未知食材自动匹配，仍需单独增加 Java 置信度门槛和人工确认策略。 |

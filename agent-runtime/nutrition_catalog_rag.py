@@ -294,37 +294,62 @@ class MilvusNutritionCatalogIndex:
         if not vectors or not vectors[0]:
             return []
         self._ensure_collection(len(vectors[0]))
+        base_filter = (
+            'source_type == "nutrition_catalog" and tenant_id == 0 '
+            'and scope == "public_published" and visibility == "published" '
+            'and indexed == true and deleted == false and review_status == "approved" '
+            'and current_version == true '
+            f'and embedding_fingerprint == "{_milvus_string(self.fingerprint)}"'
+        )
+        output_fields = [
+            "nutrition_food_id",
+            "standard_name",
+            "chinese_name",
+            "food_form",
+            "basis_unit",
+            "source_name",
+            "source_version",
+            "catalog_version",
+            "search_text",
+        ]
         try:
+            # 短名称优先走 Milvus metadata 精确匹配，避免向量模型把同类食材排在前面。
+            exact_rows = self.client.query(
+                collection_name=self.collection,
+                filter=(
+                    f"{base_filter} and (chinese_name == \"{_milvus_string(query.strip())}\" "
+                    f"or standard_name == \"{_milvus_string(query.strip())}\")"
+                ),
+                output_fields=output_fields,
+                limit=max(1, min(limit, 50)),
+            )
             hits = self.client.search(
                 collection_name=self.collection,
                 data=vectors,
                 anns_field="vector",
-                filter=(
-                    'source_type == "nutrition_catalog" and tenant_id == 0 '
-                    'and scope == "public_published" and visibility == "published" '
-                    'and indexed == true and deleted == false and review_status == "approved" '
-                    'and current_version == true '
-                    f'and embedding_fingerprint == "{_milvus_string(self.fingerprint)}"'
-                ),
+                filter=base_filter,
                 limit=max(1, min(limit, 50)),
-                output_fields=[
-                    "nutrition_food_id",
-                    "standard_name",
-                    "chinese_name",
-                    "food_form",
-                    "basis_unit",
-                    "source_name",
-                    "source_version",
-                    "catalog_version",
-                    "search_text",
-                ],
+                output_fields=output_fields,
             )[0]
         except Exception as error:
             raise RagError("RAG_NUTRITION_SEARCH_FAILED", "nutrition vector search failed") from error
         result = []
+        seen = set()
+        for entity in exact_rows:
+            match = _match_from_payload(entity, 1.0)
+            result.append(match)
+            seen.add(match.nutrition_food_id)
+            if len(result) == limit:
+                return result
         for hit in hits:
             entity = hit.get("entity", hit)
-            result.append(_match_from_payload(entity, float(hit.get("distance", 0))))
+            match = _match_from_payload(entity, float(hit.get("distance", 0)))
+            if match.nutrition_food_id in seen:
+                continue
+            seen.add(match.nutrition_food_id)
+            result.append(match)
+            if len(result) == limit:
+                break
         return result
 
 
