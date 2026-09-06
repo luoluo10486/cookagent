@@ -849,7 +849,9 @@ export function AdminPage() {
         await new Promise<void>((resolve) => window.setTimeout(resolve, 280));
       }
       onApply?.();
-      appendOperationAudit(authUser, action, targetType, targetId);
+      if (import.meta.env.VITE_AGENT_MODE !== 'real') {
+        appendOperationAudit(authUser, action, targetType, targetId);
+      }
       setRefreshNonce((current) => current + 1);
       setOperationStatus('success');
     } catch (error) {
@@ -879,7 +881,9 @@ export function AdminPage() {
         requestId: failedRequestId,
         message: typeof candidate.message === 'string' ? candidate.message : fallback.message,
       });
-      appendOperationAudit(authUser, action, targetType, targetId, 'failed', failedRequestId);
+      if (import.meta.env.VITE_AGENT_MODE !== 'real') {
+        appendOperationAudit(authUser, action, targetType, targetId, 'failed', failedRequestId);
+      }
       setOperationStatus('failed');
     }
   };
