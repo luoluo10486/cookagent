@@ -155,19 +155,23 @@ function TraceRail({ run, designChat = false }: { run: AgentRunView; designChat?
           ) : (
             <div className={styles.traceEmpty}>等待运行事件...</div>
           )}
-          {run.citations.length ? (
-            <div className={styles.citationList}>
-              {run.citations.map((citation) => (
-                <CitationBlock citation={citation} key={citation.id} />
-              ))}
-            </div>
-          ) : null}
         </TabsContent>
         <TabsContent className={styles.traceBody} value="json">
           <pre className={styles.traceJson}>{JSON.stringify(run, null, 2)}</pre>
         </TabsContent>
       </Tabs>
     </aside>
+  );
+}
+
+function CitationList({ citations }: { citations: AgentRunView['citations'] }) {
+  if (!citations.length) return null;
+  return (
+    <div className={styles.citationList} aria-label="知识库引用">
+      {citations.map((citation) => (
+        <CitationBlock citation={citation} key={citation.id} />
+      ))}
+    </div>
   );
 }
 
@@ -1698,6 +1702,7 @@ function RealChatPage() {
     setRunStatus('idle');
     setAssistantText('');
     setAssistantMessageId(undefined);
+    setCitations([]);
     setBudgetConfirmation(false);
     setCheckpointAvailable(false);
     setApproval(undefined);
@@ -1921,6 +1926,9 @@ function RealChatPage() {
       ) : null}
       {mappedMessages.map((message) => (
         <MessageBubble key={message.id} message={message}>
+          {message.role === 'assistant' && message.agentRunId === activeRunId && runStatus === 'completed' ? (
+            <CitationList citations={citations} />
+          ) : null}
           {message.role === 'assistant' && message.agentRunId ? (
             <AgentFeedback runId={message.agentRunId} messageId={message.id} />
           ) : null}
@@ -1936,6 +1944,7 @@ function RealChatPage() {
             agentRunId: activeRunId,
           }}
         >
+          {runStatus === 'completed' ? <CitationList citations={citations} /> : null}
           {assistantMessageId && activeRunId ? (
             <AgentFeedback runId={activeRunId} messageId={assistantMessageId} />
           ) : null}

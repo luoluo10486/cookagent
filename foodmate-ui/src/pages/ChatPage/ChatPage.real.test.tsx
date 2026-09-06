@@ -101,6 +101,7 @@ describe('ChatPage 真实历史会话回放', () => {
       expect(openAgentRunStream).toHaveBeenCalledWith('run-1', expect.any(Function), expect.anything()),
     );
     expect(await screen.findByText('公共营养指南')).toBeInTheDocument();
+    expect(screen.getByLabelText('知识库引用')).toBeInTheDocument();
     expect(screen.getAllByText('基于已发布公共知识库完成回答。')).toHaveLength(1);
     expect(screen.getByText('优先选择多样化且少加工的食物。')).not.toBeVisible();
   });
