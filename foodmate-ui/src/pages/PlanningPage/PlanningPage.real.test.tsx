@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -142,6 +142,9 @@ describe('PlanningPage real mode', () => {
 
     expect(await screen.findByRole('heading', { name: '服务端增肌计划' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: '已保存' })).toBeInTheDocument();
+    const savedPlanCard = screen.getByRole('heading', { name: '服务端增肌计划' }).closest('article');
+    expect(savedPlanCard).not.toBeNull();
+    expect(within(savedPlanCard as HTMLElement).getByText('已保存')).toBeInTheDocument();
     await userEvent.setup().click(screen.getByRole('tab', { name: '已校验' }));
     expect(screen.getByRole('heading', { name: '待发布计划' })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: '服务端增肌计划' })).not.toBeInTheDocument();
