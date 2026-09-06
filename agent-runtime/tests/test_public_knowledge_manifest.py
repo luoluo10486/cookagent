@@ -13,12 +13,12 @@ import validate_public_sources
 
 
 def test_public_source_manifest_is_complete_and_unindexed() -> None:
-    """三份官方资料必须可追溯，且在用户确认前保持未构建向量状态。"""
+    """九份官方资料必须可追溯，且在真实 Embedding 确认前保持未构建向量状态。"""
     root = SCRIPT_DIRECTORY / "public"
     report = validate_public_sources.validate(root)
-    assert report["document_count"] == 3
+    assert report["document_count"] == 9
     assert report["embedding_status"] == "未构建向量"
-    assert len(report["documents"]) == 3
+    assert len(report["documents"]) == 9
 
 
 def test_public_source_urls_are_unique_who_pages() -> None:

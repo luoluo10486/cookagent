@@ -2230,3 +2230,18 @@
 | 文档 | 更新工具注册与执行链路说明、本地开发指南、SQL README；补充工具用途、注册表入口、执行事实入口、清理命令和营养索引保护边界。 |
 | 缓存与安全 | 维护脚本使用 `agent-runtime\\.venv` 的 `python -B`，未向仓库写入 API Key、密码、向量正文或业务原文；项目级 Python 缓存按收尾步骤清理，`.venv` 依赖缓存不纳入删除范围。 |
 | 结论 | 当前 PostgreSQL 正式工具和参考数据可用，公共知识测试索引事实已清空，营养向量保持完整；后续重新导入公共知识时仍需走批次上传、索引、显式发布流程。 |
+
+## D144 K1 正式公共营养资料 local-stub 业务闭环（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行范围 | 使用 WHO 中文公共营养资料快照建立正式公共知识库基线；执行批量上传、异步索引、显式发布、公共检索和批次 SSE 回放，不调用真实 Embedding，不写入 Milvus。 |
+| 资料与可追溯性 | `script/data/knowledge/public/` 共 `9` 份 Markdown 资料；`manifest.json` 为每份资料记录来源 URL、版本、检索日期和 SHA-256，来源为世界卫生组织公开事实表，未发现重复、测试占位或敏感信息。 |
+| 批次与 PostgreSQL | 批次 `354847677655027712` 使用 `stub` 模式，`9/9` 条目 `indexed`，每条尝试次数为 `1`，批次为 `completed`；9 个文档均为 `visibility=published`、`status=indexed`、`current_version=true`、未逻辑删除，共 `58` 个有效 chunk。 |
+| Outbox 与审计 | 索引 Outbox `9/9` 为 `published`，可见性 Outbox `9/9` 为 `published`；统一审计包含批次创建成功事实 `1` 条和文档发布成功事实 `9` 条，未保存资料原文、对象地址或密钥。 |
+| Redis stub 索引 | `foodmate:rag:stub:chunks` 共 `58` 条，覆盖 `9` 个文档；所有条目的 metadata 均为 `published/indexed/current_version`，删除标记为 `false`，与 PostgreSQL chunk 数一致。 |
+| 公共检索 | 代表性健康饮食、钠摄入、食品安全和身体活动查询均返回最多 `4` 条受限引用；完全随机 ASCII 查询返回 `0` 条，证明无命中不会返回无关文档。 |
+| 批次 SSE | 读取到 `18` 个持久化事件，包含 `knowledge.index.indexed` 和 `knowledge.batch.progress`；以首事件 ID 回放得到 `17` 个后续事件，未返回旧游标事件，事件 ID 无重复。 |
+| 代码修复 | 为批次状态聚合增加批次行锁，避免并发条目结果回写时读取过期聚合快照；Application 受影响测试 `5` 项、Infrastructure 受影响测试 `6` 项均通过。 |
+| 数据与费用边界 | 本轮只使用 Docker 中现有 Java、Python Runtime、PostgreSQL、Redis 和 RocketMQ；未改迁移、未清理既有数据、未调用付费 Chat/Embedding、未执行性能压测、依赖重启或故障注入。 |
+| 结论 | K1 的正式公共资料准备、批量导入、local-stub 索引、发布可见性、公共检索和批次 SSE 业务证据已完成；真实 Embedding/Milvus 索引、性能与生产可靠性继续按计划后置。 |
