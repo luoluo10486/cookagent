@@ -2257,3 +2257,17 @@
 | 业务测试 | `agent-runtime\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider agent-runtime/tests/test_knowledge_rag.py agent-runtime/tests/test_knowledge_worker.py`：`70 passed`、`4` 个子断言通过。 |
 | 数据边界 | 未重建 D144 正式批次，因此当前 PostgreSQL/Redis 的 `58` 个 chunk 仍是 K1 索引快照；后续新索引任务使用 K2 策略。本轮未调用真实 Embedding、未写入 Milvus、未执行性能或故障测试。 |
 | 结论 | K2 的切分、中文关键词检索、标题/章节命中、稳定 ID 和引用数量边界已完成业务门禁；真实向量质量和历史数据重索引不在本轮执行范围。 |
+
+## D146 K3 结构化记忆与上下文业务收口（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；使用项目 `agent-runtime\\.venv`、Java 21 和仓库现有 Maven Wrapper；未调用真实 Chat/Embedding。 |
+| Python 实现 | `generate_memory_candidates` 支持喜欢、不喜欢/忌口、预算、烹饪能力、用餐时间和回答偏好，候选只保存短结构化值与用户消息 ID；一次性请求、完整计划、营养目标和高影响健康事实不生成候选。ContextBuilder 增加意图类型白名单、确认状态过滤、同 key 去重和最多 8 条限制。 |
+| Java 实现 | `MemoryRepository` 增加同 key 活动记录查询和冲突收敛；PostgreSQL 适配器在事务中使用 advisory lock，相同 JSON 幂等跳过，不同 JSON 写入 `conflict`；确认或手动修改后同 key 其他活动值转为 `rejected`。手动修改先校验 JSON 对象和长期记忆安全边界。 |
+| Java 业务测试 | `mvnw.cmd -pl foodmate-application,foodmate-infra -am test -Dtest=MemoryCandidateServiceImplTest,SessionSummaryServiceImplTest,AgentRunCommandServiceImplTest -Dsurefire.failIfNoSpecifiedTests=false`：`16/16` 通过。 |
+| Python 业务测试 | `agent-runtime\\.venv\\Scripts\\python.exe -B -m pytest -q -p no:cacheprovider agent-runtime/tests/test_memory_context.py agent-runtime/tests/test_runtime_server.py`：`57 passed`；未生成 Python 缓存。 |
+| 编译与检查 | `mvnw.cmd -pl foodmate-application,foodmate-infra -am -DskipTests compile` 成功；`git diff --check` 通过；local-stub 的 `MemoryRepository` 适配器已同步编译通过。 |
+| PostgreSQL 只读检查 | 在运行中的 `foodmate-postgres` / `FoodMate` 执行 `findActiveByKey` 对应 SQL（advisory lock、删除/拒绝/过期过滤、`FOR UPDATE`）成功，返回 `0 rows`；未修改业务数据。 |
+| 数据边界 | 未执行迁移、truncate、删除、备份恢复、Docker 重启或故障注入；未修改现有数据库、Redis、Milvus、RocketMQ 数据。 |
+| 结论 | K3 结构化候选、同 key 幂等/冲突、用户修改删除后的失效边界、摘要与上下文白名单已完成业务门禁；性能、可靠性矩阵和生产治理继续后置。 |

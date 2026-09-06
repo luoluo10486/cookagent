@@ -467,11 +467,11 @@ RocketMQ 只负责跨服务可靠运输；Redis 负责准入、优先级、lease
 
 ### P3 记忆与摘要治理
 
-实施状态（2026-09-05）：最近 8 条原始消息、结构化摘要（goals/constraints/decisions/open_questions/source_message_ids）、摘要 CAS/digest、计划型 7 天 TTL、临时型 24 小时 TTL、过期记忆过滤及长期记忆注入上限 8 条已实现并编译验证。当前 AgentRun 按 cooking/nutrition/record/planning/general 做确定性类型分层；V31 保存候选来源消息和更正/删除后的抑制来源，过滤近期消息、摘要重建和长期记忆 Context，防止旧事实再生。V31 已在本地 Docker PostgreSQL 执行并通过 validation：既有记忆 0 行，新增字段、索引和数组约束均存在。
+实施状态（2026-09-06）：最近 8 条原始消息、结构化摘要（goals/constraints/decisions/open_questions/source_message_ids）、摘要 CAS/digest、过期记忆过滤及长期记忆注入上限 8 条已实现并编译验证。当前 AgentRun 按 cooking/nutrition/record/planning/general 做确定性类型分层；V31 保存候选来源消息和更正/删除后的抑制来源，过滤近期消息、摘要重建和长期记忆 Context，防止旧事实再生。新的长期记忆候选白名单不再接受 `plan`、一次性请求、营养目标和医疗事实；历史 schema 中的计划/临时 TTL 仍仅用于兼容既有记录。V31 已在本地 Docker PostgreSQL 执行并通过 validation：既有记忆 0 行，新增字段、索引和数组约束均存在。
 
 - 保持最近 8 条原始消息；第 9 条消息触发摘要更新。
 - 摘要改为结构化字段：目标、已确认约束、决定、待确认问题和来源消息 ID；保留版本/CAS/digest。
-- 长期记忆读取只注入已确认、未过期、属于当前用户且与意图匹配的少量记录；周食谱等计划型记忆必须有 TTL。
+- 长期记忆读取只注入已确认、未过期、属于当前用户且与意图匹配的少量记录；新的周食谱、完整计划和一次性业务参数不再写入普通长期记忆。
 - 删除、更正或冲突确认后失效相关摘要和 Context 引用；不把领域权威表复制成长期记忆。
 
 ### 当时的暂缓项（已完成或已重新归类）

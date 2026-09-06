@@ -71,13 +71,12 @@ public class LocalStubPersistenceConfig {
                 return null;
             }
 
-            public boolean hasDifferentValue(
-                    long userId, String type, String key, String valueJson) {
+            public boolean hasSuppressedSourceMessages(long userId, List<String> sourceMessageIds) {
                 return false;
             }
 
-            public boolean hasSuppressedSourceMessages(long userId, List<String> sourceMessageIds) {
-                return false;
+            public MemorySnapshot findActiveByKey(long userId, String type, String key) {
+                return null;
             }
 
             public void insert(NewMemory memory) {
@@ -105,6 +104,10 @@ public class LocalStubPersistenceConfig {
             }
 
             public int confirmOwned(long userId, long memoryId) {
+                throw unavailable();
+            }
+
+            public int rejectOtherConflicts(long userId, long memoryId) {
                 throw unavailable();
             }
         };

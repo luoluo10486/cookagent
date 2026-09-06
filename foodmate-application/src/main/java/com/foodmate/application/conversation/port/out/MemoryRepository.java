@@ -8,9 +8,9 @@ import java.util.List;
 public interface MemoryRepository {
     Long findRunOwner(long runId);
 
-    boolean hasDifferentValue(long userId, String type, String key, String valueJson);
-
     boolean hasSuppressedSourceMessages(long userId, List<String> sourceMessageIds);
+
+    MemorySnapshot findActiveByKey(long userId, String type, String key);
 
     void insert(NewMemory memory);
 
@@ -25,6 +25,8 @@ public interface MemoryRepository {
     int softDeleteOwned(long userId, long memoryId);
 
     int confirmOwned(long userId, long memoryId);
+
+    int rejectOtherConflicts(long userId, long memoryId);
 
     record NewMemory(
             long id,

@@ -160,6 +160,41 @@ class Context:
 class ContextBuilder:
     """按固定优先级组装上下文；Python 只读取 Java 已授权的上下文。"""
 
+    ALLOWED_MEMORY_TYPES = frozenset(
+        {
+            "preference",
+            "constraint",
+            "routine",
+            "cooking_skill",
+            "budget_habit",
+            "time_habit",
+            "interaction_preference",
+            "user_rule",
+        }
+    )
+    INTENT_MEMORY_TYPES = {
+        "planning": ALLOWED_MEMORY_TYPES,
+        "cooking": frozenset(
+            {
+                "preference",
+                "constraint",
+                "routine",
+                "cooking_skill",
+                "interaction_preference",
+                "user_rule",
+            }
+        ),
+        "record": frozenset(
+            {"preference", "constraint", "routine", "budget_habit", "user_rule"}
+        ),
+        "nutrition": frozenset(
+            {"preference", "constraint", "budget_habit", "user_rule"}
+        ),
+        "analysis": frozenset(
+            {"preference", "constraint", "budget_habit", "user_rule"}
+        ),
+    }
+
     def __init__(self, max_recent_messages: int = 8, max_context_tokens: int = 12000):
         self.max_recent_messages = max_recent_messages
         self.max_context_tokens = max_context_tokens
@@ -170,6 +205,32 @@ class ContextBuilder:
         raw = json.dumps({"messages": messages, "summary": summary, "memories": memories, "tool_results": tool_results}, ensure_ascii=False, separators=(",", ":"), default=str)
         return max(1, len(raw))
 
+    def _authorized_memories(self, raw_memories: Any, route: Any) -> tuple[dict[str, Any], ...]:
+        """再次收窄 Java 授权范围，避免 Runtime 直接接受越权记忆类型。"""
+        intent = str(getattr(route, "intent", "general"))
+        allowed_types = self.INTENT_MEMORY_TYPES.get(intent, self.ALLOWED_MEMORY_TYPES)
+        result: list[dict[str, Any]] = []
+        seen_keys: set[tuple[str, str]] = set()
+        for item in raw_memories or ():
+            if not isinstance(item, dict):
+                continue
+            memory_id = str(item.get("memory_id") or "").strip()
+            memory_type = str(item.get("memory_type") or "").strip().lower()
+            memory_key = str(item.get("memory_key") or "").strip()
+            # 兼容只携带 memory_id 的旧回放事件；真实 Java 授权上下文必须带类型。
+            if not memory_id or (memory_type and memory_type not in allowed_types):
+                continue
+            if item.get("confirmation_status") not in (None, "confirmed"):
+                continue
+            dedup_key = (memory_type, memory_key or memory_id)
+            if dedup_key in seen_keys:
+                continue
+            seen_keys.add(dedup_key)
+            result.append(dict(item))
+            if len(result) >= 8:
+                break
+        return tuple(result)
+
     def build(self, command: dict[str, Any], route: RouteDecision) -> Context:
         authorized = command.get("authorized_context") or {}
         raw_messages = list(authorized.get("recent_messages") or [])
@@ -178,7 +239,8 @@ class ContextBuilder:
             raw_messages.append(current)
         messages = list(raw_messages[-self.max_recent_messages:])
         summary = authorized.get("session_summary")
-        memories = tuple(authorized.get("long_term_memories") or ())
+        summary = summary if isinstance(summary, dict) else None
+        memories = self._authorized_memories(authorized.get("long_term_memories"), route)
         tool_results = tuple(authorized.get("tool_results") or ())
         analysis_plan = authorized.get("database_query_plan")
         if not isinstance(analysis_plan, dict):
@@ -522,19 +584,134 @@ def split_answer(answer: str, max_bytes: int = 2048) -> list[str]:
     return chunks or [""]
 
 
+_MEMORY_BLOCKED_TERMS = (
+    "营养目标",
+    "摄入目标",
+    "热量目标",
+    "蛋白质目标",
+    "疾病",
+    "诊断",
+    "处方",
+    "药物",
+    "病史",
+    "过敏",
+    "糖尿病",
+    "高血压",
+    "肾病",
+    "medical",
+    "diagnos",
+    "prescription",
+    "medication",
+)
+_MEMORY_ONE_SHOT_TERMS = ("今天", "这次", "一次", "本周", "当前", "现在")
+
+
+def _memory_source_ids(context: Context, content: str) -> list[str]:
+    """只选择支持当前陈述的用户消息，避免把助手内容当成记忆来源。"""
+    normalized = content.strip()
+    user_ids = [
+        str(item.get("message_id"))
+        for item in reversed(context.messages)
+        if item.get("role") in ("user", "USER")
+        and item.get("message_id") is not None
+        and str(item.get("content") or "").strip() == normalized
+    ]
+    if user_ids:
+        return list(dict.fromkeys(user_ids))[:4]
+    return list(dict.fromkeys(str(value) for value in context.sources.get("message_id", ())))[-1:]
+
+
+def _memory_value(value: str, limit: int = 160) -> str:
+    return re.sub(r"\s+", " ", value).strip()[:limit]
+
+
 def generate_memory_candidates(context: Context, content: str, max_candidates: int = 3) -> list[dict[str, Any]]:
-    """只生成候选，不写 Java 的 user_memories 权威表。"""
+    """从用户的稳定偏好中生成短结构化候选，不保存整句请求或回答。"""
+    text = content.strip()
+    if not text or len(text) > 400:
+        return []
+    lower = text.lower()
+    if any(term in lower for term in _MEMORY_ONE_SHOT_TERMS) and not any(
+        marker in lower for marker in ("通常", "一般", "一直", "长期", "我的", "我喜欢", "我不吃", "我偏好")
+    ):
+        return []
+    if any(term in lower for term in _MEMORY_BLOCKED_TERMS):
+        return []
+    source_ids = _memory_source_ids(context, text)
+    if not source_ids:
+        return []
+
     candidates: list[dict[str, Any]] = []
-    if "我喜欢" in content or "我不吃" in content:
-        candidates.append({
-            "memory_type": "preference",
-            "memory_key": "user_stated_preference",
-            "memory_value": {"text": content[:200]},
-            "confidence": 0.95,
-            "scope": "global",
-            "source_message_ids": list(context.sources["message_id"]),
-        })
-    return candidates[:max_candidates]
+    seen_keys: set[tuple[str, str]] = set()
+
+    def add(memory_type: str, memory_key: str, value: dict[str, str], confidence: float = 0.92) -> None:
+        key = (memory_type, memory_key)
+        if key in seen_keys or len(candidates) >= max_candidates:
+            return
+        seen_keys.add(key)
+        candidates.append(
+            {
+                "memory_type": memory_type,
+                "memory_key": memory_key,
+                "memory_value": value,
+                "confidence": confidence,
+                "source": "conversation",
+                "scope": "global",
+                "source_message_ids": source_ids,
+            }
+        )
+
+    preference = re.search(
+        r"(?:我(?:比较)?喜欢|我偏好|我更喜欢|我爱吃|I\s+(?:like|prefer))\s*([^，。；;\n]{1,80})",
+        text,
+        re.IGNORECASE,
+    )
+    if preference:
+        add("preference", "diet_style", {"preference": _memory_value(preference.group(1))})
+
+    avoid = re.search(
+        r"(?:我不吃|我不喜欢|我忌口|我避免|我不想吃|I\s+(?:don't eat|avoid|dislike))\s*([^，。；;\n]{1,80})",
+        text,
+        re.IGNORECASE,
+    )
+    if avoid:
+        add("constraint", "avoid_foods", {"foods": _memory_value(avoid.group(1))})
+
+    budget = re.search(
+        r"(?:我的|每天的|每餐的)?预算(?:是|为|控制在)?\s*((?:每天|每餐)?\s*[0-9]{1,5}\s*(?:元|块)?(?:每天|/天|每餐|/餐)?)",
+        text,
+        re.IGNORECASE,
+    )
+    if budget:
+        value = _memory_value(budget.group(1))
+        key = "meal_budget" if any(term in text for term in ("每餐", "/餐")) else "daily_budget"
+        add("budget_habit", key, {"amount": value})
+
+    cooking = re.search(
+        r"(?:我不会做饭|我不太会做饭|我(?:只)?会做|我的烹饪能力是)\s*([^，。；;\n]{0,80})",
+        text,
+        re.IGNORECASE,
+    )
+    if cooking:
+        value = _memory_value(cooking.group(0))
+        add("cooking_skill", "self_reported_level", {"description": value})
+
+    meal_time = re.search(
+        r"(?:我通常|我一般|我习惯在|我的用餐时间是)\s*([^，。；;\n]{1,80})",
+        text,
+        re.IGNORECASE,
+    )
+    if meal_time:
+        add("time_habit", "meal_time", {"description": _memory_value(meal_time.group(1))})
+
+    interaction = re.search(
+        r"(?:以后|平时)?(?:回答|交流)(?:请|尽量)?\s*(简洁|详细|使用中文|用中文|分点|表格)",
+        text,
+        re.IGNORECASE,
+    )
+    if interaction:
+        add("interaction_preference", "response_style", {"style": _memory_value(interaction.group(1))})
+    return candidates
 
 
 def generate_tool_proposals(
