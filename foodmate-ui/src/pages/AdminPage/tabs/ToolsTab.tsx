@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Copy, Lock, Search } from 'lucide-react';
+import { Copy, Lock, RefreshCw, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -27,7 +27,14 @@ import {
   statusTag,
 } from './AdminShared';
 import type { AdminActionPayload, AdminOperationState } from './types';
-import { loadAdminDashboard, loadAdminToolRegistry, updateAdminToolStatus } from '../../../services/adminService';
+import {
+  loadAdminDashboard,
+  loadAdminQuery,
+  loadAdminToolRegistry,
+  type AdminQueryToolCall,
+  type AdminToolCallRow,
+  updateAdminToolStatus,
+} from '../../../services/adminService';
 
 const registryMetrics = [
   { label: '已注册工具', value: '24 个', tone: 'neutral' },
@@ -121,6 +128,9 @@ function ToolRegistrySection({
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [selectedTool, setSelectedTool] = useState<ToolRegistryRow>();
+  const [loadError, setLoadError] = useState('');
+  const [loading, setLoading] = useState(isRealMode);
+  const [retryNonce, setRetryNonce] = useState(0);
   const showOperationActions = operationStatus !== 'idle';
   const operationActionDisabled = operationStatus === 'submitting' || operationStatus === 'no-permission';
 
@@ -148,10 +158,28 @@ function ToolRegistrySection({
 
   useEffect(() => {
     if (!isRealMode) return;
+    let active = true;
+    // 每次刷新都重新建立请求生命周期，避免旧请求覆盖当前页面状态。
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
+    setLoadError('');
     loadAdminToolRegistry()
-      .then(setTools)
-      .catch(() => setTools([]));
-  }, [isRealMode, refreshNonce]);
+      .then((items) => {
+        if (active) setTools(items);
+      })
+      .catch((error) => {
+        if (!active) return;
+        setTools([]);
+        setSelectedTool(undefined);
+        setLoadError(error instanceof Error ? error.message : '工具注册表加载失败');
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [isRealMode, refreshNonce, retryNonce]);
 
   const filteredTools = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -336,6 +364,16 @@ function ToolRegistrySection({
         </label>
       </section>
 
+      {loadError ? (
+        <div className={styles.auditError} role="alert">
+          <span>{loadError}</span>
+          <Button variant="outline" size="sm" disabled={loading} onClick={() => setRetryNonce((value) => value + 1)}>
+            <RefreshCw aria-hidden="true" />
+            重试
+          </Button>
+        </div>
+      ) : null}
+
       <section
         className={`${styles.registryStats} ${isFigmaOperationFixture ? styles.registryOperationStats : ''}`}
         aria-label="工具注册表指标"
@@ -368,6 +406,7 @@ function ToolRegistrySection({
           tableClassName={`${styles.registryTable} ${isFigmaOperationFixture ? styles.registryOperationTable : ''}`}
           columns={registryColumns}
           data={visibleResults}
+          emptyLabel={loading ? '正在加载工具注册表...' : loadError ? '工具注册表暂不可用' : '暂无匹配的工具'}
         />
       </Card>
 
@@ -482,8 +521,212 @@ export function ToolsSection({
       operationStatus={operationStatus}
       refreshNonce={refreshNonce}
     />
+  ) : import.meta.env.VITE_AGENT_MODE === 'real' ? (
+    <RealToolCallsSection refreshNonce={refreshNonce} />
   ) : (
     <ToolCallsSection onAction={onAction} refreshNonce={refreshNonce} />
+  );
+}
+
+function mapRealToolCall(row: AdminQueryToolCall, index: number): AdminToolCallRow {
+  return {
+    key: `tool-call-${row.tool_call_id ?? index}`,
+    callId: row.tool_call_id == null ? '-' : String(row.tool_call_id),
+    runId: row.agent_run_id == null ? '-' : String(row.agent_run_id),
+    toolName: row.tool_name || '-',
+    status: row.status || '-',
+    latencyMs: row.latency_ms ?? 0,
+    traceId: row.trace_id || '-',
+    requestId: '-',
+    inputSummary: '-',
+    outputSummary: '-',
+    errorCode: '-',
+  };
+}
+
+function RealToolCallsSection({ refreshNonce = 0 }: { refreshNonce?: number }) {
+  const [rows, setRows] = useState<AdminToolCallRow[]>([]);
+  const [selectedTool, setSelectedTool] = useState<AdminToolCallRow>();
+  const [searchInput, setSearchInput] = useState('');
+  const [query, setQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [retryNonce, setRetryNonce] = useState(0);
+  const pageSize = 8;
+
+  useEffect(() => {
+    let active = true;
+    // 查询条件、刷新或重试变化时，只有当前请求可以更新页面。
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
+    setLoadError('');
+    loadAdminQuery<AdminQueryToolCall>('tool-calls', {
+      page,
+      size: pageSize,
+      query: query.trim() || undefined,
+      status: statusFilter === 'all' ? undefined : statusFilter,
+    })
+      .then((result) => {
+        if (!active) return;
+        const items = result.items.map(mapRealToolCall);
+        setRows(items);
+        setSelectedTool(items[0]);
+        setTotal(result.total);
+      })
+      .catch((error) => {
+        if (!active) return;
+        setRows([]);
+        setSelectedTool(undefined);
+        setTotal(0);
+        setLoadError(error instanceof Error ? error.message : '工具调用加载失败');
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [page, query, refreshNonce, retryNonce, statusFilter]);
+
+  const pageCount = Math.max(1, Math.ceil(total / pageSize));
+  const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const rangeEnd = Math.min(page * pageSize, total);
+  const columns: TableColumnProps<AdminToolCallRow>[] = [
+    { title: '工具调用 ID', dataIndex: 'callId' },
+    { title: 'Run ID', dataIndex: 'runId' },
+    { title: '工具名', dataIndex: 'toolName' },
+    { title: '状态', dataIndex: 'status', render: (_, row) => statusTag(row.status) },
+    { title: '耗时', render: (_, row) => `${row.latencyMs} ms` },
+    { title: 'Trace ID', dataIndex: 'traceId' },
+    {
+      title: '操作',
+      render: (_, row) => (
+        <Button variant="outline" size="sm" onClick={() => setSelectedTool(row)}>
+          详情
+        </Button>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <section className={styles.filters} aria-label="工具调用筛选">
+        <strong>筛选</strong>
+        <Select
+          value={statusFilter}
+          onValueChange={(value) => {
+            setStatusFilter(value);
+            setPage(1);
+          }}
+        >
+          <SelectTrigger className={styles.filterControl} aria-label="工具调用状态筛选">
+            <SelectValue placeholder="全部状态" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">全部状态</SelectItem>
+            <SelectItem value="success">success</SelectItem>
+            <SelectItem value="failed">failed</SelectItem>
+            <SelectItem value="running">running</SelectItem>
+          </SelectContent>
+        </Select>
+        <ShadcnInput
+          className={styles.filterInput}
+          value={searchInput}
+          placeholder="工具名 / Run ID / Trace ID"
+          aria-label="搜索工具调用"
+          onChange={(event) => setSearchInput(event.target.value)}
+        />
+        <Button
+          variant="outline"
+          disabled={loading}
+          onClick={() => {
+            setQuery(searchInput);
+            setPage(1);
+          }}
+        >
+          <Search aria-hidden="true" />
+          查询
+        </Button>
+      </section>
+
+      {loadError ? (
+        <div className={styles.auditError} role="alert">
+          <span>{loadError}</span>
+          <Button variant="outline" size="sm" disabled={loading} onClick={() => setRetryNonce((value) => value + 1)}>
+            <RefreshCw aria-hidden="true" />
+            重试
+          </Button>
+        </div>
+      ) : null}
+
+      <section className={styles.sectionLayout}>
+        <Card className={styles.wideCard}>
+          <div className={styles.cardHead}>
+            <strong>工具调用记录</strong>
+            <Badge variant="outline">真实接口只读数据</Badge>
+          </div>
+          <DataTable
+            columns={columns}
+            data={rows}
+            emptyLabel={loading ? '正在加载工具调用...' : loadError ? '工具调用暂不可用' : '暂无工具调用记录'}
+          />
+        </Card>
+        <aside className={styles.side} aria-label="工具调用详情">
+          {selectedTool ? (
+            <Card className={styles.card}>
+              <div className={styles.cardHead}>
+                <strong>工具调用详情</strong>
+                {statusTag(selectedTool.status)}
+              </div>
+              <div className={styles.detailGrid}>
+                <span>调用 ID</span>
+                <strong>{selectedTool.callId}</strong>
+                <span>Run ID</span>
+                <strong>{selectedTool.runId}</strong>
+                <span>工具名</span>
+                <strong>{selectedTool.toolName}</strong>
+                <span>耗时</span>
+                <strong>{selectedTool.latencyMs} ms</strong>
+                <span>Trace ID</span>
+                <strong>{selectedTool.traceId}</strong>
+                <span>错误码</span>
+                <strong>{selectedTool.errorCode || '-'}</strong>
+              </div>
+            </Card>
+          ) : (
+            <Card className={styles.card}>
+              <div className={styles.runEmptyState} role="status">
+                <strong>{loadError ? '工具调用详情暂不可用' : '暂无工具调用详情'}</strong>
+                <span>{loadError || '当前接口没有返回可查看的工具调用。'}</span>
+              </div>
+            </Card>
+          )}
+        </aside>
+      </section>
+
+      <section className={styles.overviewPagination} aria-label="工具调用分页">
+        <span>
+          显示第 {rangeStart} 到 {rangeEnd} 条，共 {total} 条结果
+        </span>
+        <div className={styles.overviewPageButtons}>
+          <Button disabled={page === 1 || loading} onClick={() => setPage((value) => Math.max(1, value - 1))}>
+            上一页
+          </Button>
+          <span aria-label={`第 ${page} 页，共 ${pageCount} 页`}>
+            {page} / {pageCount}
+          </span>
+          <Button
+            disabled={page >= pageCount || loading}
+            onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
+          >
+            下一页
+          </Button>
+        </div>
+      </section>
+    </>
   );
 }
 

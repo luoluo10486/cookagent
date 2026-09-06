@@ -177,7 +177,7 @@ export function isAdminNavItemActive(path: string, pathname: string, search: str
 export const sectionMeta: Record<string, { title: string; description: string; tag: string }> = {
   overview: {
     title: '系统概览',
-    description: '运行、用户、工具、模型和知识库索引状态。当前为 mock 管理视图。',
+    description: '运行、用户、工具、模型和知识库索引状态。',
     tag: 'Overview',
   },
   users: {
