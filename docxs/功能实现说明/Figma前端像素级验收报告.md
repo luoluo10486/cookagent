@@ -2261,3 +2261,21 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 三项自动 diff 均为非零，仍保持 `DIFF_REVIEW`；结构检查、截图存在和控件迁移审计不替代人工像素级 `PASS`。
 - [ ] 本节只复核三个受影响画板，不代表其余 102 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [x] 本批次集中执行 4 个 Admin 测试文件、`38/38` 个用例通过；`npm run typecheck`、`npm run build`、`npm run lint`、`npm run format:check`、`npm run qa:figma:validate` 和 `git diff --check` 均通过。证据校验返回 `structuralPass=true`、`strictDprPass=true`、`errors=[]`。
+
+## 38. 2026-09-06 Admin 操作状态组增量验收
+
+本节只记录 Admin 无权限、确认、提交中、成功和失败五个受影响画板的当前浏览器截图与 PNG diff，不重新采集或人工验收其余画板。Figma 文件保持只读，真实模式操作边界未改变。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Admin Operation No Permission | `692:4319` | `/admin?state=op-no-permission` | `dpr1-admin-op-no-permission-browser-2026-09-06.png` | `1440×1024 / 1` | 14.8073% | 3.037330 | 18.268024 | 239 | `DIFF_REVIEW` |
+| Admin Operation Confirm | `692:4539` | `/admin?state=op-confirm` | `dpr1-admin-op-confirm-browser-2026-09-06.png` | `1440×1024 / 1` | 17.2768% | 1.723395 | 10.732244 | 224 | `DIFF_REVIEW` |
+| Admin Operation Submitting | `692:4766` | `/admin?state=op-submitting` | `dpr1-admin-op-submitting-browser-2026-09-06.png` | `1440×1024 / 1` | 15.5569% | 1.710165 | 10.673565 | 224 | `DIFF_REVIEW` |
+| Admin Operation Success | `692:4995` | `/admin?state=op-success` | `dpr1-admin-op-success-browser-2026-09-06.png` | `1440×1024 / 1` | 14.5965% | 3.070683 | 18.550601 | 231 | `DIFF_REVIEW` |
+| Admin Operation Failed | `692:5207` | `/admin?state=op-failed` | `dpr1-admin-op-failed-browser-2026-09-06.png` | `1440×1024 / 1` | 16.9732% | 2.039585 | 12.151475 | 204 | `DIFF_REVIEW` |
+
+- [x] 五项截图均由 Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体 `loaded` 和无横向溢出条件下采集；浏览器 PNG 和五项 diff JSON 已同步。
+- [x] 无权限画板的 Figma 专用导航和锁图标操作列已在 fixture 中复现；真实模式权限和写操作逻辑未改变。
+- [ ] 五项自动 diff 均为非零，仍保持 `DIFF_REVIEW`；截图、结构检查和交互测试不替代人工像素级 `PASS`。
+- [ ] 本节只复核五个受影响画板，不代表其余 100 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [x] 本批次集中执行 3 个 Admin 操作态测试文件、`33/33` 个用例通过；`npm run typecheck`、`npm run build`、`npm run lint`、`npm run format:check`、`npm run qa:figma:validate` 和 `git diff --check` 均通过。证据校验返回 `structuralPass=true`、`strictDprPass=true`、`errors=[]`。

@@ -123,6 +123,14 @@
   mask: var(--admin-nav-icon) center / contain no-repeat;
 }
 
+.navFolderIcon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: currentColor;
+  stroke-width: 2;
+}
+
 .navButton:hover,
 .navButtonActive {
   background: rgba(255, 117, 118, 0.05);

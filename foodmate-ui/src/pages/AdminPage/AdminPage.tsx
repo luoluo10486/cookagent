@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowLeft, CheckCircle2, Plus, RefreshCw, ShieldAlert, X, XCircle } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, CheckCircle2, Folder, Plus, RefreshCw, ShieldAlert, X, XCircle } from 'lucide-react';
 import { useEffect, useState, type CSSProperties } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
@@ -946,12 +946,16 @@ export function AdminPage() {
                   if (isLocked) event.preventDefault();
                 }}
               >
-                <span
-                  aria-hidden="true"
-                  className={styles.navIcon}
-                  data-figma-icon={item.key}
-                  style={{ '--admin-nav-icon': `url("${item.iconPath}")` } as CSSProperties}
-                />
+                {requestedFixture?.startsWith('op-') ? (
+                  <Folder aria-hidden="true" className={styles.navFolderIcon} data-figma-icon={item.key} />
+                ) : (
+                  <span
+                    aria-hidden="true"
+                    className={styles.navIcon}
+                    data-figma-icon={item.key}
+                    style={{ '--admin-nav-icon': `url("${item.iconPath}")` } as CSSProperties}
+                  />
+                )}
                 <span>{item.label}</span>
               </Link>
             );

@@ -244,11 +244,12 @@ function ToolRegistrySection({
                   : ''
               } ${operationActionDisabled ? styles.registryActionDisabled : ''}`}
               size="sm"
+              aria-label={record.status === 'active' ? '停用工具' : '启用工具'}
               disabled={operationActionDisabled}
               onClick={() => onAction(createToolAction(record))}
             >
               {operationStatus === 'no-permission' ? <Lock aria-hidden="true" /> : null}
-              {record.status === 'active' ? '停用工具' : '启用工具'}
+              {operationStatus === 'no-permission' ? null : record.status === 'active' ? '停用工具' : '启用工具'}
             </Button>
           ) : (
             <Button

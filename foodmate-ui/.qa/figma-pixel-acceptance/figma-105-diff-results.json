@@ -601,10 +601,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 227899,
-      "differentRatio": 0.15455390082465278,
-      "meanAbsoluteError": 3.857793511284722,
-      "rmse": 20.38061818764346,
+      "differentPixels": 218343,
+      "differentRatio": 0.14807332356770833,
+      "meanAbsoluteError": 3.037329610188802,
+      "rmse": 18.268024140755227,
       "maxChannelDelta": 239
     },
     "admin-op-confirm": {
@@ -612,10 +612,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 257891,
-      "differentRatio": 0.1748935275607639,
-      "meanAbsoluteError": 2.1738294813368055,
-      "rmse": 11.940769147808458,
+      "differentPixels": 254757,
+      "differentRatio": 0.17276814778645833,
+      "meanAbsoluteError": 1.723394775390625,
+      "rmse": 10.732243787857469,
       "maxChannelDelta": 224
     },
     "admin-op-submitting": {
@@ -623,10 +623,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 234499,
-      "differentRatio": 0.1590298122829861,
-      "meanAbsoluteError": 2.1809616088867188,
-      "rmse": 11.956241544339537,
+      "differentPixels": 229396,
+      "differentRatio": 0.1555691189236111,
+      "meanAbsoluteError": 1.710165066189236,
+      "rmse": 10.67356528677225,
       "maxChannelDelta": 224
     },
     "admin-op-success": {
@@ -634,10 +634,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 220684,
-      "differentRatio": 0.1496609157986111,
-      "meanAbsoluteError": 3.819745890299479,
-      "rmse": 20.49944941910746,
+      "differentPixels": 215234,
+      "differentRatio": 0.14596489800347223,
+      "meanAbsoluteError": 3.070682610405816,
+      "rmse": 18.550600705812606,
       "maxChannelDelta": 231
     },
     "admin-op-failed": {
@@ -645,10 +645,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 253433,
-      "differentRatio": 0.17187025282118057,
-      "meanAbsoluteError": 2.490199957953559,
-      "rmse": 13.230958582350214,
+      "differentPixels": 250280,
+      "differentRatio": 0.1697319878472222,
+      "meanAbsoluteError": 2.039585706922743,
+      "rmse": 12.151475482058094,
       "maxChannelDelta": 204
     },
     "agent-chat-history-page-2": {
