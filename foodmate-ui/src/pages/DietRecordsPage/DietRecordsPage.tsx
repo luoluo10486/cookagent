@@ -135,6 +135,8 @@ const figmaSidebarSessions: SessionSummary[] = [
   { id: 'low-carb-plan', title: '低碳水饮食建议', subtitle: '12:45', active: false },
 ];
 
+const figmaStateSidebarSessions: SessionSummary[] = figmaSidebarSessions.slice(0, 3);
+
 type RecordsState = 'default' | 'loading' | 'empty' | 'error';
 
 function getRecordsState(value: string | null): RecordsState {
@@ -303,6 +305,7 @@ export function DietRecordsPage() {
   const recordsState = getRecordsState(searchParams.get('state'));
   const isRealMode = import.meta.env.VITE_AGENT_MODE === 'real';
   const isFigmaFixture = !isRealMode && (searchParams.get('state') === 'v2' || recordsState !== 'default');
+  const isFigmaStateFixture = isFigmaFixture && recordsState !== 'default';
   const [selectedDate, setSelectedDate] = useState(() => (isRealMode ? new Date() : initialDate));
   const [view, setView] = useState<'day' | 'week'>('day');
   const [meals, setMeals] = useState<MealSection[]>(initialMeals);
@@ -599,7 +602,18 @@ export function DietRecordsPage() {
       sidebarAvatarSrc={isFigmaFixture ? FIGMA_WORKSPACE_AVATARS.sidebar : undefined}
       topAvatarSrc={isFigmaFixture ? FIGMA_WORKSPACE_AVATARS.topbar : undefined}
       showKnowledgeTopNav={!isFigmaFixture}
-      sidebarFixture={isFigmaFixture ? { sessions: figmaSidebarSessions } : undefined}
+      showWindowControls={isFigmaFixture && recordsState === 'default'}
+      sidebarFixture={
+        isFigmaFixture
+          ? {
+              sessions: isFigmaStateFixture ? figmaStateSidebarSessions : figmaSidebarSessions,
+              hideSecondaryNavigation: isFigmaStateFixture,
+              hideSessionPagination: isFigmaStateFixture,
+              hideSessionSearch: isFigmaStateFixture,
+              sessionCountLabel: isFigmaStateFixture ? '共 15 条会话' : undefined,
+            }
+          : undefined
+      }
     >
       <div className={`${styles.page} fm-enter`}>
         <section className={styles.recordsBody} aria-label="饮食记录" data-figma-node-id="640:660">

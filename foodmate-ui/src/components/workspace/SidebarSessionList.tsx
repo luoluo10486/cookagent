@@ -16,6 +16,8 @@ type SidebarSessionListProps = {
   sessions: SessionSummary[];
   onAction?: (action: SessionAction, session: SessionSummary) => void;
   currentPage?: number;
+  sessionCountLabel?: string;
+  hidePagination?: boolean;
   showHistory?: boolean;
   fixtureVariant?: WorkspaceFixtureVariant;
 };
@@ -24,6 +26,8 @@ export function SidebarSessionList({
   sessions,
   onAction,
   currentPage = 1,
+  sessionCountLabel,
+  hidePagination = false,
   showHistory = true,
   fixtureVariant,
 }: SidebarSessionListProps) {
@@ -99,35 +103,40 @@ export function SidebarSessionList({
               );
             })}
           </div>
-          <div className={`${styles.pagination} sidebar-session-pagination`} aria-label="会话分页">
-            <Button variant="ghost" size="icon" aria-label="上一页" disabled type="button">
-              {fixtureVariant === 'diet-records' ? (
-                <FigmaWorkspaceAsset
-                  className={styles.paginationGlyphAsset}
-                  variant={fixtureVariant}
-                  name="chevronLeft"
-                />
-              ) : fixtureVariant ? (
-                <span className={styles.paginationGlyph}>{'<'}</span>
-              ) : (
-                <ChevronLeft aria-hidden="true" />
-              )}
-            </Button>
-            <span>{currentPage} / 3</span>
-            <Button variant="ghost" size="icon" aria-label="下一页" type="button">
-              {fixtureVariant === 'diet-records' ? (
-                <FigmaWorkspaceAsset
-                  className={styles.paginationGlyphAsset}
-                  variant={fixtureVariant}
-                  name="chevronRight"
-                />
-              ) : fixtureVariant ? (
-                <span className={styles.paginationGlyph}>{'>'}</span>
-              ) : (
-                <ChevronRight aria-hidden="true" />
-              )}
-            </Button>
-          </div>
+          {sessionCountLabel ? (
+            <p className={`${styles.sessionCount} sidebar-session-count`}>{sessionCountLabel}</p>
+          ) : null}
+          {!hidePagination ? (
+            <div className={`${styles.pagination} sidebar-session-pagination`} aria-label="会话分页">
+              <Button variant="ghost" size="icon" aria-label="上一页" disabled type="button">
+                {fixtureVariant === 'diet-records' ? (
+                  <FigmaWorkspaceAsset
+                    className={styles.paginationGlyphAsset}
+                    variant={fixtureVariant}
+                    name="chevronLeft"
+                  />
+                ) : fixtureVariant ? (
+                  <span className={styles.paginationGlyph}>{'<'}</span>
+                ) : (
+                  <ChevronLeft aria-hidden="true" />
+                )}
+              </Button>
+              <span>{currentPage} / 3</span>
+              <Button variant="ghost" size="icon" aria-label="下一页" type="button">
+                {fixtureVariant === 'diet-records' ? (
+                  <FigmaWorkspaceAsset
+                    className={styles.paginationGlyphAsset}
+                    variant={fixtureVariant}
+                    name="chevronRight"
+                  />
+                ) : fixtureVariant ? (
+                  <span className={styles.paginationGlyph}>{'>'}</span>
+                ) : (
+                  <ChevronRight aria-hidden="true" />
+                )}
+              </Button>
+            </div>
+          ) : null}
         </>
       ) : null}
     </section>

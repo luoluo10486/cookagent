@@ -438,7 +438,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -447,12 +447,18 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/analysis?view=records&state=loading",
+      "url": "/analysis?view=records&state=loading&visual-qa=1",
       "viewport": {
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-loading-browser-2026-09-06.png"
+      }
     },
     "user-knowledge-search-failed": {
       "artboardName": "user-knowledge-search-failed",
@@ -1849,7 +1855,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -1858,12 +1864,18 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/analysis?view=records&state=empty",
+      "url": "/analysis?view=records&state=empty&visual-qa=1",
       "viewport": {
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-empty-browser-2026-09-06.png"
+      }
     },
     "login-service-unavailable": {
       "artboardName": "login-service-unavailable",
@@ -2966,7 +2978,7 @@
         "scrollHeight": 1024,
         "scrollWidth": 1440
       },
-      "dpr": 1.0000000149011612,
+      "dpr": 1,
       "fonts": "loaded",
       "root": {
         "height": 1024,
@@ -2975,12 +2987,18 @@
         "y": 0
       },
       "textOverflow": [],
-      "url": "/analysis?view=records&state=error",
+      "url": "/analysis?view=records&state=error&visual-qa=1",
       "viewport": {
         "height": 1024,
         "width": 1440
       },
-      "dprPass": true
+      "dprPass": true,
+      "recapture": {
+        "capturedAt": "2026-09-06",
+        "tool": "Chrome CDP Page.captureScreenshot",
+        "browser": "Chrome/152.0.7977.77",
+        "png": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-error-browser-2026-09-06.png"
+      }
     },
     "admin-sql-audit": {
       "artboardName": "admin-sql-audit",

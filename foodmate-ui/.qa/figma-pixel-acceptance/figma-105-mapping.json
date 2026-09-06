@@ -4,7 +4,7 @@
     "page": "🎨 :: Design",
     "topLevelArtboards": 105,
     "metadataNode": "0:1",
-    "capturedAt": "2026-09-05",
+    "capturedAt": "2026-09-06",
     "figmaMcp": "get_metadata",
     "lastUpdated": "2026-09-06"
   },
@@ -2192,7 +2192,7 @@
       "queryState": "view=records&state=loading",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/diet-records-loading.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-loading-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-loading-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#diet-records-loading",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -2202,7 +2202,7 @@
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -2221,8 +2221,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-26",
-        "conclusion": "Live Figma and browser screenshots confirm the loading metrics and meal skeleton geometry are aligned. Shell identity, avatar, icon treatment, typography, and rasterization still differ; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "状态专用侧栏已按 Figma 收口；壳层身份、头像素材、字体、图标光栅化和局部像素差异仍存在，继续保持 DIFF_REVIEW。"
       }
     },
     {
@@ -2236,7 +2236,7 @@
       "queryState": "view=records&state=empty",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/diet-records-empty.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-empty-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-empty-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#diet-records-empty",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -2246,7 +2246,7 @@
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -2265,8 +2265,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-26",
-        "conclusion": "Live Figma and browser screenshots confirm the empty-state panel, icon, copy, and action geometry are aligned. Shell identity, avatar, icon treatment, typography, and rasterization still differ; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "状态专用侧栏已按 Figma 收口；壳层身份、头像素材、字体、图标光栅化和局部像素差异仍存在，继续保持 DIFF_REVIEW。"
       }
     },
     {
@@ -2280,7 +2280,7 @@
       "queryState": "view=records&state=error",
       "browserViewport": "1440x1024",
       "figmaPng": "docxs/设计/figma-png/diet-records-error.png",
-      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-error-browser-2026-09-05.png",
+      "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-diet-records-error-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#diet-records-error",
       "status": "DIFF_REVIEW",
       "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
@@ -2290,7 +2290,7 @@
         "expectedViewport": "1440x1024",
         "actualViewport": "1440x1024",
         "expectedDpr": 1,
-        "actualDpr": 1.0000000149011612,
+        "actualDpr": 1,
         "viewportPass": true,
         "dprPass": true,
         "bodyOverflow": false,
@@ -2309,8 +2309,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-26",
-        "conclusion": "Live Figma and browser screenshots confirm the error-state panel, icon, copy, and retry action geometry are aligned. Shell identity, avatar, icon treatment, typography, and rasterization still differ; retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "状态专用侧栏已按 Figma 收口；壳层身份、头像素材、字体、图标光栅化和局部像素差异仍存在，继续保持 DIFF_REVIEW。"
       }
     },
     {

@@ -111,6 +111,16 @@
   text-align: center;
 }
 
+/* 状态画板只保留三条会话，列表高度随内容收缩以露出总数提示。 */
+.compactSessionFixture :global(.sidebar-session-list) {
+  height: auto;
+  max-height: none;
+}
+
+.compactSessionFixture :global(.sidebar-session-count) {
+  margin-top: 8px;
+}
+
 .figmaFixture :global(.sidebar-session-pagination) svg {
   width: 8px;
   height: 14px;

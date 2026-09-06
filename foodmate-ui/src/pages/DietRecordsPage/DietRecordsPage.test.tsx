@@ -94,6 +94,11 @@ describe('DietRecordsPage', () => {
     renderPage(`/analysis?view=records&state=${state}`);
 
     expect(screen.getByLabelText(label)).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('搜索会话...')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '下一页' })).not.toBeInTheDocument();
+    expect(screen.getByText('共 15 条会话')).toBeInTheDocument();
+    expect(screen.queryByRole('navigation', { name: '饮食工具' })).not.toBeInTheDocument();
+    expect(document.querySelector('[data-name="window-controls"]')).not.toBeInTheDocument();
   });
 
   it('opens the first-meal dialog from the empty state', async () => {

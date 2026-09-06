@@ -82,8 +82,11 @@ type WorkspaceLayoutProps = {
     sessions: SessionSummary[];
     searchValue?: string;
     currentPage?: number;
+    sessionCountLabel?: string;
     showTopStatus?: boolean;
     hideSessionSearch?: boolean;
+    hideSessionPagination?: boolean;
+    hideSecondaryNavigation?: boolean;
     hideCollapseButton?: boolean;
   };
   pageOverlay?: React.ReactNode;
@@ -241,7 +244,7 @@ export function WorkspaceLayout({
   return (
     <TooltipProvider delayDuration={300}>
       <div
-        className={`${styles.shell} ${rightRail ? styles.withRail : ''} ${rightRailWidth === 340 ? styles.withWideRail : ''} ${activeModule === 'knowledge' ? styles.knowledgeLayout : ''} ${designChat ? styles.designChat : ''} ${isFigmaSidebarFixture ? styles.figmaFixture : ''}`}
+        className={`${styles.shell} ${rightRail ? styles.withRail : ''} ${rightRailWidth === 340 ? styles.withWideRail : ''} ${activeModule === 'knowledge' ? styles.knowledgeLayout : ''} ${designChat ? styles.designChat : ''} ${isFigmaSidebarFixture ? styles.figmaFixture : ''} ${sidebarFixture?.hideSessionPagination ? styles.compactSessionFixture : ''}`}
       >
         <aside className={`${styles.sidebar} ${sidebarFixture?.showTopStatus ? styles.profileFixture : ''}`}>
           {showFixtureWindowControls ? (
@@ -298,6 +301,8 @@ export function WorkspaceLayout({
             <SidebarSessionList
               currentPage={sidebarFixture?.currentPage}
               fixtureVariant={fixtureVariant}
+              hidePagination={sidebarFixture?.hideSessionPagination}
+              sessionCountLabel={sidebarFixture?.sessionCountLabel}
               sessions={displayedSessions}
               showHistory={!hideSessionHistory}
               onAction={sidebarFixture ? undefined : handleSessionAction}
@@ -308,33 +313,35 @@ export function WorkspaceLayout({
               </Button>
             ) : null}
           </div>
-          <nav className={styles.secondarySideNav} aria-label="饮食工具">
-            <NavLink className={fixedSideLink(activeModule === 'records')} to={`${ROUTES.ANALYSIS}?view=records`}>
-              {renderWorkspaceIcon('dietRecords', <Table2 aria-hidden="true" />)}
-              <span>饮食记录</span>
-            </NavLink>
-            <NavLink className={fixedSideLink(activeModule === 'analysis')} to={ROUTES.ANALYSIS} end>
-              {renderWorkspaceIcon('intakeAnalysis', <ChartColumn aria-hidden="true" />)}
-              <span>摄入分析</span>
-            </NavLink>
-            <NavLink className={sideLink} to={ROUTES.PLANNING}>
-              {renderWorkspaceIcon('mealPlanning', <CalendarDays aria-hidden="true" />)}
-              <span>餐食规划</span>
-            </NavLink>
-            <NavLink className={sideLink} to={ROUTES.KNOWLEDGE}>
-              {renderWorkspaceIcon('knowledge', <BookOpen aria-hidden="true" />)}
-              <span>知识库</span>
-            </NavLink>
-            <Button
-              className={styles.sideButton}
-              variant="ghost"
-              type="button"
-              onClick={() => announce('设置入口将在设置页面完成后启用。')}
-            >
-              {renderWorkspaceIcon('settings', <Settings aria-hidden="true" />)}
-              <span>设置</span>
-            </Button>
-          </nav>
+          {!sidebarFixture?.hideSecondaryNavigation ? (
+            <nav className={styles.secondarySideNav} aria-label="饮食工具">
+              <NavLink className={fixedSideLink(activeModule === 'records')} to={`${ROUTES.ANALYSIS}?view=records`}>
+                {renderWorkspaceIcon('dietRecords', <Table2 aria-hidden="true" />)}
+                <span>饮食记录</span>
+              </NavLink>
+              <NavLink className={fixedSideLink(activeModule === 'analysis')} to={ROUTES.ANALYSIS} end>
+                {renderWorkspaceIcon('intakeAnalysis', <ChartColumn aria-hidden="true" />)}
+                <span>摄入分析</span>
+              </NavLink>
+              <NavLink className={sideLink} to={ROUTES.PLANNING}>
+                {renderWorkspaceIcon('mealPlanning', <CalendarDays aria-hidden="true" />)}
+                <span>餐食规划</span>
+              </NavLink>
+              <NavLink className={sideLink} to={ROUTES.KNOWLEDGE}>
+                {renderWorkspaceIcon('knowledge', <BookOpen aria-hidden="true" />)}
+                <span>知识库</span>
+              </NavLink>
+              <Button
+                className={styles.sideButton}
+                variant="ghost"
+                type="button"
+                onClick={() => announce('设置入口将在设置页面完成后启用。')}
+              >
+                {renderWorkspaceIcon('settings', <Settings aria-hidden="true" />)}
+                <span>设置</span>
+              </Button>
+            </nav>
+          ) : null}
           <div className={styles.accountDock}>
             {!sidebarFixture?.hideCollapseButton ? (
               <Button

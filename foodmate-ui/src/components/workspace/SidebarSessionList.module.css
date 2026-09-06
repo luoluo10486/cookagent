@@ -50,6 +50,13 @@
   display: none;
 }
 
+.sessionCount {
+  margin: 8px 0 0;
+  color: var(--fm-muted);
+  font-size: 11px;
+  line-height: 16px;
+}
+
 .item {
   position: relative;
   display: flex;

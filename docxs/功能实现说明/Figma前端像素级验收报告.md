@@ -2355,3 +2355,19 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 13 项均存在非零差异，仍需处理字体/图标光栅化和局部内容差异，全部保持 `DIFF_REVIEW`，不能标记为像素级 `PASS`。
 - [ ] 本节只复核 13 个 Auth 画板，不代表其余 92 个画板重新采集或完成 105 项全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [x] 本批次未创建虚构 iconfont 字体、glyph 或 Unicode 映射；iconfont 资源登记继续保持 `BLOCKED`。
+
+## 43. 2026-09-06 Diet Records 状态侧栏增量验收
+
+本节只复核 Diet Records 的 Loading、Empty、Error 三个状态画板，不重新采集或验收其它画板。Figma 文件保持只读；Default 状态继续使用既有 2026-09-06 证据。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Diet Records Loading | `692:1427` | `/analysis?view=records&state=loading` | `dpr1-diet-records-loading-browser-2026-09-06.png` | `1440×1024 / 1` | 17.4040% | 1.889433 | 12.030390 | 243 | `DIFF_REVIEW` |
+| Diet Records Empty | `692:1556` | `/analysis?view=records&state=empty` | `dpr1-diet-records-empty-browser-2026-09-06.png` | `1440×1024 / 1` | 8.2707% | 1.688111 | 13.265539 | 243 | `DIFF_REVIEW` |
+| Diet Records Error | `692:1685` | `/analysis?view=records&state=error` | `dpr1-diet-records-error-browser-2026-09-06.png` | `1440×1024 / 1` | 6.9955% | 1.417403 | 12.250139 | 243 | `DIFF_REVIEW` |
+
+- [x] 状态侧栏已与对应 Figma 画板的可见结构对齐：无搜索框、三条会话、会话总数提示、无分页、无饮食工具侧栏和无窗口装饰点；Default Fixture 未被改变。
+- [x] 三张截图均为 Chrome `152.0.7977.77`、`1440×1024`、DPR `1`、字体加载完成且无横向溢出；三项 Figma/浏览器 PNG 同尺寸，diff 使用 `scripts/png-diff.mjs` 生成。
+- [x] 自动差异相较上一次证据均下降，但仍为非零差异；残余差异主要来自头像素材、字体、图标光栅化和浏览器渲染，不能标记像素级 `PASS`。
+- [x] `figma-105-mapping.json`、`figma-105-diff-results.json` 和 `figma-105-runtime-checks.json` 已仅更新这三个画板的增量证据；全量汇总仍为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] 本节不代表其它 102 个画板重新采集或完成全量人工视觉复核；shadcn 全页面迁移和 iconfont 实体资源登记仍未完成，iconfont 继续为 `BLOCKED`。
