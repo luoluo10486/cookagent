@@ -38,7 +38,7 @@ import styles from './DietRecordsPage.module.css';
 type FoodItem = {
   id: string;
   name: string;
-  status: 'confirmed' | 'pending';
+  status: 'confirmed' | 'pending' | 'ambiguous' | 'invalid';
   carbs: string;
   protein: string;
   fat: string;
@@ -240,6 +240,22 @@ function asNumber(value: number | string | null | undefined) {
   return Number.isFinite(number) ? number : 0;
 }
 
+function nutritionDisplayStatus(value: string): FoodItem['status'] {
+  if (value === 'matched') return 'confirmed';
+  if (value === 'pending_confirmation') return 'ambiguous';
+  if (value === 'invalid') return 'invalid';
+  return 'pending';
+}
+
+function nutritionStatusLabel(status: FoodItem['status']) {
+  return {
+    confirmed: '已匹配',
+    pending: '待估算',
+    ambiguous: '候选待确认',
+    invalid: '无法匹配',
+  }[status];
+}
+
 function mapFoodLogs(logs: FoodLog[]): MealSection[] {
   const sections = Object.keys(realMealMeta).map((id) => {
     const mealId = id as MealSection['id'];
@@ -256,7 +272,7 @@ function mapFoodLogs(logs: FoodLog[]): MealSection[] {
         log.items.map((item) => ({
           id: `${log.food_log_id}-${item.food_log_item_id}`,
           name: item.raw_name,
-          status: item.nutrition_status === 'matched' ? ('confirmed' as const) : ('pending' as const),
+          status: nutritionDisplayStatus(item.nutrition_status),
           carbs: item.carbs_g == null ? 'C: 待估算' : `C: ${formatMetricNumber(asNumber(item.carbs_g))}g`,
           protein: item.protein_g == null ? 'P: 待估算' : `P: ${formatMetricNumber(asNumber(item.protein_g))}g`,
           fat: item.fat_g == null ? 'F: 待估算' : `F: ${formatMetricNumber(asNumber(item.fat_g))}g`,
@@ -552,8 +568,18 @@ export function DietRecordsPage() {
           <div className={styles.foodRow} key={item.id}>
             <div className={styles.foodName}>
               <strong>{item.name}</strong>
-              <span className={item.status === 'confirmed' ? styles.confirmed : styles.pending}>
-                {item.status === 'confirmed' ? '已确认' : '待确认'}
+              <span
+                className={
+                  item.status === 'confirmed'
+                    ? styles.confirmed
+                    : item.status === 'ambiguous'
+                      ? styles.ambiguous
+                      : item.status === 'invalid'
+                        ? styles.invalid
+                        : styles.pending
+                }
+              >
+                {nutritionStatusLabel(item.status)}
               </span>
             </div>
             <div className={styles.foodMeta}>

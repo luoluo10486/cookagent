@@ -640,6 +640,16 @@
   color: #c79654;
 }
 
+.ambiguous {
+  background: rgba(251, 191, 36, 0.12);
+  color: #a16207;
+}
+
+.invalid {
+  background: rgba(248, 113, 113, 0.12);
+  color: #b91c1c;
+}
+
 .foodMeta {
   flex: 0 0 auto;
   gap: 16px;

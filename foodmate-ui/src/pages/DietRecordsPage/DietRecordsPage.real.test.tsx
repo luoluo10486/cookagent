@@ -181,4 +181,27 @@ describe('DietRecordsPage real mode', () => {
     await waitFor(() => expect(screen.getByText('今天还没有饮食记录')).toBeInTheDocument());
     expect(screen.queryByText('蓝莓燕麦粥')).not.toBeInTheDocument();
   });
+
+  it('keeps nutrition matching, ambiguity, and invalid states distinct', async () => {
+    vi.mocked(loadFoodLogs).mockResolvedValue([
+      log,
+      {
+        ...log,
+        food_log_id: '12',
+        items: [
+          { ...log.items[0], food_log_item_id: '102', raw_name: '候选食物', nutrition_status: 'pending_confirmation' },
+        ],
+      },
+      {
+        ...log,
+        food_log_id: '13',
+        items: [{ ...log.items[0], food_log_item_id: '103', raw_name: '无法识别食物', nutrition_status: 'invalid' }],
+      },
+    ]);
+    renderPage();
+
+    expect(await screen.findByText('候选待确认')).toBeInTheDocument();
+    expect(screen.getByText('无法匹配')).toBeInTheDocument();
+    expect(screen.getByText('已匹配')).toBeInTheDocument();
+  });
 });
