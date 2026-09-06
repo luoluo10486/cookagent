@@ -4,6 +4,15 @@
 
 > 资源策略说明（2026-09-06）：本轮已将前端默认/fixture 人物头像统一切换为项目登记的 `default-male.svg` 与 `default-female.svg`。本报告及 `.qa/figma-pixel-acceptance/` 中已有的包含旧真人头像的 PNG 仍属于历史验收证据；本轮没有对 105 个画板全量复采集，因此相关 diff 不能用于证明头像策略变更后的最新像素结果。
 
+## 1.0.1 2026-09-06 默认头像运行时资源收口
+
+- [x] 男性和女性 SVG 已与用户提供的两份附件逐字节核对，SHA-256 分别为 `EE00AF66515C1807ED24738774776C9EBCAAECCBDCD28F15B1B43B6DBBF67D0D` 和 `6F12B013242789D28BA4D8949F7345986956D474F07442C3DC9B23FE634ACF34`。
+- [x] 运行时头像解析层会拦截历史 `/assets/figma/**` 人物头像路径；Profile 页面不再直接使用未经解析的 Fixture 头像。
+- [x] Chrome 本地页面已检查 Workspace Home、Chat 写入确认态、Profile Basic 和 Admin User Detail；默认头像实际显示为登记 SVG。
+- [x] 头像相关回归为 9 个测试文件、`129/129` 个用例；typecheck、生产构建、改动文件 lint/format 均通过。
+- [x] 构建后的 JavaScript bundle 未包含旧 Figma 人物头像路径；历史 PNG 仍保留在 `public/assets/figma/**` 作为设计/验收证据，不代表运行时引用。
+- [ ] 本批次没有重采集全部 105 个画板；受影响画板的旧视觉 diff 仍不能作为头像策略变更后的最新像素证据。
+
 ## 1. 结论
 
 本报告记录两类不同验收结果：

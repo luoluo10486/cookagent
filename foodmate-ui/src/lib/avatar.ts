@@ -35,6 +35,9 @@ export const FIGMA_CHAT_AVATARS = {
   message: DEFAULT_AVATARS.female,
 } as const;
 
+// 历史 Figma 导出的人物素材只用于设计证据，运行时不允许再次作为头像来源。
+const legacyFigmaAvatarPattern = /\/assets\/figma\/.*\/(?:[^/]*(?:avatar|user)[^/]*)\.(?:png|jpe?g|webp|svg)$/i;
+
 export function getDefaultAvatarForGender(gender?: string): string | undefined {
   const normalized = gender?.trim().toLowerCase();
   if (normalized === '女' || normalized === 'female' || normalized === 'f') return DEFAULT_AVATARS.female;
@@ -43,5 +46,11 @@ export function getDefaultAvatarForGender(gender?: string): string | undefined {
 }
 
 export function resolveAvatarUrl(avatarUrl?: string, gender?: string): string | undefined {
-  return avatarUrl?.trim() || getDefaultAvatarForGender(gender);
+  const candidate = avatarUrl?.trim();
+  if (candidate && !legacyFigmaAvatarPattern.test(candidate)) return candidate;
+  if (candidate) {
+    // 遗留素材无法作为默认头像继续展示；性别未知时使用项目统一男性占位头像。
+    return getDefaultAvatarForGender(gender) ?? DEFAULT_AVATARS.male;
+  }
+  return getDefaultAvatarForGender(gender);
 }

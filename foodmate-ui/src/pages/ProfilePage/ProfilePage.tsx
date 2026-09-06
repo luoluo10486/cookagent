@@ -36,7 +36,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { FigmaWorkspaceAsset } from '@/components/workspace/FigmaWorkspaceAsset';
 import { cn } from '@/lib/utils';
-import { FIGMA_PROFILE_AVATARS, getDefaultAvatarForGender } from '@/lib/avatar';
+import { DEFAULT_AVATARS, FIGMA_PROFILE_AVATARS, resolveAvatarUrl } from '@/lib/avatar';
 import { getAuthUser, logout } from '@/services/authService';
 import {
   changePassword,
@@ -768,7 +768,9 @@ function BasicTab({
 
   if (loading) return <div className={styles.loadingPanel}>正在加载个人资料...</div>;
 
-  const avatarSource = avatarPreview || (!figmaFixture ? getDefaultAvatarForGender(profileForm.gender) : undefined);
+  // 头像统一经过运行时资源解析，避免历史 Figma 人物素材绕过默认资源策略。
+  const avatarSource =
+    resolveAvatarUrl(avatarPreview, profileForm.gender) ?? (figmaFixture ? DEFAULT_AVATARS.male : undefined);
 
   return (
     <div className={styles.basicLayout}>
