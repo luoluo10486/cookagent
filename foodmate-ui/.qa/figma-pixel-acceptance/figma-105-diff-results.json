@@ -579,10 +579,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 234134,
-      "differentRatio": 0.15878228081597223,
-      "meanAbsoluteError": 3.999544609917535,
-      "rmse": 20.96993063874851,
+      "differentPixels": 203322,
+      "differentRatio": 0.13788655598958333,
+      "meanAbsoluteError": 2.906207784016927,
+      "rmse": 17.849120214385124,
       "maxChannelDelta": 224
     },
     "admin-deleted-resources": {
@@ -590,10 +590,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 260766,
-      "differentRatio": 0.17684326171875,
-      "meanAbsoluteError": 2.6827579074435763,
-      "rmse": 16.687796349340744,
+      "differentPixels": 186536,
+      "differentRatio": 0.12650282118055556,
+      "meanAbsoluteError": 3.186895243326823,
+      "rmse": 19.126564754171582,
       "maxChannelDelta": 224
     },
     "admin-op-no-permission": {
@@ -1041,10 +1041,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 157045,
-      "differentRatio": 0.1065029568142361,
-      "meanAbsoluteError": 2.5535371568467884,
-      "rmse": 15.653056348465348,
+      "differentPixels": 107826,
+      "differentRatio": 0.07312418619791666,
+      "meanAbsoluteError": 2.3002003987630206,
+      "rmse": 15.565837537969601,
       "maxChannelDelta": 204
     },
     "admin-model-usage": {

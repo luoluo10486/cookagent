@@ -2245,3 +2245,19 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 六项自动 diff 均为非零，人工复核仍确认共享工作台、头像、图标和字体光栅化差异，全部继续保持 `DIFF_REVIEW`，不能标记为像素级 `PASS`。
 - [ ] 本节只复核六个 Agent 状态，不代表其他画板重新采集或完成 105 项全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [ ] iconfont 实体字体包、完整 CSS/Unicode 映射、来源和许可证仍缺失，继续保持 `BLOCKED`；标准命令图标继续使用 Lucide 或已登记的 Figma SVG 资源。
+
+## 37. 2026-09-06 Admin 核心列表页增量验收
+
+本节只记录 Admin Overview、Tool Registry 和 Deleted Resources 三个受影响画板的当前浏览器截图与 PNG diff，不重新采集或人工验收其余画板。Figma 文件保持只读，页面真实模式请求边界未改变。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Admin Overview | `995:977` | `/admin?state=overview` | `dpr1-admin-overview-browser-2026-09-06.png` | `1440×1024 / 1` | 7.3124% | 2.300200 | 15.565838 | 204 | `DIFF_REVIEW` |
+| Admin Tool Registry | `692:3847` | `/admin?state=tool-registry` | `dpr1-admin-tool-registry-browser-2026-09-06.png` | `1440×1024 / 1` | 13.7887% | 2.906208 | 17.849120 | 224 | `DIFF_REVIEW` |
+| Admin Deleted Resources | `692:4104` | `/admin?state=deleted-resources` | `dpr1-admin-deleted-resources-browser-2026-09-06.png` | `1440×1024 / 1` | 12.6503% | 3.186895 | 19.126565 | 224 | `DIFF_REVIEW` |
+
+- [x] 三项截图均由 Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体 `loaded` 和无横向溢出条件下采集；浏览器 PNG 和三项 diff JSON 已同步。
+- [x] Admin Overview 与 Tool Registry 的表头背景和列表高度依据 Figma PNG 复核；Deleted Resources 合规通告内部像素复核为 `#FFF5F5`，已同步前端 CSS。
+- [ ] 三项自动 diff 均为非零，仍保持 `DIFF_REVIEW`；结构检查、截图存在和控件迁移审计不替代人工像素级 `PASS`。
+- [ ] 本节只复核三个受影响画板，不代表其余 102 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [x] 本批次集中执行 4 个 Admin 测试文件、`38/38` 个用例通过；`npm run typecheck`、`npm run build`、`npm run lint`、`npm run format:check`、`npm run qa:figma:validate` 和 `git diff --check` 均通过。证据校验返回 `structuralPass=true`、`strictDprPass=true`、`errors=[]`。
