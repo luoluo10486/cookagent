@@ -19,6 +19,25 @@ MAX_SQL_LENGTH = 8_192
 MAX_DAYS = 90
 MAX_LIMIT = 500
 _TIME_PATTERN = re.compile(r"(?:最近|过去|近)\s*(\d{1,3})\s*天")
+_FOOD_QUERY_PATTERN = re.compile(
+    r"^(?:查询|统计|看看|请问)?\s*(.+?)(?:出现了?几次|出现次数|吃了?几次|吃过几次)$"
+)
+_FOOD_AFTER_QUERY_PATTERN = re.compile(
+    r"(?:出现次数|出现了?几次|吃了?几次|吃过几次)\s*(?:是|的)?\s*(.+)$"
+)
+_UNSUPPORTED_FIELD_TERMS = (
+    "钠",
+    "钙",
+    "铁",
+    "维生素",
+    "膳食纤维",
+    "胆固醇",
+    "糖分",
+    "血糖",
+    "体重",
+    "bmi",
+)
+_AMBIGUOUS_FOOD_NAMES = frozenset({"鸡肉", "牛肉", "鱼", "米饭", "鸡蛋"})
 
 
 class SqlPlannerError(ModelProviderError):
@@ -73,6 +92,9 @@ class SqlPlan:
         intent = value.get("intent")
         if status not in {"ready", "need_clarification"} or intent not in {
             "nutrition_summary",
+            "food_occurrence",
+            "meal_plan_completion",
+            "shopping_list_missing",
             "meal_plan",
             "shopping_list",
             "nutrition_food",
@@ -88,18 +110,28 @@ class SqlPlan:
             raise SqlPlannerError("SQL_PLANNER_RESPONSE_INVALID", "planner filters are invalid")
         time_range = value.get("time_range")
         if time_range is not None:
-            if not isinstance(time_range, dict) or set(time_range) - {"kind", "days", "timezone"}:
+            if not isinstance(time_range, dict) or set(time_range) - {
+                "kind",
+                "days",
+                "timezone",
+                "label",
+            }:
                 raise SqlPlannerError("SQL_PLANNER_RESPONSE_INVALID", "planner time range is invalid")
             if time_range.get("kind") != "relative" or not str(time_range.get("days", "")).isdigit():
                 raise SqlPlannerError("SQL_PLANNER_RESPONSE_INVALID", "planner time range is invalid")
             days = int(time_range["days"])
             if not 1 <= days <= MAX_DAYS:
                 raise SqlPlannerError("SQL_PLANNER_RESPONSE_INVALID", "planner time range is invalid")
+            label = time_range.get("label")
+            if label is not None and label not in {"today", "yesterday"}:
+                raise SqlPlannerError("SQL_PLANNER_RESPONSE_INVALID", "planner time range is invalid")
             time_range = {
                 "kind": "relative",
                 "days": str(days),
                 "timezone": str(time_range.get("timezone") or "Asia/Shanghai"),
             }
+            if label is not None:
+                time_range["label"] = label
         missing_slots = _bounded_strings(value.get("missing_slots", []), "missing_slots", 4)
         candidate_sql = value.get("candidate_sql")
         if status == "need_clarification":
@@ -132,6 +164,31 @@ def _bounded_strings(value: Any, name: str, maximum: int) -> tuple[str, ...]:
     return tuple(value)
 
 
+def _time_where(field: str, time_range: dict[str, str] | None) -> list[str]:
+    if not isinstance(time_range, dict):
+        raise SqlPlannerError("SQL_PLANNER_TIME_RANGE_REQUIRED", "a bounded time range is required")
+    label = time_range.get("label")
+    if label == "today":
+        return [
+            f"{field} >= CURRENT_DATE",
+            f"{field} < CURRENT_DATE + INTERVAL '1 day'",
+        ]
+    if label == "yesterday":
+        return [
+            f"{field} >= CURRENT_DATE - INTERVAL '1 day'",
+            f"{field} < CURRENT_DATE",
+        ]
+    return [f"{field} >= CURRENT_TIMESTAMP - INTERVAL '{time_range['days']} days'"]
+
+
+def _sql_literal(value: str) -> str:
+    if not isinstance(value, str) or not value.strip() or len(value) > 64:
+        raise SqlPlannerError("SQL_PLANNER_FOOD_NAME_INVALID", "food name is invalid")
+    if any(ord(char) < 32 or ord(char) == 127 for char in value):
+        raise SqlPlannerError("SQL_PLANNER_FOOD_NAME_INVALID", "food name is invalid")
+    return value.replace("'", "''")
+
+
 class DeterministicSqlPlanner:
     """Maps a small nutrition-query vocabulary to reviewed SQL templates."""
 
@@ -143,12 +200,18 @@ class DeterministicSqlPlanner:
         if not text or len(text) > 2_000:
             raise SqlPlannerError("SQL_PLANNER_INPUT_INVALID", "query text is empty or too large")
         intent = self._intent(text, intent_hint)
+        unsupported = self._unsupported_field(text)
+        if unsupported:
+            raise SqlPlannerError(
+                "SQL_PLANNER_FIELD_UNSUPPORTED",
+                f"unsupported nutrition field: {unsupported}",
+            )
         time_range = self._time_range(text)
         metrics = self._metrics(text, intent)
         dimensions = self._dimensions(text, intent)
         filters = self._filters(text, intent)
 
-        if intent == "nutrition_summary" and time_range is None:
+        if intent in {"nutrition_summary", "food_occurrence"} and time_range is None:
             return SqlPlan(
                 "need_clarification",
                 intent,
@@ -161,6 +224,22 @@ class DeterministicSqlPlanner:
                 self.version,
                 ("time_range",),
             )
+        if intent == "food_occurrence":
+            food_name = self._food_name(text)
+            if not food_name or food_name in _AMBIGUOUS_FOOD_NAMES:
+                return SqlPlan(
+                    "need_clarification",
+                    intent,
+                    time_range,
+                    metrics,
+                    dimensions,
+                    filters,
+                    None,
+                    self.mode,
+                    self.version,
+                    ("food_name",),
+                )
+            filters["food_name"] = food_name
         sql = self._template(intent, time_range, metrics, dimensions, filters)
         validate_candidate_sql(sql)
         return SqlPlan(
@@ -177,9 +256,23 @@ class DeterministicSqlPlanner:
 
     @staticmethod
     def _intent(text: str, hint: str | None) -> str:
-        allowed = {"nutrition_summary", "meal_plan", "shopping_list", "nutrition_food"}
+        allowed = {
+            "nutrition_summary",
+            "food_occurrence",
+            "meal_plan_completion",
+            "shopping_list_missing",
+            "meal_plan",
+            "shopping_list",
+            "nutrition_food",
+        }
         if hint in allowed:
             return hint
+        if any(word in text for word in ("出现次数", "出现了几次", "吃了几次", "吃过几次")):
+            return "food_occurrence"
+        if "完成度" in text and any(word in text for word in ("计划", "餐食", "饮食")):
+            return "meal_plan_completion"
+        if "缺项" in text and any(word in text for word in ("购物清单", "采购清单")):
+            return "shopping_list_missing"
         if any(word in text for word in ("购物清单", "采购清单")):
             return "shopping_list"
         if any(word in text for word in ("餐食计划", "饮食计划", "菜单", "食谱计划")):
@@ -196,9 +289,19 @@ class DeterministicSqlPlanner:
         elif "最近一周" in text or "过去一周" in text or "近一周" in text:
             days = 7
         elif "昨天" in text:
-            days = 1
-        elif "今天" in text:
-            days = 1
+            return {
+                "kind": "relative",
+                "days": "1",
+                "timezone": "Asia/Shanghai",
+                "label": "yesterday",
+            }
+        elif "今天" in text or "今日" in text:
+            return {
+                "kind": "relative",
+                "days": "1",
+                "timezone": "Asia/Shanghai",
+                "label": "today",
+            }
         else:
             return None
         if not 1 <= days <= MAX_DAYS:
@@ -207,6 +310,12 @@ class DeterministicSqlPlanner:
 
     @staticmethod
     def _metrics(text: str, intent: str) -> tuple[str, ...]:
+        if intent == "food_occurrence":
+            return ("occurrence_count",)
+        if intent == "meal_plan_completion":
+            return ("completion_ratio",)
+        if intent == "shopping_list_missing":
+            return ("missing_item_groups",)
         if intent != "nutrition_summary":
             return ()
         mapping = (
@@ -227,7 +336,7 @@ class DeterministicSqlPlanner:
     def _dimensions(text: str, intent: str) -> tuple[str, ...]:
         if intent != "nutrition_summary":
             return ()
-        return ("meal_type",) if any(word in text for word in ("按餐次", "早餐", "午餐", "晚餐")) else ("meal_time",)
+        return ("meal_type",) if "按餐次" in text else ()
 
     @staticmethod
     def _filters(text: str, intent: str) -> dict[str, str]:
@@ -243,6 +352,28 @@ class DeterministicSqlPlanner:
         return filters
 
     @staticmethod
+    def _unsupported_field(text: str) -> str | None:
+        lower = text.lower()
+        return next((term for term in _UNSUPPORTED_FIELD_TERMS if term in lower), None)
+
+    @staticmethod
+    def _food_name(text: str) -> str | None:
+        quoted = re.search(r"[「“\"]([^」”\"]{1,64})[」”\"]", text)
+        if quoted:
+            return quoted.group(1).strip()
+        match = _FOOD_QUERY_PATTERN.search(text.strip())
+        if match:
+            value = match.group(1).strip()
+        else:
+            match = _FOOD_AFTER_QUERY_PATTERN.search(text.strip())
+            value = match.group(1).strip() if match else ""
+        value = re.sub(r"^(?:分析|统计|查询|看看|请问|我想知道)\s*", "", value)
+        value = re.sub(r"^(?:(?:最近|过去|近)\s*\d{1,3}\s*天|今天|今日|昨天)\s*", "", value)
+        value = re.sub(r"^(?:我|我的|记录中的|食材)\s*", "", value)
+        value = re.sub(r"^(?:查询|统计|看看)\s*", "", value)
+        return value[:64] if value else None
+
+    @staticmethod
     def _template(
         intent: str,
         time_range: dict[str, str] | None,
@@ -250,10 +381,37 @@ class DeterministicSqlPlanner:
         dimensions: tuple[str, ...],
         filters: dict[str, str],
     ) -> str:
+        if intent == "food_occurrence":
+            food_name = filters.get("food_name")
+            if not food_name:
+                raise SqlPlannerError("SQL_PLANNER_FOOD_NAME_REQUIRED", "food name is required")
+            where = _time_where("f.meal_time", time_range)
+            if "meal_type" in filters:
+                where.append("f.meal_type = '" + filters["meal_type"] + "'")
+            where.append(f"i.raw_name = '{_sql_literal(food_name)}'")
+            return (
+                "SELECT i.raw_name AS food_name, COUNT(i.food_log_item_id) AS occurrence_count "
+                "FROM food_logs f JOIN food_log_items i ON i.food_log_id = f.food_log_id "
+                "WHERE "
+                + " AND ".join(where)
+                + " GROUP BY i.raw_name ORDER BY COUNT(i.food_log_item_id) DESC LIMIT 500"
+            )
+        if intent == "meal_plan_completion":
+            return (
+                "SELECT meal_plan_id, plan_name, days, status, "
+                "CASE WHEN status = 'saved' THEN 1.0 WHEN status = 'validated' THEN 0.5 ELSE 0.0 END "
+                "AS completion_ratio FROM meal_plans LIMIT 500"
+            )
+        if intent == "shopping_list_missing":
+            return (
+                "SELECT shopping_list_id, meal_plan_id, status, "
+                "CASE WHEN status = 'confirmed' THEN 0 ELSE 1 END AS missing_item_groups "
+                "FROM shopping_lists ORDER BY shopping_list_id DESC LIMIT 500"
+            )
         if intent == "meal_plan":
-            return "SELECT plan_name, days, budget, status, updated_at FROM meal_plans ORDER BY updated_at DESC LIMIT 500"
+            return "SELECT meal_plan_id, plan_name, days, status, updated_at FROM meal_plans ORDER BY updated_at DESC LIMIT 500"
         if intent == "shopping_list":
-            return "SELECT shopping_list_id, meal_plan_id, status, updated_at FROM shopping_lists ORDER BY updated_at DESC LIMIT 500"
+            return "SELECT shopping_list_id, meal_plan_id, status FROM shopping_lists ORDER BY shopping_list_id DESC LIMIT 500"
         if intent == "nutrition_food":
             return (
                 "SELECT standard_name, basis_unit, calories_kcal_per_100, protein_g_per_100 "
@@ -266,20 +424,20 @@ class DeterministicSqlPlanner:
         selected = [f"SUM(i.{metric}) AS {metric}" for metric in metrics]
         selected = [f"f.{dimension}" for dimension in dimensions] + selected
         group_by = ", ".join(f"f.{dimension}" for dimension in dimensions)
-        where = [
-            "f.meal_time >= CURRENT_TIMESTAMP - INTERVAL '" + time_range["days"] + " days'"
-        ]
+        where = _time_where("f.meal_time", time_range)
         if "meal_type" in filters:
             where.append("f.meal_type = '" + filters["meal_type"] + "'")
-        return (
+        query = (
             "SELECT "
             + ", ".join(selected)
             + " FROM food_logs f JOIN food_log_items i ON i.food_log_id = f.food_log_id AND i.is_deleted = FALSE WHERE "
             + " AND ".join(where)
-            + " GROUP BY "
-            + group_by
-            + " ORDER BY f.meal_time DESC LIMIT 500"
         )
+        if group_by:
+            query += " GROUP BY " + group_by + " ORDER BY " + group_by + " LIMIT 500"
+        else:
+            query += " LIMIT 500"
+        return query
 
 
 class OpenAICompatibleSqlPlanner:
@@ -479,10 +637,27 @@ def _planner_prompt(question: str, intent_hint: str | None) -> str:
                     "SELECT SUM(i.protein_g) AS protein_g FROM food_logs f "
                     "JOIN food_log_items i ON i.food_log_id = f.food_log_id "
                     "WHERE f.meal_time >= CURRENT_TIMESTAMP - INTERVAL '7 days' "
-                    "GROUP BY f.meal_time ORDER BY f.meal_time DESC LIMIT 500"
+                    "LIMIT 500"
                 ),
-                "meal_plan": "SELECT plan_name, days, budget, status, updated_at FROM meal_plans ORDER BY updated_at DESC LIMIT 500",
-                "shopping_list": "SELECT shopping_list_id, meal_plan_id, status, updated_at FROM shopping_lists ORDER BY updated_at DESC LIMIT 500",
+                "food_occurrence": (
+                    "SELECT i.raw_name AS food_name, COUNT(i.food_log_item_id) AS occurrence_count "
+                    "FROM food_logs f JOIN food_log_items i ON i.food_log_id = f.food_log_id "
+                    "WHERE f.meal_time >= CURRENT_TIMESTAMP - INTERVAL '7 days' "
+                    "AND i.raw_name = '鸡胸肉' GROUP BY i.raw_name "
+                    "ORDER BY COUNT(i.food_log_item_id) DESC LIMIT 500"
+                ),
+                "meal_plan_completion": (
+                    "SELECT meal_plan_id, plan_name, days, status, "
+                    "CASE WHEN status = 'saved' THEN 1.0 WHEN status = 'validated' THEN 0.5 ELSE 0.0 END "
+                    "AS completion_ratio FROM meal_plans LIMIT 500"
+                ),
+                "shopping_list_missing": (
+                    "SELECT shopping_list_id, meal_plan_id, status, "
+                    "CASE WHEN status = 'confirmed' THEN 0 ELSE 1 END AS missing_item_groups "
+                    "FROM shopping_lists ORDER BY shopping_list_id DESC LIMIT 500"
+                ),
+                "meal_plan": "SELECT meal_plan_id, plan_name, days, status, updated_at FROM meal_plans ORDER BY updated_at DESC LIMIT 500",
+                "shopping_list": "SELECT shopping_list_id, meal_plan_id, status FROM shopping_lists ORDER BY shopping_list_id DESC LIMIT 500",
                 "nutrition_food": (
                     "SELECT standard_name, basis_unit, calories_kcal_per_100, protein_g_per_100 "
                     "FROM nutrition_foods WHERE review_status = 'approved' "
@@ -492,9 +667,20 @@ def _planner_prompt(question: str, intent_hint: str | None) -> str:
             "sql_generation_constraints": [
                 "Copy the matching approved_sql_examples shape and change only approved columns or the relative day literal when needed.",
                 "Do not invent aliases, aggregate names, date functions, log_time, total_calories, total_protein_g, total_fat_g, or total_carbs_g.",
-                "For nutrition_summary, use meal_time for both the time filter and grouping; use only calories_kcal, protein_g, fat_g, or carbs_g aggregates.",
+                "For nutrition_summary, use meal_time for both the time filter and grouping when grouping is explicitly requested; otherwise return a total. log_time is not an approved field. Use only calories_kcal, protein_g, fat_g, or carbs_g aggregates.",
+                "For food_occurrence, use raw_name equality and COUNT(food_log_item_id); never use a fuzzy match or expose user_id.",
+                "For meal_plan_completion, completion_ratio is saved=1, validated=0.5, draft=0; this is the lifecycle completion definition.",
+                "For shopping_list_missing, missing_item_groups is 0 for confirmed and 1 for an unconfirmed list; it is not a count of raw shopping items.",
             ],
-            "allowed_intents": ["nutrition_summary", "meal_plan", "shopping_list", "nutrition_food"],
+            "allowed_intents": [
+                "nutrition_summary",
+                "food_occurrence",
+                "meal_plan_completion",
+                "shopping_list_missing",
+                "meal_plan",
+                "shopping_list",
+                "nutrition_food",
+            ],
             "required_output": {
                 "status": "ready or need_clarification",
                 "intent": "approved intent",

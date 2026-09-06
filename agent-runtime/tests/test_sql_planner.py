@@ -40,6 +40,46 @@ class DeterministicSqlPlannerTests(TestCase):
         self.assertIn("FROM shopping_lists", self.planner.plan("查看购物清单").candidate_sql)
         self.assertIn("review_status = 'approved'", self.planner.plan("查询食材营养目录").candidate_sql)
 
+    def test_core_nutrition_queries_have_explicit_business_metrics(self):
+        today = self.planner.plan("今日热量")
+        self.assertEqual("today", today.time_range["label"])
+        self.assertEqual(("calories_kcal",), today.metrics)
+        self.assertIn("CURRENT_DATE", today.candidate_sql)
+        self.assertIn("SUM(i.calories_kcal)", today.candidate_sql)
+
+        protein = self.planner.plan("分析最近7天蛋白质摄入")
+        self.assertEqual(("protein_g",), protein.metrics)
+        self.assertNotIn("GROUP BY", protein.candidate_sql)
+
+    def test_food_occurrence_requires_a_precise_name_and_time_range(self):
+        ready = self.planner.plan("统计最近7天鸡胸肉出现次数")
+        self.assertEqual("food_occurrence", ready.intent)
+        self.assertEqual("鸡胸肉", ready.filters["food_name"])
+        self.assertIn("COUNT(i.food_log_item_id)", ready.candidate_sql)
+        self.assertIn("i.raw_name = '鸡胸肉'", ready.candidate_sql)
+
+        breakfast = self.planner.plan("统计最近7天早餐鸡胸肉出现次数")
+        self.assertEqual("breakfast", breakfast.filters["meal_type"])
+        self.assertIn("f.meal_type = 'breakfast'", breakfast.candidate_sql)
+
+        ambiguous = self.planner.plan("统计最近7天鸡肉出现次数")
+        self.assertEqual("need_clarification", ambiguous.status)
+        self.assertEqual(("food_name",), ambiguous.missing_slots)
+
+    def test_plan_completion_and_shopping_missing_use_documented_status_semantics(self):
+        completion = self.planner.plan("我的餐食计划完成度")
+        self.assertEqual("meal_plan_completion", completion.intent)
+        self.assertIn("completion_ratio", completion.candidate_sql)
+        self.assertIn("status = 'saved'", completion.candidate_sql)
+
+        shopping = self.planner.plan("查看购物清单缺项")
+        self.assertEqual("shopping_list_missing", shopping.intent)
+        self.assertIn("missing_item_groups", shopping.candidate_sql)
+
+    def test_unsupported_nutrition_field_fails_closed(self):
+        with self.assertRaisesRegex(SqlPlannerError, "SQL_PLANNER_FIELD_UNSUPPORTED"):
+            self.planner.plan("分析最近7天的钠摄入")
+
     def test_time_range_and_candidate_limits_fail_closed(self):
         with self.assertRaisesRegex(SqlPlannerError, "SQL_PLANNER_TIME_RANGE_INVALID"):
             self.planner.plan("分析最近120天蛋白质摄入")

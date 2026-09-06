@@ -781,6 +781,8 @@ public class LocalStubPersistenceConfig {
                                 catalog(datasourceId, "food_log_items", "is_deleted", "bool"),
                                 catalog(datasourceId, "meal_plans", "meal_plan_id", "bigint"),
                                 catalog(datasourceId, "meal_plans", "user_id", "bigint"),
+                                catalog(datasourceId, "meal_plans", "plan_name", "varchar"),
+                                catalog(datasourceId, "meal_plans", "days", "integer"),
                                 catalog(datasourceId, "meal_plans", "status", "varchar"),
                                 catalog(datasourceId, "meal_plans", "updated_at", "timestamptz"),
                                 catalog(datasourceId, "meal_plans", "is_deleted", "bool"),

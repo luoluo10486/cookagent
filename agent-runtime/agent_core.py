@@ -289,10 +289,17 @@ class DeterministicRouter:
             "计算" in text and any(character.isdigit() for character in text)
         ):
             return RouteDecision("calculation", "complex", risk)
-        # Planning requests commonly mention breakfast/lunch/dinner while
-        # describing the requested schedule. An explicit plan request wins
-        # over analytical words such as "蛋白质" in its constraints.
-        if any(word in text for word in ("计划", "食谱", "购物清单")):
+        # 读取计划、清单或完成度属于 SQL Agent；只有生成、保存才进入写入规划。
+        if any(word in text for word in ("完成度", "缺项", "出现次数", "出现了几次", "吃了几次", "吃过几次")):
+            return RouteDecision("analysis", "complex", risk)
+        if any(word in text for word in ("查看", "查询", "列出", "获取")) and any(
+            word in text for word in ("计划", "购物清单", "采购清单")
+        ):
+            return RouteDecision("analysis", "complex", risk)
+        # 计划请求经常包含早餐、午餐和晚餐；明确的写入意图优先于约束中的“蛋白质”等分析词。
+        if any(word in text for word in ("计划", "食谱", "购物清单")) and not any(
+            word in text for word in ("分析", "查看", "查询", "统计")
+        ):
             return RouteDecision("planning", "complex", risk, ("days",) if "天" not in text else ())
         # Analysis questions often describe the absence of records. Match the
         # requested operation before the noun "记录" so those questions do not
@@ -503,9 +510,29 @@ class DeterministicComposer:
         plan = context.analysis_plan or {}
         time_range = plan.get("time_range") or {}
         days = time_range.get("days") if isinstance(time_range, dict) else None
-        range_text = f"最近 {days} 天" if days else "已授权时间范围"
-        metrics = ", ".join(str(item) for item in plan.get("metrics") or ()) or "已批准指标"
-        dimensions = ", ".join(str(item) for item in plan.get("dimensions") or ()) or "无分组维度"
+        range_text = {
+            "today": "今天",
+            "yesterday": "昨天",
+        }.get(
+            time_range.get("label") if isinstance(time_range, dict) else None,
+            f"最近 {days} 天" if days else "当前有效数据",
+        )
+        metric_labels = {
+            "calories_kcal": "热量（kcal）",
+            "protein_g": "蛋白质（g）",
+            "fat_g": "脂肪（g）",
+            "carbs_g": "碳水（g）",
+            "occurrence_count": "出现次数",
+            "completion_ratio": "计划生命周期完成度",
+            "missing_item_groups": "待确认购物清单数",
+        }
+        metrics = "、".join(
+            metric_labels.get(str(item), str(item)) for item in plan.get("metrics") or ()
+        ) or "已批准指标"
+        dimension_labels = {"meal_type": "餐次", "raw_name": "食材"}
+        dimensions = "、".join(
+            dimension_labels.get(str(item), str(item)) for item in plan.get("dimensions") or ()
+        ) or "不分组"
         status = database.get("status")
         if status != "succeeded":
             code = str(database.get("error_code") or "DATABASE_QUERY_FAILED")
@@ -516,11 +543,32 @@ class DeterministicComposer:
             )
         rows = database.get("rows") or []
         if not rows:
+            empty_reason = {
+                "food_occurrence": "没有找到该食材在此时间范围内的有效饮食记录",
+                "meal_plan_completion": "当前没有可用的未删除餐食计划",
+                "shopping_list_missing": "当前没有可用的未删除购物清单",
+            }.get(str(plan.get("intent")), "未找到可用的饮食记录")
             return (
                 f"时间范围：{range_text}。统计口径：{metrics}；分组维度：{dimensions}。"
-                "数据覆盖：未找到可用的饮食记录。当前没有足够数据生成趋势结论，"
-                "建议先补充饮食记录后再分析。"
+                f"数据为空原因：{empty_reason}。"
             )
+        intent = str(plan.get("intent") or "")
+        if intent == "food_occurrence":
+            details = "、".join(
+                f"{str(row.get('food_name') or '未命名食材')} {row.get('occurrence_count', 0)} 次"
+                for row in rows[:6]
+            )
+            return f"时间范围：{range_text}。统计口径：按有效饮食明细计数。结果：{details}。"
+        if intent == "meal_plan_completion":
+            details = "、".join(
+                f"{str(row.get('plan_name') or row.get('meal_plan_id') or '未命名计划')}"
+                f" {float(row.get('completion_ratio', 0)) * 100:g}%"
+                for row in rows[:6]
+            )
+            return f"统计口径：计划状态完成度（已保存 100%、已校验 50%、草稿 0%）。结果：{details}。"
+        if intent == "shopping_list_missing":
+            pending = sum(int(row.get("missing_item_groups") or 0) for row in rows)
+            return f"统计口径：未确认清单视为待处理清单。结果：{pending} 个清单仍有待确认项。"
         safe_rows = json.dumps(rows[:20], ensure_ascii=False, separators=(",", ":"), default=str)
         if len(safe_rows) > 2_000:
             safe_rows = safe_rows[:2_000] + "..."
@@ -888,56 +936,62 @@ def generate_tool_proposals(
             if isinstance(authorized, dict):
                 authorized["_sql_planner_plan"] = plan.as_dict()
         if plan.status == "need_clarification":
+            code = (
+                "SQL_PLANNER_FOOD_NAME_REQUIRED"
+                if "food_name" in plan.missing_slots
+                else "SQL_PLANNER_TIME_RANGE_REQUIRED"
+            )
             raise SqlPlannerError(
-                "SQL_PLANNER_TIME_RANGE_REQUIRED",
-                "analysis query requires a time range",
+                code,
+                "analysis query requires clarification",
                 plan.missing_slots,
             )
-        time_result = next(
-            (item for item in reversed(tool_results) if item.get("tool_name") == "time_parser"),
-            None,
-        )
-        if time_result is None:
-            invocation_id = str(
-                "time_"
-                + hashlib.sha256(
-                    (str(command["run_id"]) + question).encode("utf-8")
-                ).hexdigest()[:24]
+        if plan.time_range is not None:
+            time_result = next(
+                (item for item in reversed(tool_results) if item.get("tool_name") == "time_parser"),
+                None,
             )
-            proposal = Proposal(
-                proposal_id="prop_" + invocation_id,
-                run_id=str(command["run_id"]),
-                proposal_type="tool",
-                schema_version="v1",
-                payload={
-                    "invocation_id": invocation_id,
-                    "idempotency_key": "time_"
-                    + hashlib.sha256(question.encode("utf-8")).hexdigest()[:32],
-                },
-                requires_confirmation=False,
-                tool_name="time_parser",
-                input={
-                    "question": question,
-                    "timezone": (plan.time_range or {}).get("timezone", "Asia/Shanghai"),
-                },
-            ).as_dict()
-            validate_proposal(
-                Proposal(
-                    proposal["proposal_id"],
-                    proposal["run_id"],
-                    proposal["proposal_type"],
-                    proposal["schema_version"],
-                    proposal["payload"],
-                    proposal["requires_confirmation"],
-                    proposal["request_hash"],
-                    proposal.get("tool_name"),
-                    proposal.get("confirmation_ref"),
-                    proposal.get("input"),
+            if time_result is None:
+                invocation_id = str(
+                    "time_"
+                    + hashlib.sha256(
+                        (str(command["run_id"]) + question).encode("utf-8")
+                    ).hexdigest()[:24]
                 )
-            )
-            return [proposal]
-        if time_result.get("status") != "succeeded":
-            return []
+                proposal = Proposal(
+                    proposal_id="prop_" + invocation_id,
+                    run_id=str(command["run_id"]),
+                    proposal_type="tool",
+                    schema_version="v1",
+                    payload={
+                        "invocation_id": invocation_id,
+                        "idempotency_key": "time_"
+                        + hashlib.sha256(question.encode("utf-8")).hexdigest()[:32],
+                    },
+                    requires_confirmation=False,
+                    tool_name="time_parser",
+                    input={
+                        "question": question,
+                        "timezone": (plan.time_range or {}).get("timezone", "Asia/Shanghai"),
+                    },
+                ).as_dict()
+                validate_proposal(
+                    Proposal(
+                        proposal["proposal_id"],
+                        proposal["run_id"],
+                        proposal["proposal_type"],
+                        proposal["schema_version"],
+                        proposal["payload"],
+                        proposal["requires_confirmation"],
+                        proposal["request_hash"],
+                        proposal.get("tool_name"),
+                        proposal.get("confirmation_ref"),
+                        proposal.get("input"),
+                    )
+                )
+                return [proposal]
+            if time_result.get("status") != "succeeded":
+                return []
         statement = str(plan.candidate_sql)
         invocation_id = str(
             request.get("invocation_id")
@@ -1242,6 +1296,17 @@ def _validate_meal_plan_candidate(value: Any) -> None:
             raise ValueError("plan")
 
 
+def _sql_clarification_answer(error: SqlPlannerError) -> str:
+    """将 SQL Agent 的结构化澄清错误转换为用户可执行的下一步。"""
+    if error.code == "SQL_PLANNER_TIME_RANGE_REQUIRED":
+        return "为了分析饮食数据，请补充时间范围，例如今天、昨天或最近 7 天。"
+    if error.code == "SQL_PLANNER_FOOD_NAME_REQUIRED":
+        return "请明确要统计的食材名称；生熟、部位或具体品种有歧义时，请选择完整名称。"
+    if error.code == "SQL_PLANNER_FIELD_UNSUPPORTED":
+        return "当前 SQL Agent 仅支持热量、蛋白质、脂肪和碳水统计，暂不支持该营养字段。"
+    return "当前查询需要补充或修正条件后才能继续。"
+
+
 class InMemoryCheckpoint:
     """本地开发 checkpoint；生产接入 Redis 时复用相同 CAS 接口。"""
 
@@ -1420,8 +1485,12 @@ def run_deterministic(
                 proposals,
             )
     except SqlPlannerError as error:
-        if error.code == "SQL_PLANNER_TIME_RANGE_REQUIRED":
-            answer = "为了分析摄入情况，请补充时间范围，例如最近 7 天。"
+        if error.code in {
+            "SQL_PLANNER_TIME_RANGE_REQUIRED",
+            "SQL_PLANNER_FOOD_NAME_REQUIRED",
+            "SQL_PLANNER_FIELD_UNSUPPORTED",
+        }:
+            answer = _sql_clarification_answer(error)
             decision = EvalDecision("pass", error.code)
             return AgentExecution(
                 route,

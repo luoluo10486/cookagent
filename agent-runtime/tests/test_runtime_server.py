@@ -542,6 +542,44 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(database["payload"]["statement"], database["input"]["candidate_sql"])
         validate_proposal(Proposal(**database))
 
+    def test_analysis_routes_read_only_plan_and_shopping_queries_without_time_parser(self):
+        for question, intent in (
+            ("查看我的餐食计划完成度", "meal_plan_completion"),
+            ("查看购物清单缺项", "shopping_list_missing"),
+        ):
+            execution = run_deterministic(
+                {
+                    "run_id": "analysis-" + intent,
+                    "dispatch_id": "d-" + intent,
+                    "message": {"content": question},
+                }
+            )
+
+            self.assertEqual("analysis", execution.route.intent)
+            self.assertEqual("database_query", execution.proposals[0]["tool_name"])
+            self.assertEqual(intent, execution.proposals[0]["input"]["intent"])
+
+    def test_analysis_returns_actionable_clarification_for_ambiguous_or_unsupported_query(self):
+        ambiguous = run_deterministic(
+            {
+                "run_id": "analysis-ambiguous",
+                "dispatch_id": "d-ambiguous",
+                "message": {"content": "统计最近7天鸡肉出现次数"},
+            }
+        )
+        self.assertEqual("SQL_PLANNER_FOOD_NAME_REQUIRED", ambiguous.eval.reason)
+        self.assertIn("明确", ambiguous.answer)
+
+        unsupported = run_deterministic(
+            {
+                "run_id": "analysis-unsupported",
+                "dispatch_id": "d-unsupported",
+                "message": {"content": "分析最近7天的钠摄入"},
+            }
+        )
+        self.assertEqual("SQL_PLANNER_FIELD_UNSUPPORTED", unsupported.eval.reason)
+        self.assertIn("仅支持热量", unsupported.answer)
+
     def test_real_sql_planner_uses_shared_router_once_across_tool_rounds(self):
         class Provider(ModelProvider):
             provider_code = "cloud_primary"

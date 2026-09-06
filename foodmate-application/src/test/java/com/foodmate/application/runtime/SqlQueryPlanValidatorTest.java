@@ -35,4 +35,20 @@ class SqlQueryPlanValidatorTest {
                 "TOOL_SCHEMA_UNSUPPORTED",
                 SqlQueryPlanValidator.validate(unknown, "SELECT 1 LIMIT 1"));
     }
+
+    @Test
+    void acceptsCoreReadOnlyAnalysisIntents() throws Exception {
+        for (String intent : new String[] {"food_occurrence", "meal_plan_completion", "shopping_list_missing"}) {
+            var plan = mapper.createObjectNode();
+            plan.put("intent", intent);
+            plan.put("candidate_sql", "SELECT 1 LIMIT 1");
+            plan.put("planner_mode", "stub");
+            plan.put("planner_version", "m2-2-deterministic-v1");
+            plan.putArray("metrics");
+            plan.putArray("dimensions");
+            plan.putObject("filters");
+
+            assertEquals(null, SqlQueryPlanValidator.validate(plan, "SELECT 1 LIMIT 1"));
+        }
+    }
 }

@@ -40,6 +40,7 @@ FoodMate 是面向饮食记录、营养分析与备餐规划的任务型 Agent �
 | M1-2/M1-3 基础链路 | PostgreSQL E2E 已验证注册、登录、Cookie/CSRF、会话创建、消息持久化和读取；Java -> Python deterministic stub -> Java -> SSE 最小闭环已验证。 |
 | 异步传输 | Java PostgreSQL Outbox -> RocketMQ -> Consumer 的真实 E2E 已验证 envelope、`request_hash`、`dispatch_id` 与 `run_id`。 |
 | Tool/SQL 闭环 | Proposal -> Java Tool Gateway -> 只读 SQL / 审计 -> Result 的真实 E2E 已验证；SQL 失败会记录 `SQL_EXECUTION_FAILED`，重复 Proposal 不重复执行。 |
+| SQL Agent 饮食分析 | 已补齐今日热量、近 7 天蛋白质、指定食材出现次数、餐食计划完成度和待确认购物清单查询；缺少时间/食材、字段不支持和空结果均有明确澄清或安全空态，Java 继续执行 SQL Schema、用户范围、AST、LIMIT 和审计校验。 |
 | M1-5 饮食业务 | 饮食记录创建、查询、编辑、删除、恢复，today/7d/30d 分析，餐食计划生命周期和购物清单已接入 Java/SQL/API；本地 PostgreSQL 当前有 1,000 条 approved/official USDA 食材和 1,518 条 approved USDA foodPortion 换算，规范键、来源 ID 和换算规则均通过校验，matched/pending 分支保持可用。 |
 | K4 营养候选确认 | 已完成业务切片 | `GET /api/nutrition-foods/search` 返回受限候选；中文烹饪前缀会归一化，多个生熟/部位候选不会自动猜测，饮食写入支持显式 `nutrition_food_id` 或 `pending_confirmation`；V34 已在本地 PostgreSQL 执行并通过校验。 |
 | 营养语义索引 | 1,000 条 approved/official 目录已通过真实 Qwen Embedding 建立独立 Milvus 集合 `foodmate_nutrition_foods`；Runtime 营养检索只返回候选 ID，饮食写入和营养数值仍回源 PostgreSQL 精确匹配。 |
@@ -165,3 +166,10 @@ npm run dev
 - Java 对同一 `memory_type + memory_key` 的相同 JSON 做幂等去重，不同值写为 `conflict`；用户确认后同 key 其他活动值转为 `rejected`。手动修改要求 JSON 对象，并会触发摘要失效和重建边界。
 - Python ContextBuilder 和 Java 查询共同执行意图白名单、确认状态、未过期、未删除、来源抑制、最近 8 条消息及最多 8 条长期记忆约束。
 - K3 业务测试：Python `57 passed`；Java `16/16`；未执行真实云服务、性能压测、组件重启、ACK/重复投递故障矩阵或备份恢复。
+
+## 2026-09-06 K5 SQL Agent 饮食分析覆盖
+
+- SQL Planner 现在支持今日热量、近 7 天蛋白质、指定食材出现次数、餐食计划生命周期完成度和待确认购物清单统计；指定早餐、午餐或晚餐时，食材次数统计会保留餐次过滤。
+- 缺少时间范围、食材名称歧义或不支持的营养字段会进入明确澄清；数据库返回空结果时说明数据为空原因，不把空结果伪装成数值或趋势。
+- 计划读取和购物清单读取进入只读 SQL Agent；计划生成、保存和饮食写入仍经过原有确认流程。Java 继续执行结构化计划校验、JSqlParser 用户范围/软删除注入、只读和 LIMIT 约束，并记录 SQL 专用审计。
+- 本轮业务验证：Python `87 passed`；Java `SqlQueryPlanValidatorTest` 与 `JSqlParserQueryGuardTest` 共 `12/12`；未执行性能压测、依赖重启、ACK/重复投递故障注入或生产验证。

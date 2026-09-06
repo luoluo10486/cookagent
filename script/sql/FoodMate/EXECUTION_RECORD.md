@@ -2285,3 +2285,17 @@
 | 业务行为证据 | 实际查询“鸡胸肉”返回多个 USDA 生熟/部位候选；显式目录 ID 才会计算营养快照，歧义和无安全换算路径不写入推断营养值。 |
 | 数据边界 | V34 已在本地库执行；本轮未清理、truncate、备份恢复或修改既有饮食数据，未启动付费服务、未执行性能压测、组件重启或故障注入。 |
 | 结论 | K4 营养候选确认业务切片完成并具备 Java/API/数据库校验证据；复合菜关系、人工营养学复核、性能、可靠性和生产治理继续按计划后置。 |
+
+## D148 K5 SQL Agent 饮食分析业务覆盖（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；Python 使用项目 `agent-runtime\\.venv`；Java 使用仓库 Maven Wrapper 和 Java 21；未启动或重启 Docker 依赖。 |
+| 实现范围 | SQL Planner 新增今日热量、近 7 天蛋白质、指定食材出现次数、餐食计划生命周期完成度和待确认购物清单查询；早餐、午餐、晚餐条件会传入食材次数统计。 |
+| 安全与业务边界 | Python 只生成结构化只读计划；Java 继续执行允许意图、Schema、当前用户范围、软删除、JSqlParser AST、LIMIT、超时和 SQL 专用审计。计划/清单读取不触发写入确认，生成和保存计划仍走原有确认流程。 |
+| 澄清与空态 | 缺少时间范围或食材名称时返回稳定澄清；营养字段超出当前白名单时失败关闭；空结果说明对应数据为空原因，不输出伪造数值或原始 SQL。 |
+| Python 业务测试 | `agent-runtime\\.venv\\Scripts\\python.exe -B -m pytest -q -p no:cacheprovider tests\\test_sql_planner.py tests\\test_runtime_server.py tests\\test_tool_protocol.py`：`87 passed`。 |
+| Java 业务测试 | `mvnw.cmd -pl foodmate-application -am test "-Dtest=SqlQueryPlanValidatorTest,JSqlParserQueryGuardTest" "-Dsurefire.failIfNoSpecifiedTests=false"`：`12/12` 通过，`BUILD SUCCESS`。 |
+| 变更检查 | `git diff --check` 通过；未生成 Python 字节码缓存，未暂存 `.env`、密钥或无关用户改动。 |
+| 数据与费用边界 | 本轮未写入 PostgreSQL、Redis、Milvus 或 RocketMQ 业务数据，未调用真实付费 Chat/Embedding，未执行性能压测、组件重启、ACK/重复投递故障注入、SSE 故障恢复、备份恢复或生产验证。 |
+| 结论 | K5 核心饮食分析的理解 -> 澄清/规划 -> Java 只读校验 -> 结果安全说明业务切片完成；真实环境运行、性能和可靠性门禁仍按计划后置。 |
