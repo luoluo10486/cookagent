@@ -2245,3 +2245,15 @@
 | 代码修复 | 为批次状态聚合增加批次行锁，避免并发条目结果回写时读取过期聚合快照；Application 受影响测试 `5` 项、Infrastructure 受影响测试 `6` 项均通过。 |
 | 数据与费用边界 | 本轮只使用 Docker 中现有 Java、Python Runtime、PostgreSQL、Redis 和 RocketMQ；未改迁移、未清理既有数据、未调用付费 Chat/Embedding、未执行性能压测、依赖重启或故障注入。 |
 | 结论 | K1 的正式公共资料准备、批量导入、local-stub 索引、发布可见性、公共检索和批次 SSE 业务证据已完成；真实 Embedding/Milvus 索引、性能与生产可靠性继续按计划后置。 |
+
+## D145 K2 知识切分与检索质量业务收口（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 切分策略 | `chunk_markdown` 支持完整 Markdown 标题层级和 `section_path`；同章节段落优先合并，长段落优先在句末、标点或空白处拆分，默认目标 `700` 字符、硬上限 `1000` 字符、重叠 `80` 字符。 |
+| 稳定性 | 保留 `document_id + version + sequence` 的稳定 `embedding_id`；旧调用方传入较小 `max_chars` 时会自动收敛目标和重叠，不突破硬上限。 |
+| 检索策略 | stub/Redis stub 同时使用标题、章节和正文关键词；候选最多 `12` 条、重排最多 `6` 条、最终最多 `4` 条且每文档最多 `2` 条。Milvus 继续使用公共 ACL、发布、索引、当前版本和未删除过滤。 |
+| 中文检索 | tokenizer 同时生成中文单字和重叠二元词；固定业务样例覆盖蛋白质、钠、食品安全、身体活动、膳食纤维和随机无命中查询。 |
+| 业务测试 | `agent-runtime\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider agent-runtime/tests/test_knowledge_rag.py agent-runtime/tests/test_knowledge_worker.py`：`70 passed`、`4` 个子断言通过。 |
+| 数据边界 | 未重建 D144 正式批次，因此当前 PostgreSQL/Redis 的 `58` 个 chunk 仍是 K1 索引快照；后续新索引任务使用 K2 策略。本轮未调用真实 Embedding、未写入 Milvus、未执行性能或故障测试。 |
+| 结论 | K2 的切分、中文关键词检索、标题/章节命中、稳定 ID 和引用数量边界已完成业务门禁；真实向量质量和历史数据重索引不在本轮执行范围。 |
