@@ -4973,8 +4973,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-29",
-        "conclusion": "The user table, detail panel, five tabs including 业务会话, high-risk action controls and the Figma 用户详情 Tab guidance panel remain represented. The filter row now aligns to the Figma y=88 baseline after fixing the reset button height; shell identity, icons, typography, avatar and other full-page differences remain, so retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "用户表格、详情面板、五个 Tab、风险操作和用户详情说明卡均已复核；Figma fixture 的筛选值完整显示，详情操作区和说明卡垂直节奏已按 801:215 调整。侧栏身份、图标、字体、头像和浏览器光栅化仍有可见差异，继续保持 DIFF_REVIEW。"
       },
       "additionalVisualEvidence": [
         {
@@ -5003,6 +5003,29 @@
             "bodyHorizontalOverflow": false,
             "bodyVerticalOverflow": false,
             "windowControlsCandidates": 0
+          },
+          "conclusion": "DIFF_REVIEW"
+        },
+        {
+          "figmaPng": "docxs/设计/figma-png/admin-user-detail.png",
+          "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-admin-user-detail-browser-2026-09-06.png",
+          "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#admin-user-detail",
+          "visualChange": "将 Figma fixture 的角色和状态 Select 值设为可伸缩单行显示，注册日期字号调整为 12px；仅在 fixture 中移除首行选中底色，并将详情操作区与说明卡的垂直间距调整为 Figma 目标节奏。",
+          "diff": {
+            "differentPixels": 310119,
+            "differentRatio": 0.21031290690104168,
+            "meanAbsoluteError": 3.9146821763780384,
+            "rmse": 21.375077838520504,
+            "maxChannelDelta": 227
+          },
+          "geometry": {
+            "viewport": "1440x1024",
+            "dpr": 1.0000000149011612,
+            "fonts": "loaded",
+            "filters": "692x32 at y=88",
+            "detailPanel": "420x912 at x=996,y=88",
+            "bodyHorizontalOverflow": false,
+            "bodyVerticalOverflow": false
           },
           "conclusion": "DIFF_REVIEW"
         }

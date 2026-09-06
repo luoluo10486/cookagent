@@ -2939,6 +2939,11 @@
   min-height: 0;
 }
 
+/* Figma User Detail fixture 的首行没有额外选中底色，真实列表仍保留选中反馈。 */
+.usersLayoutFigma .usersTableRowSelected {
+  background: #ffffff;
+}
+
 .usersListColumn,
 .usersDetailColumn {
   min-width: 0;
@@ -3017,6 +3022,20 @@
   background: #ffffff;
 }
 
+/* Figma 筛选条需要保证当前值完整显示，不能被通用 Select 的行截断规则压缩。 */
+.usersSelect > span {
+  display: block !important;
+  min-width: 0;
+  overflow: hidden;
+  flex: 1 1 auto;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.usersSelect {
+  font-size: 13px;
+}
+
 .usersSelect select {
   width: 100%;
   min-width: 0;
@@ -3042,15 +3061,17 @@
 .usersDateFilter {
   justify-content: space-between;
   color: #333333;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 16px;
   cursor: pointer;
 }
 
 .usersDateFilter span {
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
 }
 
@@ -3458,7 +3479,7 @@
   flex-direction: column;
   gap: 10px;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 32px;
   padding-top: 20px;
 }
 
@@ -3482,7 +3503,7 @@
   gap: 8px;
   width: 100%;
   height: 220px;
-  margin-top: 29px;
+  margin-top: 17px;
   padding: 14px;
   overflow: hidden;
   border: 1px solid #e3ebe5;

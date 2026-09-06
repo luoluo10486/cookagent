@@ -2279,3 +2279,18 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 五项自动 diff 均为非零，仍保持 `DIFF_REVIEW`；截图、结构检查和交互测试不替代人工像素级 `PASS`。
 - [ ] 本节只复核五个受影响画板，不代表其余 100 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [x] 本批次集中执行 3 个 Admin 操作态测试文件、`33/33` 个用例通过；`npm run typecheck`、`npm run build`、`npm run lint`、`npm run format:check`、`npm run qa:figma:validate` 和 `git diff --check` 均通过。证据校验返回 `structuralPass=true`、`strictDprPass=true`、`errors=[]`。
+
+## 39. 2026-09-06 Admin User Detail 增量验收
+
+本节只记录 Admin User Detail 节点 `801:215` 的增量视觉修正和单页证据，不重新采集或人工验收其余画板。Figma 文件保持只读，真实模式用户服务和权限边界未改变。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Admin User Detail | `801:215` | `/admin?state=user-detail` | `dpr1-admin-user-detail-browser-2026-09-06.png` | `1440×1024 / 1` | 21.0313% | 3.914682 | 21.375078 | 227 | `DIFF_REVIEW` |
+
+- [x] 筛选值区域改为可伸缩单行显示，注册日期字号调整为 Figma 目标值；筛选行几何保持 `692×32 at y=88`。
+- [x] 仅 Figma fixture 移除首行额外选中底色，真实列表选中反馈不变；详情操作区与说明卡垂直间距按参考图调整。
+- [x] Chrome `152.0.7977.77` 在 `1440×1024`、DPR `1`、字体加载完成条件下采集；页面无横向溢出，运行时几何和文字检查通过。
+- [ ] 自动 diff 仍为非零，侧栏、图标、字体、头像和浏览器光栅化差异仍需后续处理，继续保持 `DIFF_REVIEW`。
+- [ ] 本节只复核一个 Admin 画板，不代表 105 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [x] 本批次没有创建虚构 iconfont 字体、glyph 或 Unicode 映射，iconfont 仍为 `BLOCKED`。

@@ -263,7 +263,7 @@ export function UsersSection({ onAction }: { onAction: (payload: AdminActionPayl
   };
 
   return (
-    <section className={styles.usersLayout}>
+    <section className={`${styles.usersLayout} ${isMockMode ? styles.usersLayoutFigma : ''}`}>
       <div className={styles.usersListColumn}>
         <div className={styles.usersFilters}>
           <label className={styles.usersSearch}>
