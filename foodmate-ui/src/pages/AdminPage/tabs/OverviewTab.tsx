@@ -112,8 +112,8 @@ function formatResultCount(value: number) {
 
 export function OverviewSection({ refreshNonce = 0 }: { onAction?: unknown; refreshNonce?: number }) {
   const isRealMode = import.meta.env.VITE_AGENT_MODE === 'real';
-  const [metrics, setMetrics] = useState<OverviewMetric[]>(overviewMetrics);
-  const [rows, setRows] = useState<OverviewRow[]>(overviewRows);
+  const [metrics, setMetrics] = useState<OverviewMetric[]>(isRealMode ? [] : overviewMetrics);
+  const [rows, setRows] = useState<OverviewRow[]>(isRealMode ? [] : overviewRows);
   const [resultFilter, setResultFilter] = useState('all');
   const [degradedFilter, setDegradedFilter] = useState('all');
   const [query, setQuery] = useState('');
