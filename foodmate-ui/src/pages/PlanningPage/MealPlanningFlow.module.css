@@ -217,6 +217,11 @@
   color: #89b27c;
 }
 
+.planStatusvalidated {
+  background: rgba(219, 234, 254, 0.18);
+  color: #2563eb;
+}
+
 .planListMeta span {
   height: 22px;
   background: rgba(255, 246, 226, 0.1);
