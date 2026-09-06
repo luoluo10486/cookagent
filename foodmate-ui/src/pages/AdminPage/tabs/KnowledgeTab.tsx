@@ -16,7 +16,7 @@ import { type KnowledgeRow, canManage } from './AdminShared';
 import type { AdminActionPayload } from './types';
 import {
   changeKnowledgeVisibility,
-  loadAdminDashboard,
+  loadAdminKnowledge,
   loadKnowledgeBatch,
   retryKnowledgeItem,
   streamKnowledgeBatch,
@@ -139,10 +139,10 @@ export function KnowledgeSection({
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setLoadError('');
-    loadAdminDashboard()
-      .then((dashboard) => {
+    loadAdminKnowledge()
+      .then((result) => {
         if (!active) return;
-        const rows = dashboard.knowledge as KnowledgeRow[];
+        const rows = result.items as KnowledgeRow[];
         setDocuments(rows);
         setSelectedDoc(rows[0]);
       })

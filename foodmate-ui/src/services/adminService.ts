@@ -321,6 +321,21 @@ export type AdminOperationAuditRow = {
 const text = (value: string | number | null | undefined) => (value == null ? '-' : String(value));
 const numeric = (value: number | string | null | undefined) => (value == null ? 0 : Number(value));
 
+function normalizeKnowledgeRow(row: AdminKnowledgeResponse, index: number): AdminKnowledgeRow {
+  return {
+    key: `knowledge-${row.document_id ?? index}`,
+    documentId: text(row.document_id),
+    title: row.title,
+    status: row.status,
+    visibility: row.visibility || 'draft',
+    chunks: row.chunks ?? 0,
+    owner: row.owner,
+    source: row.source,
+    indexProgress: row.index_progress,
+    updatedAt: text(row.updated_at),
+  };
+}
+
 function normalizeDashboard(data: AdminDashboardResponse): AdminDashboard {
   return {
     overview_metrics: data.overview_metrics,
@@ -405,18 +420,7 @@ function normalizeDashboard(data: AdminDashboardResponse): AdminDashboard {
       latencyMs: row.latency_ms ?? 0,
       status: row.status,
     })),
-    knowledge: data.knowledge.map((row, index) => ({
-      key: `knowledge-${row.document_id ?? index}`,
-      documentId: text(row.document_id),
-      title: row.title,
-      status: row.status,
-      visibility: row.visibility || 'draft',
-      chunks: row.chunks ?? 0,
-      owner: row.owner,
-      source: row.source,
-      indexProgress: row.index_progress,
-      updatedAt: text(row.updated_at),
-    })),
+    knowledge: data.knowledge.map(normalizeKnowledgeRow),
     deleted: data.deleted.map((row, index) => ({
       key: `deleted-${row.resource_id ?? index}`,
       resourceType: row.resource_type,
@@ -591,6 +595,25 @@ export async function loadAdminQuery<T>(resource: string, params: AdminQueryPara
   if (params.sort) search.set('sort', params.sort);
   if (params.direction) search.set('direction', params.direction);
   return apiRequest<AdminOperationalQueryResponse<T>>(`/api/admin/queries/${resource}?${search.toString()}`);
+}
+
+/** 管理端知识库使用专用分页查询，避免把 dashboard 概览当成明细数据源。 */
+export async function loadAdminKnowledge(params: AdminQueryParams = {}): Promise<{
+  items: AdminKnowledgeRow[];
+  total: number;
+  page: number;
+  size: number;
+}> {
+  const data = await loadAdminQuery<AdminKnowledgeResponse>('knowledge', {
+    size: 100,
+    ...params,
+  });
+  return {
+    items: data.items.map(normalizeKnowledgeRow),
+    total: data.total,
+    page: data.page,
+    size: data.size,
+  };
 }
 
 export async function loadAdminTraceDetail(traceId: string): Promise<AdminTraceDetail> {

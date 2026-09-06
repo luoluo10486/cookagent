@@ -2310,3 +2310,15 @@
 | 前端业务验证 | `npm.cmd test -- --run src/services/adminToolRegistry.test.ts src/services/adminModelGovernance.test.ts`：`6/6` 通过；真实接口无 dashboard fallback 的映射契约已覆盖。 |
 | 数据与边界 | 未执行迁移、写库、Docker 重启、性能压测、故障注入或真实付费调用；未修改工具注册数据。 |
 | 结论 | K6 工具注册表的真实读取、Schema 展示和启停版本一致性已完成；管理端知识库/运行审计等页面的真实字段核对继续在后续大点集中处理。 |
+
+## D150 K6 知识库管理查询真实接口收口（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；`foodmate-ui` 使用项目 `node_modules`；未启动或重启 Docker 依赖。 |
+| 列表接口 | 管理端知识库真实模式从 `/api/admin/dashboard` 切换为 `/api/admin/queries/knowledge?page=1&size=100`，使用后端统一分页查询的 `items/total/page/size` 响应。 |
+| 业务链路 | 批次上传仍使用 `/api/admin/knowledge-documents/upload-batches`；详情、SSE、失败条目重试、发布、下线、恢复和软删除接口保持真实路径，未引入第二套状态来源。 |
+| 前端状态 | 真实模式支持加载中、空列表、接口失败和重试；批次详情继续由详情接口和 SSE 回读，不能通过 dashboard 旧快照覆盖。 |
+| 前端业务验证 | `npm.cmd run test -- --run src/pages/AdminPage/tabs/KnowledgeTab.real.test.tsx src/pages/AdminPage/tabs/KnowledgeTab.test.tsx`：`4/4` 通过；`npm.cmd run typecheck`：通过；`git diff --check`：通过。 |
+| 数据与费用边界 | 未修改 PostgreSQL、Redis、Milvus、RocketMQ 数据，未调用真实付费 Chat/Embedding，未执行性能测试、组件重启、故障注入、备份恢复或生产操作。 |
+| 结论 | K6 知识库列表已与后端真实分页契约对齐；用户详情真实查询、K7 页面业务状态和最终集中回归继续后置。 |
