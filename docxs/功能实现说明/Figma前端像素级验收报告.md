@@ -9,7 +9,7 @@
 1. Figma 文件内部结构、组件系统、Prototype 和画板截图回读已完成。
 2. 前端代码与 Figma 画板的自动化像素差异已覆盖 105 个已建立映射的页面/状态，105 个结果均为 `DIFF_REVIEW`，不能标记为像素级通过。
 
-因此当前不能宣称“Figma 105 张画板已全部像素级通过”。已经完成的是可复核的 Figma 全量结构验收、105 个画板的路由/状态映射、差异证据收集，以及运行时几何、可见文字和 DPR 检查；当前 mapping 中 87 项已完成人工复核，18 项仍为 `PENDING`，并且已复核项仍存在可见差异，结果继续保留为 `DIFF_REVIEW`。
+因此当前不能宣称“Figma 105 张画板已全部像素级通过”。已经完成的是可复核的 Figma 全量结构验收、105 个画板的路由/状态映射、差异证据收集，以及运行时几何、可见文字和 DPR 检查；当前 mapping 中 88 项已完成人工复核，17 项仍为 `PENDING`，并且已复核项仍存在可见差异，结果继续保留为 `DIFF_REVIEW`。
 
 ## 1.1 2026-09-06 Workspace/Home 与 Agent Chat 资源收口
 
@@ -52,6 +52,20 @@
 - [x] 本批次统一门禁通过：Vitest `40/40` 个测试文件、`257/257` 个用例，`typecheck`、`lint`、`format:check`、`build`、`qa:figma:validate` 和 `git diff --check`。
 - [ ] 三项自动 diff 均为非零，且人工复核确认字体、头像、图标和浏览器光栅化差异仍存在，全部继续保持 `DIFF_REVIEW`，不能标记像素级 `PASS`。
 - [ ] 本批次不代表其余画板重新采集或完成 105 项全量人工复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍未提供，资源登记继续保持 `BLOCKED`。
+
+## 1.4 2026-09-06 Profile Memories 增量验收
+
+本节只处理 Profile Memories 画板 `806:1281`，不重新采集或人工验收其它画板。Figma 文件保持只读；真实模式的记忆操作和服务边界未改变。
+
+| 画板 | Figma 节点 | 前端入口 | Figma PNG | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---|---:|---:|---:|---:|---|
+| Profile Memories | `806:1281` | `/profile?state=memories` | `recaptured-figma/profile-memories-live-2026-09-06.png` | `recaptured/dpr1-profile-memories-browser-2026-09-06.png` | `1440×1024 / 1` | 21.5618% | 4.279536 | 21.369497 | 226 | `DIFF_REVIEW` |
+
+- [x] 已使用实时 Figma 原始尺寸 PNG 和 Chrome `152.0.7977.77` 浏览器 PNG 完成同尺寸比较；视口为 `1440×1024`、DPR `1`、字体已加载且页面无横向溢出。
+- [x] `scripts/png-diff.mjs` 输出 `differentPixels=317942`、差异比例 `21.5618%`、`MAE=4.279536`、`RMSE=21.369497`、最大通道差异 `226`。
+- [x] 人工复核确认介绍卡、筛选区、记忆卡、长期记忆管理卡和 Profile Memories 专属图标结构已对齐；仍存在字体、头像、控件状态、图标和局部文字换行差异。
+- [ ] 本画板继续保持 `DIFF_REVIEW`，不能标记为像素级 `PASS`；本节不代表其余 104 个画板重新采集或完成全量人工复核。
 - [ ] iconfont 实体包、完整 CSS/Unicode 映射、来源和许可证仍未提供，资源登记继续保持 `BLOCKED`。
 
 ## 2. Figma 文件内部验收

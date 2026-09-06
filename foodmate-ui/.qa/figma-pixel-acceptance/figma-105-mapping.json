@@ -5283,12 +5283,12 @@
       "frontendRoute": "/profile",
       "queryState": "state=memories",
       "browserViewport": "1440x1024",
-      "figmaPng": "docxs/设计/figma-png/profile-memories.png",
+      "figmaPng": "foodmate-ui/.qa/figma-pixel-acceptance/recaptured-figma/profile-memories-live-2026-09-06.png",
       "browserPng": ".qa/figma-pixel-acceptance/recaptured/dpr1-profile-memories-browser-2026-09-06.png",
       "diffJson": ".qa/figma-pixel-acceptance/figma-105-diff-results.json#profile-memories",
       "status": "DIFF_REVIEW",
-      "manualReviewConclusion": "PENDING",
-      "evidenceNote": "Automated diff exists; manual visual review remains open",
+      "manualReviewConclusion": "VISUAL_DIFFERENCES_CONFIRMED",
+      "evidenceNote": "Automated diff and manual visual review completed; visible differences remain",
       "geometryCheck": {
         "status": "PASS",
         "expectedViewport": "1440x1024",
@@ -5311,10 +5311,10 @@
         "overflow": []
       },
       "manualReview": {
-        "status": "PENDING",
+        "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
         "reviewedAt": "2026-09-06",
-        "conclusion": "当前 Profile 浏览器截图已完成自动 diff、视口、DPR、字体和溢出检查；逐项人工视觉复核尚未完成，继续保持 DIFF_REVIEW。"
+        "conclusion": "已对照 Figma 节点 806:1281 的实时 PNG 完成人工视觉复核；页面结构、记忆卡、筛选区和长期记忆管理卡已确认，仍存在字体、头像、控件状态、图标和局部文字换行差异，继续保持 DIFF_REVIEW。"
       },
       "dpr1Capture": {
         "capturedAt": "2026-09-06",

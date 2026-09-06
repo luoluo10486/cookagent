@@ -34,6 +34,7 @@ import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { FigmaWorkspaceAsset } from '@/components/workspace/FigmaWorkspaceAsset';
 import { cn } from '@/lib/utils';
 import { FIGMA_PROFILE_AVATARS, getDefaultAvatarForGender } from '@/lib/avatar';
 import { getAuthUser, logout } from '@/services/authService';
@@ -1201,6 +1202,7 @@ function MemoriesTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
             <MemoryRow
               key={memory.id}
               memory={memory}
+              figmaFixture={figmaFixture}
               onConfirm={() =>
                 setMemories((items) =>
                   items.map((item) => (item.id === memory.id ? { ...item, status: 'confirmed' } : item)),
@@ -1293,12 +1295,14 @@ function MemoriesTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
 
 function MemoryRow({
   memory,
+  figmaFixture = false,
   onConfirm,
   onEdit,
   onDelete,
   onSource,
 }: {
   memory: Memory;
+  figmaFixture?: boolean;
   onConfirm: () => void;
   onEdit: () => void;
   onDelete: () => void;
@@ -1324,13 +1328,25 @@ function MemoryRow({
           </Button>
         ) : null}
         <IconAction label="查看来源会话" onClick={onSource}>
-          <Eye aria-hidden="true" />
+          {figmaFixture ? (
+            <FigmaWorkspaceAsset variant="profile" name="memoryView" className={styles.figmaMemoryIcon} />
+          ) : (
+            <Eye aria-hidden="true" />
+          )}
         </IconAction>
         <IconAction label="编辑记忆" onClick={onEdit}>
-          <Edit3 aria-hidden="true" />
+          {figmaFixture ? (
+            <FigmaWorkspaceAsset variant="profile" name="memoryEdit" className={styles.figmaMemoryIcon} />
+          ) : (
+            <Edit3 aria-hidden="true" />
+          )}
         </IconAction>
         <IconAction label="删除记忆" danger onClick={onDelete}>
-          <Trash2 aria-hidden="true" />
+          {figmaFixture ? (
+            <FigmaWorkspaceAsset variant="profile" name="memoryDelete" className={styles.figmaMemoryIcon} />
+          ) : (
+            <Trash2 aria-hidden="true" />
+          )}
         </IconAction>
       </div>
     </Card>

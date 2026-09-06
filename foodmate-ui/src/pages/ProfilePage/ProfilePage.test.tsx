@@ -106,6 +106,11 @@ describe('ProfilePage', () => {
     const memoryPage = screen.getByRole('heading', { name: '记忆系统' }).closest('[data-figma-layout]');
 
     expect(memoryPage).toHaveAttribute('data-figma-layout', 'profile-memories');
+    expect(memoryPage?.querySelector('img[src="/assets/figma/workspace/profile/memory-eye.svg"]')).toBeInTheDocument();
+    expect(memoryPage?.querySelector('img[src="/assets/figma/workspace/profile/memory-edit.svg"]')).toBeInTheDocument();
+    expect(
+      memoryPage?.querySelector('img[src="/assets/figma/workspace/profile/memory-trash.svg"]'),
+    ).toBeInTheDocument();
   });
 
   it('limits the security Figma fixture to the two reference cards', () => {

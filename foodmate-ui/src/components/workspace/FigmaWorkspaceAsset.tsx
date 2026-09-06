@@ -30,7 +30,10 @@ export type FigmaWorkspaceAssetName =
   | 'metricCarbs'
   | 'metricFat'
   | 'chevronLeft'
-  | 'chevronRight';
+  | 'chevronRight'
+  | 'memoryView'
+  | 'memoryEdit'
+  | 'memoryDelete';
 
 type FigmaWorkspaceAssetProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> & {
   variant: WorkspaceFixtureVariant;
@@ -170,6 +173,9 @@ const assetFileNames: Record<WorkspaceFixtureVariant, Partial<Record<FigmaWorksp
     statusDot: 'status-dot.svg',
     sessionDotActive: 'session-dot-active.svg',
     sessionDotDefault: 'session-dot-default.svg',
+    memoryView: 'memory-eye.svg',
+    memoryEdit: 'memory-edit.svg',
+    memoryDelete: 'memory-trash.svg',
   },
 };
 
