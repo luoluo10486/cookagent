@@ -699,6 +699,14 @@ public class LocalStubPersistenceConfig {
                 return 0;
             }
 
+            public List<OperationAuditRow> operationAuditsForUser(long userId, int limit, int offset) {
+                return List.of();
+            }
+
+            public long countOperationAuditsForUser(long userId) {
+                return 0;
+            }
+
             public List<DlqRow> dlq(Query query) {
                 return List.of();
             }

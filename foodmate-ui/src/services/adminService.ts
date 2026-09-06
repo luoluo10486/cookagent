@@ -720,6 +720,62 @@ export type AdminUserRow = {
   revision?: number;
 };
 
+export type AdminUserDetail = {
+  profile: {
+    user_id: number;
+    display_name?: string;
+    gender?: string;
+    birthday?: string;
+    height_cm?: number;
+    weight_kg?: number;
+    activity_level?: string;
+    diet_goal?: string;
+    calorie_target?: number;
+    protein_target?: number;
+    allergens?: string;
+    dislikes?: string;
+    preferred_units?: string;
+  } | null;
+  login_sessions: Array<{
+    auth_session_id: number;
+    device_id?: string;
+    user_agent?: string;
+    ip_address?: string;
+    expires_at?: string;
+    last_seen_at?: string;
+    created_at?: string;
+    revoked_at?: string;
+  }>;
+  business_sessions: {
+    items: Array<{
+      session_id: number;
+      user_id: number;
+      title: string;
+      mode: string;
+      status: string;
+      last_message_at?: string;
+    }>;
+    total: number;
+    page: number;
+    size: number;
+  };
+  operation_history: {
+    items: Array<{
+      operator_id: number | null;
+      action: string;
+      target_type: string;
+      target_id: string;
+      result: string;
+      request_id: string;
+      trace_id: string;
+      created_at?: string;
+    }>;
+    total: number;
+    page: number;
+    size: number;
+  };
+};
+
 type AdminUserResponse = {
   user_id: number;
   username: string;
@@ -773,6 +829,11 @@ export async function loadAdminUsers(): Promise<AdminUserRow[]> {
     createdAt: user.created_at ?? '-',
     revision: user.revision ?? 1,
   }));
+}
+
+export async function loadAdminUserDetail(userId: string): Promise<AdminUserDetail> {
+  if (import.meta.env.VITE_AGENT_MODE !== 'real') throw new Error('Real admin API is disabled');
+  return apiRequest<AdminUserDetail>(`/api/admin/users/${encodeURIComponent(userId)}/detail`);
 }
 
 async function adminWrite<T>(path: string, method: string, payload?: object, idempotencyPrefix?: string): Promise<T> {

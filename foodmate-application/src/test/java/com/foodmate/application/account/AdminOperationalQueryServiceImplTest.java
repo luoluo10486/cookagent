@@ -194,4 +194,29 @@ class AdminOperationalQueryServiceImplTest {
                 com.foodmate.shared.error.BusinessException.class,
                 () -> service.traceDetail("missing-trace"));
     }
+
+    @Test
+    void loadsOnlyTheSelectedUsersOperationHistoryPage() {
+        when(store.operationAuditsForUser(7L, 20, 20))
+                .thenReturn(
+                        List.of(
+                                new AdminOperationalQueryRepository.OperationAuditRow(
+                                        7L,
+                                        "profile.update",
+                                        "profile",
+                                        "7",
+                                        "success",
+                                        "request-7",
+                                        "trace-7",
+                                        Instant.parse("2026-09-06T00:00:00Z"))));
+        when(store.countOperationAuditsForUser(7L)).thenReturn(1L);
+
+        var result = service.operationAuditsForUser(7L, 2, 20);
+
+        assertEquals(1, result.items().size());
+        assertEquals("profile.update", result.items().getFirst().action());
+        assertEquals(1L, result.total());
+        assertEquals(2, result.page());
+        verify(store).operationAuditsForUser(7L, 20, 20);
+    }
 }

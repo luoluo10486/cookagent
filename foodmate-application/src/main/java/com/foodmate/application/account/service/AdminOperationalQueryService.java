@@ -11,6 +11,9 @@ import java.util.Locale;
 public interface AdminOperationalQueryService {
     Page<?> query(String resource, Request request);
 
+    /** 查询与用户本人操作或用户主体变更直接相关的审计摘要。 */
+    Page<OperationAudit> operationAuditsForUser(long userId, int page, int size);
+
     /** 返回一个 Trace 的脱敏权威跨度视图。 */
     TraceDetail traceDetail(String traceId);
 

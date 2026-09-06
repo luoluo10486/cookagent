@@ -41,7 +41,13 @@ import {
   statusTag,
 } from './AdminShared';
 import type { AdminActionPayload } from './types';
-import { loadAdminUsers, revokeAdminUserSessions, updateAdminUserStatus } from '../../../services/adminService';
+import {
+  loadAdminUserDetail,
+  loadAdminUsers,
+  revokeAdminUserSessions,
+  type AdminUserDetail,
+  updateAdminUserStatus,
+} from '../../../services/adminService';
 import { FIGMA_ADMIN_AVATARS, resolveAvatarUrl } from '../../../lib/avatar';
 
 const isMockMode = import.meta.env.VITE_AGENT_MODE !== 'real';
@@ -189,6 +195,9 @@ export function UsersSection({ onAction }: { onAction: (payload: AdminActionPayl
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('active');
   const [filtersChanged, setFiltersChanged] = useState(false);
+  const [selectedDetail, setSelectedDetail] = useState<AdminUserDetail>();
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState('');
 
   useEffect(() => {
     if (isMockMode) return;
@@ -203,6 +212,29 @@ export function UsersSection({ onAction }: { onAction: (payload: AdminActionPayl
         setLoadError(error instanceof Error ? error.message : '用户列表加载失败');
       });
   }, []);
+
+  useEffect(() => {
+    if (isMockMode || !selectedUser) return;
+    let active = true;
+    // 详情单独加载，避免用户列表接口被迫携带会话和审计明细。
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setDetailLoading(true);
+    setDetailError('');
+    setSelectedDetail(undefined);
+    loadAdminUserDetail(selectedUser.userId)
+      .then((detail) => {
+        if (active) setSelectedDetail(detail);
+      })
+      .catch((error) => {
+        if (active) setDetailError(error instanceof Error ? error.message : '用户详情加载失败');
+      })
+      .finally(() => {
+        if (active) setDetailLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [selectedUser?.userId]);
 
   const visibleUsers = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -377,7 +409,13 @@ export function UsersSection({ onAction }: { onAction: (payload: AdminActionPayl
 
       <aside className={styles.usersDetailColumn}>
         {selectedUser ? (
-          <UserDetailCard user={selectedUser} onRevoke={() => revokeSessions(selectedUser)} />
+          <UserDetailCard
+            user={selectedUser}
+            detail={selectedDetail}
+            detailLoading={detailLoading}
+            detailError={detailError}
+            onRevoke={() => revokeSessions(selectedUser)}
+          />
         ) : (
           <Card className={styles.userDetailCard}>
             <div className={styles.emptyState}>
@@ -507,14 +545,55 @@ function UserStatusTag({ status }: { status: string }) {
   return <span className={`${styles.userStatusTag} ${styles[`userStatus${status}`]}`}>{label}</span>;
 }
 
-function UserDetailCard({ user, onRevoke }: { user: AdminUserView; onRevoke: () => void }) {
-  const sessions = isMockMode ? adminUserSessionRows.filter((item) => item.userId === user.userId) : [];
-  const businessSessions = isMockMode ? adminUserBusinessSessionRows.filter((item) => item.userId === user.userId) : [];
+function UserDetailCard({
+  user,
+  detail,
+  detailLoading,
+  detailError,
+  onRevoke,
+}: {
+  user: AdminUserView;
+  detail?: AdminUserDetail;
+  detailLoading: boolean;
+  detailError: string;
+  onRevoke: () => void;
+}) {
+  const profile = detail?.profile;
+  const sessions = isMockMode
+    ? adminUserSessionRows.filter((item) => item.userId === user.userId)
+    : (detail?.login_sessions ?? []).map((item) => ({
+        key: `session-${item.auth_session_id}`,
+        userId: user.userId,
+        device: item.user_agent || item.device_id || '-',
+        ip: item.ip_address || '-',
+        expiresAt: item.expires_at || '-',
+        status: item.revoked_at ? 'revoked' : 'active',
+      }));
+  const businessSessions = isMockMode
+    ? adminUserBusinessSessionRows.filter((item) => item.userId === user.userId)
+    : (detail?.business_sessions.items ?? []).map((item) => ({
+        key: `business-session-${item.session_id}`,
+        userId: user.userId,
+        sessionId: String(item.session_id),
+        type: item.mode,
+        title: item.title,
+        status: item.status,
+        lastActivityAt: item.last_message_at || '-',
+      }));
   const operationHistory = isMockMode
     ? adminUserOperationHistoryRows.filter((item) => item.userId === user.userId)
-    : [];
-  const initials = user.displayName.slice(0, 1) || user.username.slice(0, 1).toUpperCase();
-  const avatarSource = resolveAvatarUrl(user.avatarUrl, user.gender);
+    : (detail?.operation_history.items ?? []).map((item, index) => ({
+        key: `user-history-${item.request_id || index}`,
+        userId: user.userId,
+        action: item.action,
+        actor: item.operator_id == null ? '-' : String(item.operator_id),
+        result: item.result,
+        requestId: item.request_id,
+        createdAt: item.created_at || '-',
+      }));
+  const displayName = profile?.display_name || user.displayName;
+  const initials = displayName.slice(0, 1) || user.username.slice(0, 1).toUpperCase();
+  const avatarSource = resolveAvatarUrl(user.avatarUrl, profile?.gender || user.gender);
 
   return (
     <Card className={styles.userDetailCard}>
@@ -540,7 +619,7 @@ function UserDetailCard({ user, onRevoke }: { user: AdminUserView; onRevoke: () 
           {avatarSource ? <img src={avatarSource} alt="" /> : initials}
         </div>
         <div className={styles.userDetailName}>
-          <strong>{user.displayName}</strong>
+          <strong>{displayName}</strong>
           <span>{user.registeredLabel ?? `Registered ${user.createdAt}`}</span>
         </div>
         <UserRoleTag role={user.role} />
@@ -567,34 +646,55 @@ function UserDetailCard({ user, onRevoke }: { user: AdminUserView; onRevoke: () 
           <DetailSectionHeading icon={<Utensils aria-hidden="true" />} title="饮食画像" />
           <DetailGrid
             items={[
-              ['性别', user.gender],
-              ['身高', user.heightCm ? `${user.heightCm} cm` : '-'],
-              ['体重', user.weightKg ? `${user.weightKg} kg` : '-'],
-              ['活动水平', user.activityLevel],
-              ['饮食目标', user.dietGoal],
-              ['热量目标', user.calorieTarget ? `${user.calorieTarget} kcal` : '-'],
-              ['蛋白质目标', user.proteinTarget ? `${user.proteinTarget} g` : '-'],
-              ['过敏原', user.allergens],
-              ['忌口', user.dislikes],
-              ['常用单位', user.preferredUnits],
+              ['性别', profile?.gender || user.gender],
+              ['身高', profile?.height_cm ? `${profile.height_cm} cm` : user.heightCm ? `${user.heightCm} cm` : '-'],
+              ['体重', profile?.weight_kg ? `${profile.weight_kg} kg` : user.weightKg ? `${user.weightKg} kg` : '-'],
+              ['活动水平', profile?.activity_level || user.activityLevel],
+              ['饮食目标', profile?.diet_goal || user.dietGoal],
+              [
+                '热量目标',
+                profile?.calorie_target ? `${profile.calorie_target} kcal` : user.calorieTarget ? `${user.calorieTarget} kcal` : '-',
+              ],
+              [
+                '蛋白质目标',
+                profile?.protein_target ? `${profile.protein_target} g` : user.proteinTarget ? `${user.proteinTarget} g` : '-',
+              ],
+              ['过敏原', profile?.allergens || user.allergens],
+              ['忌口', profile?.dislikes || user.dislikes],
+              ['常用单位', profile?.preferred_units || user.preferredUnits],
             ]}
           />
         </TabsContent>
         <TabsContent value="login-sessions" className={styles.userDetailPanel}>
           <DetailSectionHeading icon={<Monitor aria-hidden="true" />} title="登录会话" />
-          <DetailTableState isMockMode={isMockMode} hasData={sessions.length > 0}>
+          <DetailTableState
+            isMockMode={isMockMode}
+            loading={detailLoading}
+            error={detailError}
+            hasData={sessions.length > 0}
+          >
             <DataTable columns={sessionColumns} data={sessions} />
           </DetailTableState>
         </TabsContent>
         <TabsContent value="history" className={styles.userDetailPanel}>
           <DetailSectionHeading icon={<History aria-hidden="true" />} title="操作历史" />
-          <DetailTableState isMockMode={isMockMode} hasData={operationHistory.length > 0}>
+          <DetailTableState
+            isMockMode={isMockMode}
+            loading={detailLoading}
+            error={detailError}
+            hasData={operationHistory.length > 0}
+          >
             <DataTable columns={operationHistoryColumns} data={operationHistory} />
           </DetailTableState>
         </TabsContent>
         <TabsContent value="business-sessions" className={styles.userDetailPanel}>
           <DetailSectionHeading icon={<Utensils aria-hidden="true" />} title="业务会话" />
-          <DetailTableState isMockMode={isMockMode} hasData={businessSessions.length > 0}>
+          <DetailTableState
+            isMockMode={isMockMode}
+            loading={detailLoading}
+            error={detailError}
+            hasData={businessSessions.length > 0}
+          >
             <DataTable columns={businessSessionColumns} data={businessSessions} />
           </DetailTableState>
         </TabsContent>
@@ -654,17 +754,23 @@ function DetailGrid({ items }: { items: Array<[string, string]> }) {
 
 function DetailTableState({
   isMockMode: mockMode,
+  loading,
+  error,
   hasData,
   children,
 }: {
   isMockMode: boolean;
+  loading: boolean;
+  error: string;
   hasData: boolean;
   children: ReactNode;
 }) {
   if (hasData) return children;
+  if (loading) return <div className={styles.detailEmptyState}>正在加载详情...</div>;
+  if (error) return <div className={styles.detailEmptyState}>{error}</div>;
   return (
     <div className={styles.detailEmptyState} role="status">
-      <span>{mockMode ? '暂无记录' : '该详情数据尚未接入真实接口'}</span>
+      <span>{mockMode ? '暂无记录' : '暂无记录'}</span>
     </div>
   );
 }

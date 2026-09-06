@@ -2322,3 +2322,16 @@
 | 前端业务验证 | `npm.cmd run test -- --run src/pages/AdminPage/tabs/KnowledgeTab.real.test.tsx src/pages/AdminPage/tabs/KnowledgeTab.test.tsx`：`4/4` 通过；`npm.cmd run typecheck`：通过；`git diff --check`：通过。 |
 | 数据与费用边界 | 未修改 PostgreSQL、Redis、Milvus、RocketMQ 数据，未调用真实付费 Chat/Embedding，未执行性能测试、组件重启、故障注入、备份恢复或生产操作。 |
 | 结论 | K6 知识库列表已与后端真实分页契约对齐；用户详情真实查询、K7 页面业务状态和最终集中回归继续后置。 |
+
+## D151 K6 管理员用户详情真实读取（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；Java 21、Maven Wrapper 和 `foodmate-ui` 项目依赖可用；未启动或重启 Docker 依赖。 |
+| 后端接口 | 新增 `GET /api/admin/users/{id}/detail`，返回脱敏资料、登录会话、业务会话分页和用户主体相关操作审计摘要。 |
+| 数据边界 | 操作历史只读取 `operator_id=用户 ID` 或 `target_type='user' AND target_id=用户 ID` 的记录；不返回密码、令牌、完整参数或业务原文。 |
+| 前端接入 | 用户详情由真实用户选择触发独立接口请求；资料、饮食画像、登录会话、业务会话和历史 Tab 支持真实数据、加载中、失败和无记录状态；重置凭证仍明确未接入。 |
+| Java 业务验证 | `mvnw.cmd -pl foodmate-application,foodmate-infra,foodmate-api -am test "-Dtest=AdminOperationalQueryServiceImplTest,AdminUserControllerRbacTest" "-Dsurefire.failIfNoSpecifiedTests=false"`：应用层 `8/8`、API `3/3` 通过，`BUILD SUCCESS`。 |
+| 前端业务验证 | `npm.cmd run test -- --run src/pages/AdminPage/tabs/UsersTab.test.tsx src/services/adminToolRegistry.test.ts`：`5/5` 通过；`npm.cmd run typecheck`：通过。 |
+| 格式与边界 | 本轮 8 个 Java 文件分别执行 Spotless `check`，均通过；`git diff --check` 通过；未修改数据库数据，未调用真实付费 Chat/Embedding，未执行性能、重启、故障注入或生产操作。 |
+| 结论 | 管理端用户详情不再依赖 mock 会话/历史空态，已与真实后端查询契约对齐；K7 其他页面体验和最终集中回归继续后置。 |
