@@ -184,6 +184,7 @@ public final class ToolRegistryCatalog {
                 timeoutMs,
                 retryable,
                 idempotent,
-                PUBLISHED_AT);
+                PUBLISHED_AT,
+                1L);
     }
 }

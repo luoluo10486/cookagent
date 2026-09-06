@@ -96,7 +96,8 @@ class ToolRegistryServiceTest {
                         1000,
                         true,
                         true,
-                        null);
+                         null,
+                         1L);
         when(repository.findCurrent("calculator")).thenReturn(malformed);
 
         BusinessException exception =
@@ -123,6 +124,7 @@ class ToolRegistryServiceTest {
                 source.timeoutMs(),
                 source.retryable(),
                 source.idempotent(),
-                source.publishedAt());
+                source.publishedAt(),
+                source.revision());
     }
 }

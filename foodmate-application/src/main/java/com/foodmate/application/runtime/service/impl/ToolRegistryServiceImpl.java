@@ -71,7 +71,8 @@ public class ToolRegistryServiceImpl implements ToolRegistryService {
                 definition.timeoutMs(),
                 definition.retryable(),
                 definition.idempotent(),
-                definition.publishedAt());
+                definition.publishedAt(),
+                definition.revision());
     }
 
     private JsonNode parse(String value) {

@@ -27,7 +27,7 @@ import {
   statusTag,
 } from './AdminShared';
 import type { AdminActionPayload, AdminOperationState } from './types';
-import { loadAdminDashboard, updateAdminToolStatus } from '../../../services/adminService';
+import { loadAdminDashboard, loadAdminToolRegistry, updateAdminToolStatus } from '../../../services/adminService';
 
 const registryMetrics = [
   { label: '已注册工具', value: '24 个', tone: 'neutral' },
@@ -53,15 +53,6 @@ function registryStatusPill(value: string) {
 function registryRiskPill(value: string) {
   const tone = value === 'high' ? 'coral' : value === 'medium' ? 'amber' : 'teal';
   return <RegistryPill value={registryRiskLabels[value] ?? value} tone={tone} />;
-}
-
-function registryRowFromTool(tool: ToolRow): ToolRegistryRow {
-  return {
-    ...tool,
-    timeoutMs: tool.timeoutMs ?? '-',
-    retryPolicy: tool.retryPolicy ?? '-',
-    failedRate: tool.failedRate ?? '-',
-  };
 }
 
 function copyToolName(name: string) {
@@ -135,17 +126,21 @@ function ToolRegistrySection({
 
   const createToolAction = (record: ToolRegistryRow): AdminActionPayload => {
     const nextStatus = record.status === 'active' ? 'disabled' : 'active';
+    let nextRevision = record.revision ?? 1;
     return {
       action: nextStatus === 'disabled' ? '停用工具' : '启用工具',
       targetLabel: record.name,
       targetType: 'tool',
       targetId: record.name,
       execute: async () => {
-        await updateAdminToolStatus(record.name, nextStatus, record.revision ?? 1);
+        const result = await updateAdminToolStatus(record.name, nextStatus, record.revision ?? 1);
+        nextRevision = result.revision;
       },
       onApply: () => {
         setTools((current) =>
-          current.map((tool) => (tool.key === record.key ? { ...tool, status: nextStatus } : tool)),
+          current.map((tool) =>
+            tool.key === record.key ? { ...tool, status: nextStatus, revision: nextRevision } : tool,
+          ),
         );
       },
     };
@@ -153,8 +148,8 @@ function ToolRegistrySection({
 
   useEffect(() => {
     if (!isRealMode) return;
-    loadAdminDashboard()
-      .then((dashboard) => setTools(dashboard.tools.map(registryRowFromTool)))
+    loadAdminToolRegistry()
+      .then(setTools)
       .catch(() => setTools([]));
   }, [isRealMode, refreshNonce]);
 
@@ -269,7 +264,7 @@ function ToolRegistrySection({
   const hasFilter = Boolean(query.trim()) || statusFilter !== 'all' || riskFilter !== 'all' || scopeFilter !== 'all';
   const totalResults = isRealMode || hasFilter ? filteredTools.length : 24;
   const pageSize = isFigmaOperationFixture ? 4 : 6;
-  const pageCount = isFigmaOperationFixture ? 2 : 4;
+  const pageCount = isFigmaOperationFixture ? 2 : Math.max(1, Math.ceil(totalResults / pageSize));
   const visibleResults = filteredTools.slice((page - 1) * pageSize, page * pageSize);
 
   return (
@@ -421,6 +416,10 @@ function ToolRegistrySection({
           </DialogHeader>
           {selectedTool ? (
             <div className={styles.registryDetailGrid}>
+              <span>显示名称</span>
+              <strong>{selectedTool.displayName ?? selectedTool.name}</strong>
+              <span>描述</span>
+              <strong>{selectedTool.description ?? '-'}</strong>
               <span>版本</span>
               <strong>{selectedTool.version}</strong>
               <span>状态</span>
@@ -433,6 +432,8 @@ function ToolRegistrySection({
               <strong>{selectedTool.timeoutMs}</strong>
               <span>重试策略</span>
               <strong>{selectedTool.retryPolicy}</strong>
+              <span>幂等</span>
+              <strong>{selectedTool.idempotent == null ? '-' : selectedTool.idempotent ? '是' : '否'}</strong>
               <span>入参 schema</span>
               <strong>{selectedTool.schema}</strong>
             </div>

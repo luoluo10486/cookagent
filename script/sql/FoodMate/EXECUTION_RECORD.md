@@ -2299,3 +2299,14 @@
 | 变更检查 | `git diff --check` 通过；未生成 Python 字节码缓存，未暂存 `.env`、密钥或无关用户改动。 |
 | 数据与费用边界 | 本轮未写入 PostgreSQL、Redis、Milvus 或 RocketMQ 业务数据，未调用真实付费 Chat/Embedding，未执行性能压测、组件重启、ACK/重复投递故障注入、SSE 故障恢复、备份恢复或生产验证。 |
 | 结论 | K5 核心饮食分析的理解 -> 澄清/规划 -> Java 只读校验 -> 结果安全说明业务切片完成；真实环境运行、性能和可靠性门禁仍按计划后置。 |
+
+## D149 K6 工具注册表真实接口收口（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 实现范围 | Java 工具注册表查询增加 `tool_registries.revision`，统一响应返回当前版本、输入/输出 Schema、权限、超时、重试、幂等和 `revision`；管理端真实模式改用 `GET /api/admin/tools/registry`。 |
+| 启停一致性 | 管理端启停从同一注册表响应读取 `revision`，提交确认摘要和 `Idempotency-Key`；成功后使用服务端返回的新 `revision` 更新本地行，避免后续写操作使用过期版本。 |
+| Java 业务验证 | `mvnw.cmd -pl foodmate-api,foodmate-application,foodmate-infra -am test "-Dtest=ToolRegistryControllerTest,ToolRegistryServiceTest,ToolPolicyGatewayServiceTest" "-Dsurefire.failIfNoSpecifiedTests=false"`：应用层 `13/13`、API `1/1` 通过，`BUILD SUCCESS`。 |
+| 前端业务验证 | `npm.cmd test -- --run src/services/adminToolRegistry.test.ts src/services/adminModelGovernance.test.ts`：`6/6` 通过；真实接口无 dashboard fallback 的映射契约已覆盖。 |
+| 数据与边界 | 未执行迁移、写库、Docker 重启、性能压测、故障注入或真实付费调用；未修改工具注册数据。 |
+| 结论 | K6 工具注册表的真实读取、Schema 展示和启停版本一致性已完成；管理端知识库/运行审计等页面的真实字段核对继续在后续大点集中处理。 |

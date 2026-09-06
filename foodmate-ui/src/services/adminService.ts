@@ -109,6 +109,26 @@ type AdminToolResponse = {
   last_called_at: string;
   revision?: number;
 };
+type AdminToolRegistryResponse = {
+  tool_id: number;
+  name: string;
+  display_name: string;
+  description: string;
+  category: string;
+  risk_level: string;
+  availability_scope: string;
+  status: string;
+  current_version: string;
+  version: string;
+  input_schema: unknown;
+  output_schema: unknown;
+  permissions: unknown;
+  timeout_ms: number;
+  retryable: boolean;
+  idempotent: boolean;
+  published_at: string | null;
+  revision: number;
+};
 type AdminUsageResponse = {
   provider: string;
   model: string;
@@ -230,6 +250,16 @@ export type AdminToolRow = {
   timeoutMs?: string;
   retryPolicy?: string;
   failedRate?: string;
+  displayName?: string;
+  description?: string;
+  category?: string;
+  currentVersion?: string;
+  inputSchema?: unknown;
+  outputSchema?: unknown;
+  permissions?: unknown;
+  retryable?: boolean;
+  idempotent?: boolean;
+  publishedAt?: string;
 };
 export type AdminToolRegistryRow = AdminToolRow & {
   timeoutMs: string;
@@ -422,6 +452,40 @@ function normalizeDashboard(data: AdminDashboardResponse): AdminDashboard {
 export async function loadAdminDashboard(): Promise<AdminDashboard> {
   if (import.meta.env.VITE_AGENT_MODE !== 'real') throw new Error('Real admin API is disabled');
   return normalizeDashboard(await apiRequest<AdminDashboardResponse>('/api/admin/dashboard'));
+}
+
+function normalizeToolRegistryRow(row: AdminToolRegistryResponse): AdminToolRegistryRow {
+  return {
+    key: `tool-registry-${row.tool_id}`,
+    name: row.name,
+    version: row.version || row.current_version,
+    risk: row.risk_level,
+    status: row.status,
+    scope: row.availability_scope,
+    owner: row.category,
+    schema: JSON.stringify(row.input_schema) ?? '-',
+    lastCalledAt: '-',
+    revision: row.revision,
+    timeoutMs: String(row.timeout_ms),
+    retryPolicy: row.retryable ? '可重试' : '不可重试',
+    failedRate: '-',
+    displayName: row.display_name,
+    description: row.description,
+    category: row.category,
+    currentVersion: row.current_version,
+    inputSchema: row.input_schema,
+    outputSchema: row.output_schema,
+    permissions: row.permissions,
+    retryable: row.retryable,
+    idempotent: row.idempotent,
+    publishedAt: row.published_at ?? undefined,
+  };
+}
+
+export async function loadAdminToolRegistry(): Promise<AdminToolRegistryRow[]> {
+  if (import.meta.env.VITE_AGENT_MODE !== 'real') throw new Error('Real admin API is disabled');
+  const response = await apiRequest<{ tools: AdminToolRegistryResponse[] }>('/api/admin/tools/registry');
+  return response.tools.map(normalizeToolRegistryRow);
 }
 
 type AdminOperationalQueryResponse<T> = {

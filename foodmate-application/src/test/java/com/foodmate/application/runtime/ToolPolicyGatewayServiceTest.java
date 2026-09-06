@@ -86,7 +86,8 @@ class ToolPolicyGatewayServiceTest {
                         10000,
                         false,
                         true,
-                        Instant.parse("2026-09-05T00:00:00Z"));
+                        Instant.parse("2026-09-05T00:00:00Z"),
+                        1L);
         when(registryStore.findCurrent("meal_plan.save_plan")).thenReturn(definition);
         ApprovalService approvals = mock(ApprovalService.class);
         when(store.runContext(42L)).thenReturn(new ToolGatewayPort.RunContext(7L, 8L));
@@ -219,7 +220,8 @@ class ToolPolicyGatewayServiceTest {
                                 definition.timeoutMs(),
                                 definition.retryable(),
                                 definition.idempotent(),
-                                definition.publishedAt()));
+                                definition.publishedAt(),
+                                definition.revision()));
 
         var result = gateway(registry()).execute(toolProposal("calculator", object()));
 

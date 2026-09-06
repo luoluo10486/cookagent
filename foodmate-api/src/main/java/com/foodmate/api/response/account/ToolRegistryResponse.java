@@ -32,7 +32,8 @@ public record ToolRegistryResponse(List<Tool> tools) {
                                                 value.timeoutMs(),
                                                 value.retryable(),
                                                 value.idempotent(),
-                                                value.publishedAt()))
+                                                value.publishedAt(),
+                                                value.revision()))
                         .toList());
     }
 
@@ -54,5 +55,6 @@ public record ToolRegistryResponse(List<Tool> tools) {
             int timeoutMs,
             boolean retryable,
             boolean idempotent,
-            Instant publishedAt) {}
+            Instant publishedAt,
+            long revision) {}
 }
