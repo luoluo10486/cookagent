@@ -2294,3 +2294,21 @@ Figma Design 页共有 105 张顶层画板。本轮已为 105 张画板建立独
 - [ ] 自动 diff 仍为非零，侧栏、图标、字体、头像和浏览器光栅化差异仍需后续处理，继续保持 `DIFF_REVIEW`。
 - [ ] 本节只复核一个 Admin 画板，不代表 105 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
 - [x] 本批次没有创建虚构 iconfont 字体、glyph 或 Unicode 映射，iconfont 仍为 `BLOCKED`。
+
+## 40. 2026-09-06 Admin 运行详情组增量验收
+
+本节只记录 Admin Run Detail、Tool Calls、SQL Audit、Trace 四个共享详情画板的顶栏视觉修正和增量证据，不重新采集或人工验收其余画板。diff 使用 `figma-105-mapping.json` 当前指向的既有 Figma 参考图。
+
+| 画板 | Figma 节点 | 前端入口 | 浏览器 PNG | 视口 / DPR | 差异比例 | MAE | RMSE | 最大通道差异 | 结论 |
+|---|---|---|---|---|---:|---:|---:|---:|---|
+| Admin Run Detail | `797:212` | `/admin?state=run-detail` | `dpr1-admin-run-detail-browser-2026-09-06.png` | `1440×1024 / 1` | 11.8894% | 2.361519 | 15.235328 | 211 | `DIFF_REVIEW` |
+| Admin Tool Calls | `797:359` | `/admin?state=tool-calls` | `dpr1-admin-tool-calls-browser-2026-09-06.png` | `1440×1024 / 1` | 6.4040% | 2.187168 | 15.930855 | 211 | `DIFF_REVIEW` |
+| Admin SQL Audit | `797:490` | `/admin?state=sql-audit` | `dpr1-admin-sql-audit-browser-2026-09-06.png` | `1440×1024 / 1` | 6.4125% | 2.231111 | 16.187527 | 211 | `DIFF_REVIEW` |
+| Admin Trace | `797:621` | `/admin?state=trace` | `dpr1-admin-trace-browser-2026-09-06.png` | `1440×1024 / 1` | 11.7421% | 2.290575 | 14.981216 | 211 | `DIFF_REVIEW` |
+
+- [x] 四个详情 fixture 的顶栏左右内边距已按当前 Figma 参考图调整为 `24px`，标题和刷新按钮完成 `8px` 水平校正。
+- [x] 四项截图均在 Chrome `152.0.7977.77`、`1440×1024`、DPR `1`、字体加载完成条件下采集，页面无横向溢出。
+- [x] 四项同尺寸 diff 均可复现，差异比例较本批次前记录下降；由于仍有非零差异，全部保持 `DIFF_REVIEW`。
+- [ ] 本节只复核四个 Admin 详情画板，不代表 105 个画板重新采集或完成全量人工视觉复核；全量聚合继续为 `105 DIFF_REVIEW / 0 PASS / 0 UNMAPPED / 0 SIZE_MISMATCH`。
+- [x] 本批次没有创建虚构 iconfont 字体、glyph 或 Unicode 映射，iconfont 仍为 `BLOCKED`。
+- [x] 本批次集中执行 AdminPage 定向测试 `25/25`；类型、格式、lint、构建、Figma 证据校验和 `git diff --check` 均通过，证据校验为 `structuralPass=true`、`strictDprPass=true`、`errors=[]`。

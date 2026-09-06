@@ -993,7 +993,9 @@ export function AdminPage() {
         {requestedFixture && !requestedFixture.startsWith('op-') && !isDetailFixture ? (
           <AdminFixtureOverlay state={requestedFixture} onDismiss={dismissFixture} />
         ) : null}
-        <header className={`${styles.topbar} ${isKnowledgeFixture ? styles.knowledgeFixtureTopbar : ''}`}>
+        <header
+          className={`${styles.topbar} ${isKnowledgeFixture ? styles.knowledgeFixtureTopbar : ''} ${isDetailFixture ? styles.fixtureDetailTopbar : ''}`}
+        >
           <div className={styles.topbarTitle}>
             <h1>
               {isDetailFixture

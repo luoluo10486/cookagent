@@ -887,10 +887,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 177065,
-      "differentRatio": 0.12007988823784722,
-      "meanAbsoluteError": 2.499438985188802,
-      "rmse": 15.990065611152732,
+      "differentPixels": 175316,
+      "differentRatio": 0.11889377170138889,
+      "meanAbsoluteError": 2.3615185207790796,
+      "rmse": 15.235327566595645,
       "maxChannelDelta": 211
     },
     "admin-tool-calls": {
@@ -898,10 +898,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 96507,
-      "differentRatio": 0.065447998046875,
-      "meanAbsoluteError": 2.357275221082899,
-      "rmse": 16.83938237648113,
+      "differentPixels": 94431,
+      "differentRatio": 0.06404012044270833,
+      "meanAbsoluteError": 2.187167527940538,
+      "rmse": 15.930854984489631,
       "maxChannelDelta": 211
     },
     "admin-sql-audit": {
@@ -909,10 +909,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 96632,
-      "differentRatio": 0.06553276909722222,
-      "meanAbsoluteError": 2.4012191772460936,
-      "rmse": 17.082408566139573,
+      "differentPixels": 94556,
+      "differentRatio": 0.06412489149305556,
+      "meanAbsoluteError": 2.2311114841037325,
+      "rmse": 16.187526807267794,
       "maxChannelDelta": 211
     },
     "admin-trace": {
@@ -920,10 +920,10 @@
       "width": 1440,
       "height": 1024,
       "pixelCount": 1474560,
-      "differentPixels": 174894,
-      "differentRatio": 0.11860758463541667,
-      "meanAbsoluteError": 2.4284952799479167,
-      "rmse": 15.748137079634201,
+      "differentPixels": 173145,
+      "differentRatio": 0.11742146809895833,
+      "meanAbsoluteError": 2.2905748155381946,
+      "rmse": 14.981215881611533,
       "maxChannelDelta": 211
     },
     "admin-user-detail": {

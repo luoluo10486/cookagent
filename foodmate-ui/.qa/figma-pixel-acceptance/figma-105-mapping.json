@@ -4488,8 +4488,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-29",
-        "conclusion": "Run table, filters, execution timeline, download control and Run detail fields remain represented. The shared event panel and Run detail panel now match the Figma geometry targets; shell identity, icon treatment, typography and other full-page visual differences remain, so retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "Run 表格、筛选器、执行时间线、下载控制和 Run 详情字段均已复核；详情 fixture 顶栏左右内边距已按当前映射中的 Figma 参考图调整。侧栏身份、图标、字体和其它整页视觉差异仍存在，继续保持 DIFF_REVIEW。"
       },
       "additionalVisualEvidence": [
         {
@@ -4571,8 +4571,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-29",
-        "conclusion": "依据实时 Figma 节点 797:359，工具调用表已收口为 1132x87px，表头 38px、数据行 49px；说明面板已由浏览器 y=656.4px 对齐到 Figma y=674px。浏览器字体、视口、几何和文本检查通过，左上角红黄绿窗口装饰未渲染。侧栏身份、图标光栅化及整页其他组合差异仍存在，保留 DIFF_REVIEW。"
+        "reviewedAt": "2026-09-06",
+        "conclusion": "工具调用表、参数面板、说明面板和治理 Tab 均已复核；详情 fixture 顶栏左右内边距已按当前映射中的 Figma 参考图调整。浏览器字体、视口、几何和文本检查通过，侧栏身份、图标光栅化及其它组合差异仍存在，继续保持 DIFF_REVIEW。"
       },
       "additionalVisualEvidence": [
         {
@@ -4676,8 +4676,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-29",
-        "conclusion": "SQL Audit tabs, filters, call summary table, masked payload and detail fields remain represented. The detail panel matches the Figma y=674 target and the risk filter/search row matches the 94px/794px geometry target; shell identity, icon treatment, typography and other full-page visual differences remain, so retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "SQL Audit Tab、筛选器、调用摘要表、脱敏参数面板和详情字段均已复核；详情 fixture 顶栏左右内边距已按当前映射中的 Figma 参考图调整。风险筛选器和搜索行几何保持有效，侧栏、图标、字体和其它整页视觉差异仍存在，继续保持 DIFF_REVIEW。"
       },
       "additionalVisualEvidence": [
         {
@@ -4784,8 +4784,8 @@
       "manualReview": {
         "status": "VISUAL_DIFFERENCES_CONFIRMED",
         "reviewer": "Codex",
-        "reviewedAt": "2026-08-29",
-        "conclusion": "Trace filters, run table, four event timeline cards, refresh control, log-download action and Trace detail fields remain represented. The event panel, cards, detail panel, log-download link styling, status colors, timeline colors and Run table column tracks now match the checked Figma targets; shell identity, icon treatment, typography and other full-page visual differences remain, so retain DIFF_REVIEW."
+        "reviewedAt": "2026-09-06",
+        "conclusion": "Trace 筛选器、Run 表格、四个事件时间线卡片、刷新控制、日志下载和 Trace 详情字段均已复核；详情 fixture 顶栏左右内边距已按当前映射中的 Figma 参考图调整。事件面板、时间线和表格列轨道保持有效，侧栏、图标、字体和其它整页视觉差异仍存在，继续保持 DIFF_REVIEW。"
       },
       "additionalVisualEvidence": [
         {

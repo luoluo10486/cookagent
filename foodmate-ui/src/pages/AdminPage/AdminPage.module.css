@@ -336,6 +336,12 @@
   padding-left: 24px;
 }
 
+/* Figma 详情画板的标题栏左右内边距为 24px，普通管理页继续使用通用壳层值。 */
+.fixtureDetailTopbar {
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
 .knowledgeFixtureUploadButton {
   min-width: 96px;
   height: 32px !important;
