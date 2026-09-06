@@ -720,6 +720,13 @@
   gap: 16px;
 }
 
+.memoryConflictCount {
+  align-self: center;
+  color: #b45309;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
 .filterGroup {
   display: flex;
   gap: 8px;

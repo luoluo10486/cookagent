@@ -82,7 +82,7 @@ type Memory = {
   source: string;
   relativeTime: string;
   content: string;
-  status: 'confirmed' | 'pending';
+  status: 'confirmed' | 'pending' | 'conflict';
 };
 
 const memoryTypeLabels: Record<string, string> = {
@@ -1305,9 +1305,10 @@ function MemoryRow({
   onDelete: () => void;
   onSource: () => void;
 }) {
-  const isPending = memory.status === 'pending';
+  const needsAction = memory.status !== 'confirmed';
+  const isConflict = memory.status === 'conflict';
   return (
-    <Card className={cn(styles.memoryRow, isPending && styles.memoryRowPending)}>
+    <Card className={cn(styles.memoryRow, needsAction && styles.memoryRowPending)}>
       <div className={styles.memoryAccent} />
       <div className={styles.memoryContent}>
         <div className={styles.memoryMeta}>
@@ -1315,13 +1316,15 @@ function MemoryRow({
           <span>{memory.source}</span>
         </div>
         <p className={styles.memoryQuote}>"{memory.content}"</p>
-        <StatusChip tone={isPending ? 'orange' : 'green'}>{isPending ? '待确认' : '已确认'}</StatusChip>
+        <StatusChip tone={isConflict ? 'red' : needsAction ? 'orange' : 'green'}>
+          {isConflict ? '存在冲突' : needsAction ? '待确认' : '已确认'}
+        </StatusChip>
       </div>
       <span className={styles.memoryTime}>{memory.relativeTime}</span>
       <div className={styles.memoryActions}>
-        {isPending ? (
+        {needsAction ? (
           <Button className={styles.confirmButton} type="button" size="sm" onClick={onConfirm}>
-            确认记忆
+            {isConflict ? '确认并替换' : '确认记忆'}
           </Button>
         ) : null}
         <IconAction label="查看来源会话" onClick={onSource}>
@@ -1933,9 +1936,18 @@ function RealMemoriesTab() {
   const navigate = useNavigate();
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'attention' | 'confirmed'>('all');
   const [deleting, setDeleting] = useState<Memory>();
   const [editing, setEditing] = useState<Memory>();
   const [editValue, setEditValue] = useState('');
+
+  const attentionCount = memories.filter((memory) => memory.status !== 'confirmed').length;
+  const conflictCount = memories.filter((memory) => memory.status === 'conflict').length;
+  const confirmedCount = memories.filter((memory) => memory.status === 'confirmed').length;
+  const visibleMemories = memories.filter(
+    (memory) =>
+      filter === 'all' || (filter === 'confirmed' ? memory.status === 'confirmed' : memory.status !== 'confirmed'),
+  );
 
   const refresh = () => {
     setLoading(true);
@@ -1968,15 +1980,36 @@ function RealMemoriesTab() {
         <p>FoodMate 会将你在 Agent 对话中明确确认的偏好、限制和饮食模式保存为长期记忆。</p>
       </Card>
       <div className={styles.memoryToolbar}>
-        <strong>实时数据</strong>
+        <div className={styles.filterGroup} role="tablist" aria-label="真实记忆状态">
+          {(
+            [
+              ['all', `全部 (${memories.length})`],
+              ['attention', `待处理 (${attentionCount})`],
+              ['confirmed', `已确认 (${confirmedCount})`],
+            ] as const
+          ).map(([value, label]) => (
+            <Button
+              key={value}
+              className={cn(styles.filterButton, filter === value && styles.filterButtonActive)}
+              variant="ghost"
+              type="button"
+              role="tab"
+              aria-selected={filter === value}
+              onClick={() => setFilter(value)}
+            >
+              {label}
+            </Button>
+          ))}
+          {conflictCount > 0 ? <span className={styles.memoryConflictCount}>含 {conflictCount} 条冲突</span> : null}
+        </div>
         <Button variant="outline" size="sm" type="button" onClick={() => void refresh()} disabled={loading}>
           <RefreshCw aria-hidden="true" /> 刷新
         </Button>
       </div>
       {loading ? <Card className={styles.memoryEmpty}>正在加载记忆...</Card> : null}
-      {!loading && memories.length ? (
+      {!loading && visibleMemories.length ? (
         <div className={styles.memoryList}>
-          {memories.map((memory) => (
+          {visibleMemories.map((memory) => (
             <MemoryRow
               key={memory.id}
               memory={memory}
@@ -1991,14 +2024,16 @@ function RealMemoriesTab() {
           ))}
         </div>
       ) : null}
-      {!loading && !memories.length ? (
+      {!loading && !visibleMemories.length ? (
         <Card className={styles.memoryEmpty}>
           <div className={styles.emptyEyebrow}>MEMORY / EMPTY</div>
-          <h2>暂无长期记忆</h2>
-          <p>在 Agent 对话中确认一条偏好后，它会显示在这里。</p>
-          <Button className={styles.saveButton} type="button" onClick={() => navigate('/chat')}>
-            前往对话
-          </Button>
+          <h2>{memories.length ? '没有匹配的记忆' : '暂无长期记忆'}</h2>
+          <p>{memories.length ? '当前状态筛选没有返回记录。' : '在 Agent 对话中确认一条偏好后，它会显示在这里。'}</p>
+          {!memories.length ? (
+            <Button className={styles.saveButton} type="button" onClick={() => navigate('/chat')}>
+              前往对话
+            </Button>
+          ) : null}
         </Card>
       ) : null}
       <Card className={styles.memoryGuidance}>
@@ -2084,7 +2119,8 @@ function toMemory(item: MemoryRecord): Memory {
     source: item.source || 'Agent 对话',
     relativeTime: memoryRelativeTime(updatedAt),
     content,
-    status: confirmationStatus === 'confirmed' ? 'confirmed' : 'pending',
+    status:
+      confirmationStatus === 'conflict' ? 'conflict' : confirmationStatus === 'confirmed' ? 'confirmed' : 'pending',
   };
 }
 
