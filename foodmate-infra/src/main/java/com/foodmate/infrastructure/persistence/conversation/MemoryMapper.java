@@ -25,24 +25,6 @@ public interface MemoryMapper {
 
     @Select(
             """
-            SELECT EXISTS(
-                SELECT 1 FROM user_memories
-                WHERE user_id = #{userId}
-                  AND memory_type = #{type}
-                  AND memory_key = #{key}
-                  AND is_deleted = FALSE
-                  AND (expires_at IS NULL OR expires_at > CURRENT_TIMESTAMP)
-                  AND memory_value::text <> CAST(#{valueJson} AS jsonb)::text
-            )
-            """)
-    boolean hasDifferentValue(
-            @Param("userId") long userId,
-            @Param("type") String type,
-            @Param("key") String key,
-            @Param("valueJson") String valueJson);
-
-    @Select(
-            """
             <script>
             SELECT EXISTS(
                 SELECT 1
@@ -65,6 +47,28 @@ public interface MemoryMapper {
             """)
     boolean hasSuppressedSourceMessages(
             @Param("userId") long userId, @Param("sourceMessageIds") List<String> sourceMessageIds);
+
+    @Select(
+            """
+            SELECT memory.memory_id AS memoryId, memory.memory_type AS memoryType,
+                   memory.memory_key AS memoryKey, memory.memory_value::text AS memoryValue,
+                   memory.confidence, memory.source, memory.scope,
+                   memory.confirmation_status AS confirmationStatus,
+                   memory.expires_at AS expiresAt, memory.updated_at AS updatedAt
+            FROM (SELECT pg_advisory_xact_lock(
+                    hashtextextended(CONCAT(#{userId}, ':', #{type}, ':', #{key}), 0))) lock_guard
+            JOIN user_memories memory ON memory.user_id = #{userId}
+                AND memory.memory_type = #{type}
+                AND memory.memory_key = #{key}
+            WHERE memory.is_deleted = FALSE
+              AND memory.confirmation_status <> 'rejected'
+              AND (memory.expires_at IS NULL OR memory.expires_at > CURRENT_TIMESTAMP)
+            ORDER BY memory.updated_at DESC
+            LIMIT 1
+            FOR UPDATE OF memory
+            """)
+    MemorySnapshot findActiveByKey(
+            @Param("userId") long userId, @Param("type") String type, @Param("key") String key);
 
     @Insert(
             """
@@ -96,6 +100,7 @@ public interface MemoryMapper {
             FROM user_memories memory
             WHERE memory.user_id = #{userId}
               AND memory.is_deleted = FALSE
+              AND memory.confirmation_status <> 'rejected'
               AND (memory.expires_at IS NULL OR memory.expires_at > CURRENT_TIMESTAMP)
               AND NOT EXISTS (
                   SELECT 1
@@ -115,6 +120,7 @@ public interface MemoryMapper {
                    confirmation_status AS confirmationStatus, expires_at AS expiresAt, updated_at AS updatedAt
             FROM user_memories
             WHERE memory_id = #{memoryId} AND user_id = #{userId} AND is_deleted = FALSE
+              AND confirmation_status <> 'rejected'
             """)
     MemorySnapshot findOwned(@Param("userId") long userId, @Param("memoryId") long memoryId);
 
@@ -123,6 +129,7 @@ public interface MemoryMapper {
             SELECT EXISTS(
                 SELECT 1 FROM user_memories
                 WHERE memory_id = #{memoryId} AND user_id = #{userId} AND is_deleted = FALSE
+                  AND confirmation_status <> 'rejected'
             )
             """)
     boolean existsOwned(@Param("userId") long userId, @Param("memoryId") long memoryId);
@@ -161,4 +168,22 @@ public interface MemoryMapper {
             WHERE memory_id = #{memoryId} AND user_id = #{userId} AND is_deleted = FALSE
             """)
     int confirmOwned(@Param("userId") long userId, @Param("memoryId") long memoryId);
+
+    @Update(
+            """
+            UPDATE user_memories current_memory
+            SET confirmation_status = 'rejected',
+                updated_at = CURRENT_TIMESTAMP,
+                updated_by = #{userId}
+            FROM user_memories selected_memory
+            WHERE selected_memory.memory_id = #{memoryId}
+              AND selected_memory.user_id = #{userId}
+              AND current_memory.user_id = selected_memory.user_id
+              AND current_memory.memory_type = selected_memory.memory_type
+              AND current_memory.memory_key = selected_memory.memory_key
+              AND current_memory.memory_id <> selected_memory.memory_id
+              AND current_memory.is_deleted = FALSE
+              AND current_memory.confirmation_status <> 'rejected'
+            """)
+    int rejectOtherConflicts(@Param("userId") long userId, @Param("memoryId") long memoryId);
 }

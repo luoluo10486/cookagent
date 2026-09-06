@@ -203,8 +203,10 @@ public class KnowledgeRepositoryAdapter implements KnowledgeRepository {
             }
         }
         if (!changed) return;
-        mapper.refreshJob(result.itemId());
         long jobId = mapper.jobIdForItem(result.itemId());
+        // 先锁定批次再聚合，保证并发条目全部提交后最终一次刷新可以收敛状态。
+        mapper.lockJobForRefresh(jobId);
+        mapper.refreshJob(result.itemId());
         mapper.insertJobEvent(
                 ids.nextId(),
                 jobId,

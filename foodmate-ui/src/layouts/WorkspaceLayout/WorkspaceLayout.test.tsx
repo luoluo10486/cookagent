@@ -111,12 +111,9 @@ describe('WorkspaceLayout shell controls', () => {
       resolve(process.cwd(), 'src/layouts/WorkspaceLayout/WorkspaceLayout.module.css'),
       'utf8',
     );
-    expect(stylesheet).toContain('--fm-fixture-sidebar-active-surface: #fbf7f2;');
-    expect(stylesheet).toContain('--fm-fixture-session-active-surface: #fffcf9;');
-    expect(stylesheet).toContain('--fm-fixture-top-nav-active-surface: #fffefc;');
-    expect(stylesheet).not.toContain('--fm-fixture-sidebar-active-surface: rgba(199, 150, 84, 0.08);');
-    expect(stylesheet).not.toContain('--fm-fixture-session-active-surface: rgba(255, 246, 226, 0.2);');
-    expect(stylesheet).not.toContain('--fm-fixture-top-nav-active-surface: #fffefa;');
+    expect(stylesheet).toContain('--fm-fixture-sidebar-active-surface: var(--fm-figma-workspace-sidebar-active);');
+    expect(stylesheet).toContain('--fm-fixture-session-active-surface: var(--fm-figma-workspace-session-active);');
+    expect(stylesheet).toContain('--fm-fixture-top-nav-active-surface: var(--fm-figma-workspace-top-nav-active);');
   });
 
   it('uses the Figma green token for design chat brand and agent marks', () => {
@@ -152,6 +149,25 @@ describe('WorkspaceLayout shell controls', () => {
     expect(container.querySelector('[data-name="window-controls"] img')).toHaveAttribute(
       'src',
       '/assets/figma/workspace/window-controls.svg',
+    );
+  });
+
+  it('normalizes legacy avatar overrides before they reach the shared shell', () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={['/']}>
+        <WorkspaceLayout
+          sidebarAvatarSrc="/assets/figma/workspace/home-sidebar-avatar.png"
+          topAvatarSrc="/assets/figma/workspace/home-topbar-avatar.png"
+        >
+          <div>页面内容</div>
+        </WorkspaceLayout>
+      </MemoryRouter>,
+    );
+
+    expect(container.querySelector('aside .avatar img')).toHaveAttribute('src', '/assets/avatars/default-male.svg');
+    expect(container.querySelector('main header .topAvatar img')).toHaveAttribute(
+      'src',
+      '/assets/avatars/default-male.svg',
     );
   });
 

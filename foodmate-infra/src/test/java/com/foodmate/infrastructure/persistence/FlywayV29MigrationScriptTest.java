@@ -32,7 +32,10 @@ class FlywayV29MigrationScriptTest {
         String migrationReadme = Files.readString(ROOT.resolve("migration/README.md"));
 
         assertTrue(validation.contains("invalid_provider_trace_ids"));
+        assertTrue(validation.contains("provider_trace_migration_status"));
+        assertTrue(validation.contains("\\gexec"));
         assertTrue(rollback.contains("provider_trace_id_rows"));
+        assertTrue(rollback.contains("\\gexec"));
         assertTrue(rollback.contains("回滚前置检查"));
         assertTrue(rootReadme.contains("V29") && rootReadme.contains("Trace"));
         assertTrue(migrationReadme.contains("V29__m2_1_embedding_trace.sql"));

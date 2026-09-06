@@ -38,7 +38,7 @@ import styles from './DietRecordsPage.module.css';
 type FoodItem = {
   id: string;
   name: string;
-  status: 'confirmed' | 'pending';
+  status: 'confirmed' | 'pending' | 'ambiguous' | 'invalid';
   carbs: string;
   protein: string;
   fat: string;
@@ -134,6 +134,8 @@ const figmaSidebarSessions: SessionSummary[] = [
   { id: 'dinner-protein', title: '晚餐蛋白质补充', subtitle: '12:45', active: false },
   { id: 'low-carb-plan', title: '低碳水饮食建议', subtitle: '12:45', active: false },
 ];
+
+const figmaStateSidebarSessions: SessionSummary[] = figmaSidebarSessions.slice(0, 3);
 
 type RecordsState = 'default' | 'loading' | 'empty' | 'error';
 
@@ -238,6 +240,22 @@ function asNumber(value: number | string | null | undefined) {
   return Number.isFinite(number) ? number : 0;
 }
 
+function nutritionDisplayStatus(value: string): FoodItem['status'] {
+  if (value === 'matched') return 'confirmed';
+  if (value === 'pending_confirmation') return 'ambiguous';
+  if (value === 'invalid') return 'invalid';
+  return 'pending';
+}
+
+function nutritionStatusLabel(status: FoodItem['status']) {
+  return {
+    confirmed: '已匹配',
+    pending: '待估算',
+    ambiguous: '候选待确认',
+    invalid: '无法匹配',
+  }[status];
+}
+
 function mapFoodLogs(logs: FoodLog[]): MealSection[] {
   const sections = Object.keys(realMealMeta).map((id) => {
     const mealId = id as MealSection['id'];
@@ -254,7 +272,7 @@ function mapFoodLogs(logs: FoodLog[]): MealSection[] {
         log.items.map((item) => ({
           id: `${log.food_log_id}-${item.food_log_item_id}`,
           name: item.raw_name,
-          status: item.nutrition_status === 'matched' ? ('confirmed' as const) : ('pending' as const),
+          status: nutritionDisplayStatus(item.nutrition_status),
           carbs: item.carbs_g == null ? 'C: 待估算' : `C: ${formatMetricNumber(asNumber(item.carbs_g))}g`,
           protein: item.protein_g == null ? 'P: 待估算' : `P: ${formatMetricNumber(asNumber(item.protein_g))}g`,
           fat: item.fat_g == null ? 'F: 待估算' : `F: ${formatMetricNumber(asNumber(item.fat_g))}g`,
@@ -303,6 +321,7 @@ export function DietRecordsPage() {
   const recordsState = getRecordsState(searchParams.get('state'));
   const isRealMode = import.meta.env.VITE_AGENT_MODE === 'real';
   const isFigmaFixture = !isRealMode && (searchParams.get('state') === 'v2' || recordsState !== 'default');
+  const isFigmaStateFixture = isFigmaFixture && recordsState !== 'default';
   const [selectedDate, setSelectedDate] = useState(() => (isRealMode ? new Date() : initialDate));
   const [view, setView] = useState<'day' | 'week'>('day');
   const [meals, setMeals] = useState<MealSection[]>(initialMeals);
@@ -549,8 +568,18 @@ export function DietRecordsPage() {
           <div className={styles.foodRow} key={item.id}>
             <div className={styles.foodName}>
               <strong>{item.name}</strong>
-              <span className={item.status === 'confirmed' ? styles.confirmed : styles.pending}>
-                {item.status === 'confirmed' ? '已确认' : '待确认'}
+              <span
+                className={
+                  item.status === 'confirmed'
+                    ? styles.confirmed
+                    : item.status === 'ambiguous'
+                      ? styles.ambiguous
+                      : item.status === 'invalid'
+                        ? styles.invalid
+                        : styles.pending
+                }
+              >
+                {nutritionStatusLabel(item.status)}
               </span>
             </div>
             <div className={styles.foodMeta}>
@@ -593,12 +622,24 @@ export function DietRecordsPage() {
   return (
     <WorkspaceLayout
       activeModule="records"
+      fixtureVariant={isFigmaFixture ? 'diet-records' : undefined}
       displayNameOverride={isFigmaFixture ? 'Anddy' : undefined}
       profileIdOverride={isFigmaFixture ? '1234567' : undefined}
       sidebarAvatarSrc={isFigmaFixture ? FIGMA_WORKSPACE_AVATARS.sidebar : undefined}
       topAvatarSrc={isFigmaFixture ? FIGMA_WORKSPACE_AVATARS.topbar : undefined}
       showKnowledgeTopNav={!isFigmaFixture}
-      sidebarFixture={isFigmaFixture ? { sessions: figmaSidebarSessions } : undefined}
+      showWindowControls={isFigmaFixture && recordsState === 'default'}
+      sidebarFixture={
+        isFigmaFixture
+          ? {
+              sessions: isFigmaStateFixture ? figmaStateSidebarSessions : figmaSidebarSessions,
+              hideSecondaryNavigation: isFigmaStateFixture,
+              hideSessionPagination: isFigmaStateFixture,
+              hideSessionSearch: isFigmaStateFixture,
+              sessionCountLabel: isFigmaStateFixture ? '共 15 条会话' : undefined,
+            }
+          : undefined
+      }
     >
       <div className={`${styles.page} fm-enter`}>
         <section className={styles.recordsBody} aria-label="饮食记录" data-figma-node-id="640:660">

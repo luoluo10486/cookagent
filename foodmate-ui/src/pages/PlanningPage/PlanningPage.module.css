@@ -300,8 +300,8 @@
 }
 
 .feedbackIconError {
-  background: rgba(255, 117, 118, 0.06);
-  color: #ff7576;
+  background: #fff1f1;
+  color: #ff3131;
 }
 
 .feedbackCard h1 {
@@ -390,6 +390,17 @@
 
 .feedbackCardError .feedbackActions button {
   line-height: 18px;
+}
+
+.feedbackCardError .feedbackPrimary {
+  background: #4caf50;
+  color: #ffffff;
+}
+
+.feedbackCardError .feedbackPrimary:hover,
+.feedbackCardError .feedbackPrimary:focus-visible {
+  background: #43a047;
+  color: #ffffff;
 }
 
 .feedbackCardError .feedbackSecondary {

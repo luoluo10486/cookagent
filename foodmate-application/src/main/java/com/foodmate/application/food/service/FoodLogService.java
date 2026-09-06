@@ -9,12 +9,12 @@ import java.util.List;
 public interface FoodLogService {
     FoodLogView create(long userId, CreateCommand command);
 
-    /** Replaces the editable content of an existing food log using optimistic concurrency. */
+    /** 使用乐观并发完整替换已有饮食记录的可编辑内容。 */
     FoodLogView update(long userId, long foodLogId, long revision, UpdateCommand command);
 
     List<FoodLogView> list(long userId, Instant from, Instant to);
 
-    /** Lists the current user's soft-deleted records so they can be restored. */
+    /** 查询当前用户可恢复的软删除饮食记录。 */
     List<FoodLogView> listDeleted(long userId);
 
     void delete(long userId, long foodLogId, long revision, String idempotencyKey);
@@ -58,7 +58,11 @@ public interface FoodLogService {
         }
     }
 
-    record ItemCommand(String rawName, BigDecimal amount, String unit) {}
+    record ItemCommand(String rawName, BigDecimal amount, String unit, Long nutritionFoodId) {
+        public ItemCommand(String rawName, BigDecimal amount, String unit) {
+            this(rawName, amount, unit, null);
+        }
+    }
 
     record FoodLogView(
             long foodLogId,

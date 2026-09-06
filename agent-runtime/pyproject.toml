@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [tool.setuptools]
-py-modules = ["runtime_server", "runtime_env", "mq_runtime", "agent_core", "model_provider", "paid_execution", "proposal_protocol", "sql_planner", "knowledge_rag", "knowledge_worker"]
+py-modules = ["runtime_server", "runtime_env", "mq_runtime", "agent_core", "model_provider", "paid_execution", "proposal_protocol", "sql_planner", "knowledge_rag", "knowledge_worker", "nutrition_catalog_rag"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

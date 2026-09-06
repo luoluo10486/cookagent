@@ -160,6 +160,41 @@ class Context:
 class ContextBuilder:
     """按固定优先级组装上下文；Python 只读取 Java 已授权的上下文。"""
 
+    ALLOWED_MEMORY_TYPES = frozenset(
+        {
+            "preference",
+            "constraint",
+            "routine",
+            "cooking_skill",
+            "budget_habit",
+            "time_habit",
+            "interaction_preference",
+            "user_rule",
+        }
+    )
+    INTENT_MEMORY_TYPES = {
+        "planning": ALLOWED_MEMORY_TYPES,
+        "cooking": frozenset(
+            {
+                "preference",
+                "constraint",
+                "routine",
+                "cooking_skill",
+                "interaction_preference",
+                "user_rule",
+            }
+        ),
+        "record": frozenset(
+            {"preference", "constraint", "routine", "budget_habit", "user_rule"}
+        ),
+        "nutrition": frozenset(
+            {"preference", "constraint", "budget_habit", "user_rule"}
+        ),
+        "analysis": frozenset(
+            {"preference", "constraint", "budget_habit", "user_rule"}
+        ),
+    }
+
     def __init__(self, max_recent_messages: int = 8, max_context_tokens: int = 12000):
         self.max_recent_messages = max_recent_messages
         self.max_context_tokens = max_context_tokens
@@ -170,6 +205,32 @@ class ContextBuilder:
         raw = json.dumps({"messages": messages, "summary": summary, "memories": memories, "tool_results": tool_results}, ensure_ascii=False, separators=(",", ":"), default=str)
         return max(1, len(raw))
 
+    def _authorized_memories(self, raw_memories: Any, route: Any) -> tuple[dict[str, Any], ...]:
+        """再次收窄 Java 授权范围，避免 Runtime 直接接受越权记忆类型。"""
+        intent = str(getattr(route, "intent", "general"))
+        allowed_types = self.INTENT_MEMORY_TYPES.get(intent, self.ALLOWED_MEMORY_TYPES)
+        result: list[dict[str, Any]] = []
+        seen_keys: set[tuple[str, str]] = set()
+        for item in raw_memories or ():
+            if not isinstance(item, dict):
+                continue
+            memory_id = str(item.get("memory_id") or "").strip()
+            memory_type = str(item.get("memory_type") or "").strip().lower()
+            memory_key = str(item.get("memory_key") or "").strip()
+            # 兼容只携带 memory_id 的旧回放事件；真实 Java 授权上下文必须带类型。
+            if not memory_id or (memory_type and memory_type not in allowed_types):
+                continue
+            if item.get("confirmation_status") not in (None, "confirmed"):
+                continue
+            dedup_key = (memory_type, memory_key or memory_id)
+            if dedup_key in seen_keys:
+                continue
+            seen_keys.add(dedup_key)
+            result.append(dict(item))
+            if len(result) >= 8:
+                break
+        return tuple(result)
+
     def build(self, command: dict[str, Any], route: RouteDecision) -> Context:
         authorized = command.get("authorized_context") or {}
         raw_messages = list(authorized.get("recent_messages") or [])
@@ -178,7 +239,8 @@ class ContextBuilder:
             raw_messages.append(current)
         messages = list(raw_messages[-self.max_recent_messages:])
         summary = authorized.get("session_summary")
-        memories = tuple(authorized.get("long_term_memories") or ())
+        summary = summary if isinstance(summary, dict) else None
+        memories = self._authorized_memories(authorized.get("long_term_memories"), route)
         tool_results = tuple(authorized.get("tool_results") or ())
         analysis_plan = authorized.get("database_query_plan")
         if not isinstance(analysis_plan, dict):
@@ -227,10 +289,17 @@ class DeterministicRouter:
             "计算" in text and any(character.isdigit() for character in text)
         ):
             return RouteDecision("calculation", "complex", risk)
-        # Planning requests commonly mention breakfast/lunch/dinner while
-        # describing the requested schedule. An explicit plan request wins
-        # over analytical words such as "蛋白质" in its constraints.
-        if any(word in text for word in ("计划", "食谱", "购物清单")):
+        # 读取计划、清单或完成度属于 SQL Agent；只有生成、保存才进入写入规划。
+        if any(word in text for word in ("完成度", "缺项", "出现次数", "出现了几次", "吃了几次", "吃过几次")):
+            return RouteDecision("analysis", "complex", risk)
+        if any(word in text for word in ("查看", "查询", "列出", "获取")) and any(
+            word in text for word in ("计划", "购物清单", "采购清单")
+        ):
+            return RouteDecision("analysis", "complex", risk)
+        # 计划请求经常包含早餐、午餐和晚餐；明确的写入意图优先于约束中的“蛋白质”等分析词。
+        if any(word in text for word in ("计划", "食谱", "购物清单")) and not any(
+            word in text for word in ("分析", "查看", "查询", "统计")
+        ):
             return RouteDecision("planning", "complex", risk, ("days",) if "天" not in text else ())
         # Analysis questions often describe the absence of records. Match the
         # requested operation before the noun "记录" so those questions do not
@@ -441,9 +510,29 @@ class DeterministicComposer:
         plan = context.analysis_plan or {}
         time_range = plan.get("time_range") or {}
         days = time_range.get("days") if isinstance(time_range, dict) else None
-        range_text = f"最近 {days} 天" if days else "已授权时间范围"
-        metrics = ", ".join(str(item) for item in plan.get("metrics") or ()) or "已批准指标"
-        dimensions = ", ".join(str(item) for item in plan.get("dimensions") or ()) or "无分组维度"
+        range_text = {
+            "today": "今天",
+            "yesterday": "昨天",
+        }.get(
+            time_range.get("label") if isinstance(time_range, dict) else None,
+            f"最近 {days} 天" if days else "当前有效数据",
+        )
+        metric_labels = {
+            "calories_kcal": "热量（kcal）",
+            "protein_g": "蛋白质（g）",
+            "fat_g": "脂肪（g）",
+            "carbs_g": "碳水（g）",
+            "occurrence_count": "出现次数",
+            "completion_ratio": "计划生命周期完成度",
+            "missing_item_groups": "待确认购物清单数",
+        }
+        metrics = "、".join(
+            metric_labels.get(str(item), str(item)) for item in plan.get("metrics") or ()
+        ) or "已批准指标"
+        dimension_labels = {"meal_type": "餐次", "raw_name": "食材"}
+        dimensions = "、".join(
+            dimension_labels.get(str(item), str(item)) for item in plan.get("dimensions") or ()
+        ) or "不分组"
         status = database.get("status")
         if status != "succeeded":
             code = str(database.get("error_code") or "DATABASE_QUERY_FAILED")
@@ -454,11 +543,32 @@ class DeterministicComposer:
             )
         rows = database.get("rows") or []
         if not rows:
+            empty_reason = {
+                "food_occurrence": "没有找到该食材在此时间范围内的有效饮食记录",
+                "meal_plan_completion": "当前没有可用的未删除餐食计划",
+                "shopping_list_missing": "当前没有可用的未删除购物清单",
+            }.get(str(plan.get("intent")), "未找到可用的饮食记录")
             return (
                 f"时间范围：{range_text}。统计口径：{metrics}；分组维度：{dimensions}。"
-                "数据覆盖：未找到可用的饮食记录。当前没有足够数据生成趋势结论，"
-                "建议先补充饮食记录后再分析。"
+                f"数据为空原因：{empty_reason}。"
             )
+        intent = str(plan.get("intent") or "")
+        if intent == "food_occurrence":
+            details = "、".join(
+                f"{str(row.get('food_name') or '未命名食材')} {row.get('occurrence_count', 0)} 次"
+                for row in rows[:6]
+            )
+            return f"时间范围：{range_text}。统计口径：按有效饮食明细计数。结果：{details}。"
+        if intent == "meal_plan_completion":
+            details = "、".join(
+                f"{str(row.get('plan_name') or row.get('meal_plan_id') or '未命名计划')}"
+                f" {float(row.get('completion_ratio', 0)) * 100:g}%"
+                for row in rows[:6]
+            )
+            return f"统计口径：计划状态完成度（已保存 100%、已校验 50%、草稿 0%）。结果：{details}。"
+        if intent == "shopping_list_missing":
+            pending = sum(int(row.get("missing_item_groups") or 0) for row in rows)
+            return f"统计口径：未确认清单视为待处理清单。结果：{pending} 个清单仍有待确认项。"
         safe_rows = json.dumps(rows[:20], ensure_ascii=False, separators=(",", ":"), default=str)
         if len(safe_rows) > 2_000:
             safe_rows = safe_rows[:2_000] + "..."
@@ -522,19 +632,134 @@ def split_answer(answer: str, max_bytes: int = 2048) -> list[str]:
     return chunks or [""]
 
 
+_MEMORY_BLOCKED_TERMS = (
+    "营养目标",
+    "摄入目标",
+    "热量目标",
+    "蛋白质目标",
+    "疾病",
+    "诊断",
+    "处方",
+    "药物",
+    "病史",
+    "过敏",
+    "糖尿病",
+    "高血压",
+    "肾病",
+    "medical",
+    "diagnos",
+    "prescription",
+    "medication",
+)
+_MEMORY_ONE_SHOT_TERMS = ("今天", "这次", "一次", "本周", "当前", "现在")
+
+
+def _memory_source_ids(context: Context, content: str) -> list[str]:
+    """只选择支持当前陈述的用户消息，避免把助手内容当成记忆来源。"""
+    normalized = content.strip()
+    user_ids = [
+        str(item.get("message_id"))
+        for item in reversed(context.messages)
+        if item.get("role") in ("user", "USER")
+        and item.get("message_id") is not None
+        and str(item.get("content") or "").strip() == normalized
+    ]
+    if user_ids:
+        return list(dict.fromkeys(user_ids))[:4]
+    return list(dict.fromkeys(str(value) for value in context.sources.get("message_id", ())))[-1:]
+
+
+def _memory_value(value: str, limit: int = 160) -> str:
+    return re.sub(r"\s+", " ", value).strip()[:limit]
+
+
 def generate_memory_candidates(context: Context, content: str, max_candidates: int = 3) -> list[dict[str, Any]]:
-    """只生成候选，不写 Java 的 user_memories 权威表。"""
+    """从用户的稳定偏好中生成短结构化候选，不保存整句请求或回答。"""
+    text = content.strip()
+    if not text or len(text) > 400:
+        return []
+    lower = text.lower()
+    if any(term in lower for term in _MEMORY_ONE_SHOT_TERMS) and not any(
+        marker in lower for marker in ("通常", "一般", "一直", "长期", "我的", "我喜欢", "我不吃", "我偏好")
+    ):
+        return []
+    if any(term in lower for term in _MEMORY_BLOCKED_TERMS):
+        return []
+    source_ids = _memory_source_ids(context, text)
+    if not source_ids:
+        return []
+
     candidates: list[dict[str, Any]] = []
-    if "我喜欢" in content or "我不吃" in content:
-        candidates.append({
-            "memory_type": "preference",
-            "memory_key": "user_stated_preference",
-            "memory_value": {"text": content[:200]},
-            "confidence": 0.95,
-            "scope": "global",
-            "source_message_ids": list(context.sources["message_id"]),
-        })
-    return candidates[:max_candidates]
+    seen_keys: set[tuple[str, str]] = set()
+
+    def add(memory_type: str, memory_key: str, value: dict[str, str], confidence: float = 0.92) -> None:
+        key = (memory_type, memory_key)
+        if key in seen_keys or len(candidates) >= max_candidates:
+            return
+        seen_keys.add(key)
+        candidates.append(
+            {
+                "memory_type": memory_type,
+                "memory_key": memory_key,
+                "memory_value": value,
+                "confidence": confidence,
+                "source": "conversation",
+                "scope": "global",
+                "source_message_ids": source_ids,
+            }
+        )
+
+    preference = re.search(
+        r"(?:我(?:比较)?喜欢|我偏好|我更喜欢|我爱吃|I\s+(?:like|prefer))\s*([^，。；;\n]{1,80})",
+        text,
+        re.IGNORECASE,
+    )
+    if preference:
+        add("preference", "diet_style", {"preference": _memory_value(preference.group(1))})
+
+    avoid = re.search(
+        r"(?:我不吃|我不喜欢|我忌口|我避免|我不想吃|I\s+(?:don't eat|avoid|dislike))\s*([^，。；;\n]{1,80})",
+        text,
+        re.IGNORECASE,
+    )
+    if avoid:
+        add("constraint", "avoid_foods", {"foods": _memory_value(avoid.group(1))})
+
+    budget = re.search(
+        r"(?:我的|每天的|每餐的)?预算(?:是|为|控制在)?\s*((?:每天|每餐)?\s*[0-9]{1,5}\s*(?:元|块)?(?:每天|/天|每餐|/餐)?)",
+        text,
+        re.IGNORECASE,
+    )
+    if budget:
+        value = _memory_value(budget.group(1))
+        key = "meal_budget" if any(term in text for term in ("每餐", "/餐")) else "daily_budget"
+        add("budget_habit", key, {"amount": value})
+
+    cooking = re.search(
+        r"(?:我不会做饭|我不太会做饭|我(?:只)?会做|我的烹饪能力是)\s*([^，。；;\n]{0,80})",
+        text,
+        re.IGNORECASE,
+    )
+    if cooking:
+        value = _memory_value(cooking.group(0))
+        add("cooking_skill", "self_reported_level", {"description": value})
+
+    meal_time = re.search(
+        r"(?:我通常|我一般|我习惯在|我的用餐时间是)\s*([^，。；;\n]{1,80})",
+        text,
+        re.IGNORECASE,
+    )
+    if meal_time:
+        add("time_habit", "meal_time", {"description": _memory_value(meal_time.group(1))})
+
+    interaction = re.search(
+        r"(?:以后|平时)?(?:回答|交流)(?:请|尽量)?\s*(简洁|详细|使用中文|用中文|分点|表格)",
+        text,
+        re.IGNORECASE,
+    )
+    if interaction:
+        add("interaction_preference", "response_style", {"style": _memory_value(interaction.group(1))})
+    return candidates
 
 
 def generate_tool_proposals(
@@ -711,56 +936,62 @@ def generate_tool_proposals(
             if isinstance(authorized, dict):
                 authorized["_sql_planner_plan"] = plan.as_dict()
         if plan.status == "need_clarification":
+            code = (
+                "SQL_PLANNER_FOOD_NAME_REQUIRED"
+                if "food_name" in plan.missing_slots
+                else "SQL_PLANNER_TIME_RANGE_REQUIRED"
+            )
             raise SqlPlannerError(
-                "SQL_PLANNER_TIME_RANGE_REQUIRED",
-                "analysis query requires a time range",
+                code,
+                "analysis query requires clarification",
                 plan.missing_slots,
             )
-        time_result = next(
-            (item for item in reversed(tool_results) if item.get("tool_name") == "time_parser"),
-            None,
-        )
-        if time_result is None:
-            invocation_id = str(
-                "time_"
-                + hashlib.sha256(
-                    (str(command["run_id"]) + question).encode("utf-8")
-                ).hexdigest()[:24]
+        if plan.time_range is not None:
+            time_result = next(
+                (item for item in reversed(tool_results) if item.get("tool_name") == "time_parser"),
+                None,
             )
-            proposal = Proposal(
-                proposal_id="prop_" + invocation_id,
-                run_id=str(command["run_id"]),
-                proposal_type="tool",
-                schema_version="v1",
-                payload={
-                    "invocation_id": invocation_id,
-                    "idempotency_key": "time_"
-                    + hashlib.sha256(question.encode("utf-8")).hexdigest()[:32],
-                },
-                requires_confirmation=False,
-                tool_name="time_parser",
-                input={
-                    "question": question,
-                    "timezone": (plan.time_range or {}).get("timezone", "Asia/Shanghai"),
-                },
-            ).as_dict()
-            validate_proposal(
-                Proposal(
-                    proposal["proposal_id"],
-                    proposal["run_id"],
-                    proposal["proposal_type"],
-                    proposal["schema_version"],
-                    proposal["payload"],
-                    proposal["requires_confirmation"],
-                    proposal["request_hash"],
-                    proposal.get("tool_name"),
-                    proposal.get("confirmation_ref"),
-                    proposal.get("input"),
+            if time_result is None:
+                invocation_id = str(
+                    "time_"
+                    + hashlib.sha256(
+                        (str(command["run_id"]) + question).encode("utf-8")
+                    ).hexdigest()[:24]
                 )
-            )
-            return [proposal]
-        if time_result.get("status") != "succeeded":
-            return []
+                proposal = Proposal(
+                    proposal_id="prop_" + invocation_id,
+                    run_id=str(command["run_id"]),
+                    proposal_type="tool",
+                    schema_version="v1",
+                    payload={
+                        "invocation_id": invocation_id,
+                        "idempotency_key": "time_"
+                        + hashlib.sha256(question.encode("utf-8")).hexdigest()[:32],
+                    },
+                    requires_confirmation=False,
+                    tool_name="time_parser",
+                    input={
+                        "question": question,
+                        "timezone": (plan.time_range or {}).get("timezone", "Asia/Shanghai"),
+                    },
+                ).as_dict()
+                validate_proposal(
+                    Proposal(
+                        proposal["proposal_id"],
+                        proposal["run_id"],
+                        proposal["proposal_type"],
+                        proposal["schema_version"],
+                        proposal["payload"],
+                        proposal["requires_confirmation"],
+                        proposal["request_hash"],
+                        proposal.get("tool_name"),
+                        proposal.get("confirmation_ref"),
+                        proposal.get("input"),
+                    )
+                )
+                return [proposal]
+            if time_result.get("status") != "succeeded":
+                return []
         statement = str(plan.candidate_sql)
         invocation_id = str(
             request.get("invocation_id")
@@ -1065,6 +1296,17 @@ def _validate_meal_plan_candidate(value: Any) -> None:
             raise ValueError("plan")
 
 
+def _sql_clarification_answer(error: SqlPlannerError) -> str:
+    """将 SQL Agent 的结构化澄清错误转换为用户可执行的下一步。"""
+    if error.code == "SQL_PLANNER_TIME_RANGE_REQUIRED":
+        return "为了分析饮食数据，请补充时间范围，例如今天、昨天或最近 7 天。"
+    if error.code == "SQL_PLANNER_FOOD_NAME_REQUIRED":
+        return "请明确要统计的食材名称；生熟、部位或具体品种有歧义时，请选择完整名称。"
+    if error.code == "SQL_PLANNER_FIELD_UNSUPPORTED":
+        return "当前 SQL Agent 仅支持热量、蛋白质、脂肪和碳水统计，暂不支持该营养字段。"
+    return "当前查询需要补充或修正条件后才能继续。"
+
+
 class InMemoryCheckpoint:
     """本地开发 checkpoint；生产接入 Redis 时复用相同 CAS 接口。"""
 
@@ -1243,8 +1485,12 @@ def run_deterministic(
                 proposals,
             )
     except SqlPlannerError as error:
-        if error.code == "SQL_PLANNER_TIME_RANGE_REQUIRED":
-            answer = "为了分析摄入情况，请补充时间范围，例如最近 7 天。"
+        if error.code in {
+            "SQL_PLANNER_TIME_RANGE_REQUIRED",
+            "SQL_PLANNER_FOOD_NAME_REQUIRED",
+            "SQL_PLANNER_FIELD_UNSUPPORTED",
+        }:
+            answer = _sql_clarification_answer(error)
             decision = EvalDecision("pass", error.code)
             return AgentExecution(
                 route,

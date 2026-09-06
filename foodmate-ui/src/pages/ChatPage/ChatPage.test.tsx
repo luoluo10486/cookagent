@@ -144,7 +144,7 @@ describe('ChatPage Figma 默认状态', () => {
     const stylesheet = readFileSync(resolve(process.cwd(), 'src/pages/ChatPage/ChatPage.module.css'), 'utf8');
 
     expect(stylesheet).toContain('.designChatPage .assistant .messageBubble');
-    expect(stylesheet).toContain('--fm-fixture-assistant-surface: #f4f6f5;');
+    expect(stylesheet).toContain('--fm-fixture-assistant-surface: var(--fm-fixture-chat-control-surface);');
   });
 
   it('uses the Figma surface for the Composer input row in the fixture', () => {
@@ -154,7 +154,7 @@ describe('ChatPage Figma 默认状态', () => {
       'utf8',
     );
 
-    expect(pageStylesheet).toContain('--fm-fixture-composer-input-surface: #fcfcfc;');
+    expect(pageStylesheet).toContain('--fm-fixture-composer-input-surface: var(--fm-fixture-chat-bg);');
     expect(composerStylesheet).toContain('background: var(--fm-fixture-composer-input-surface, var(--fm-bg-soft));');
   });
 
@@ -251,21 +251,15 @@ describe('ChatPage Agent remaining states', () => {
     expect(document.querySelector('img[src="/assets/avatars/default-male.svg"]')).toBeInTheDocument();
   });
 
-  it('uses the Figma avatar assets for the default Chat fixture shell', () => {
+  it('uses the registered gender defaults for the default Chat fixture shell', () => {
     renderState('figma-v2');
 
-    expect(document.querySelector('aside .avatar img')).toHaveAttribute(
-      'src',
-      '/assets/figma/workspace/home-sidebar-avatar.png',
-    );
+    expect(document.querySelector('aside .avatar img')).toHaveAttribute('src', '/assets/avatars/default-male.svg');
     expect(document.querySelector('main header .topAvatar img')).toHaveAttribute(
       'src',
-      '/assets/figma/agent-chat/figma-v2-topbar-avatar.png',
+      '/assets/avatars/default-male.svg',
     );
-    expect(document.querySelector('.userAvatar img')).toHaveAttribute(
-      'src',
-      '/assets/figma/agent-chat/figma-v2-message-avatar.png',
-    );
+    expect(document.querySelector('.userAvatar img')).toHaveAttribute('src', '/assets/avatars/default-female.svg');
   });
 
   it('renders write confirmation details and records confirm/cancel actions', () => {

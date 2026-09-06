@@ -580,6 +580,8 @@ export function PlanningPage() {
     };
   }, [isRealMode, selectedPlan]);
   const isFigmaFixture = !isRealMode && (requestedView === 'v2' || view !== 'default');
+  // 错误态画板不包含会话搜索和历史列表，避免把默认工作台壳层带入状态稿。
+  const isPlanningErrorFixture = isFigmaFixture && view === 'error';
 
   const navigatePlanningView = (nextView: MealPlanningFlowView | 'default') => {
     navigate(nextView === 'default' ? '/planning' : `/planning?state=${nextView}`);
@@ -667,6 +669,7 @@ export function PlanningPage() {
   return (
     <WorkspaceLayout
       activeModule="planning"
+      fixtureVariant={isFigmaFixture ? 'planning' : undefined}
       rightRail={
         view === 'default' && (!isRealMode || selectedPlan) ? (
           <PlanSidebar
@@ -683,7 +686,16 @@ export function PlanningPage() {
       sidebarAvatarSrc={isFigmaFixture ? FIGMA_WORKSPACE_AVATARS.sidebar : undefined}
       topAvatarSrc={isFigmaFixture ? FIGMA_WORKSPACE_AVATARS.topbar : undefined}
       showKnowledgeTopNav={!isFigmaFixture}
-      sidebarFixture={isFigmaFixture ? { sessions: figmaSidebarSessions } : undefined}
+      hideSessionHistory={isPlanningErrorFixture}
+      sidebarFixture={
+        isFigmaFixture
+          ? {
+              sessions: figmaSidebarSessions,
+              hideSessionSearch: isPlanningErrorFixture,
+              hideSessionPagination: isPlanningErrorFixture,
+            }
+          : undefined
+      }
     >
       {content}
     </WorkspaceLayout>

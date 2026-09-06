@@ -57,8 +57,16 @@ describe('KnowledgeSection real mode', () => {
     const fetchMock = vi.fn().mockImplementation((input: RequestInfo | URL, init?: RequestInit) => {
       const path = String(input);
       const method = (init?.method ?? 'GET').toUpperCase();
-      if (path === '/api/admin/dashboard') {
-        return Promise.resolve(new Response(JSON.stringify({ success: true, data: dashboard }), { status: 200 }));
+      if (path === '/api/admin/queries/knowledge?page=1&size=100') {
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({
+              success: true,
+              data: { resource: 'knowledge', items: dashboard.knowledge, total: 1, page: 1, size: 100 },
+            }),
+            { status: 200 },
+          ),
+        );
       }
       if (path === '/api/admin/knowledge-documents/upload-batches') {
         return Promise.resolve(

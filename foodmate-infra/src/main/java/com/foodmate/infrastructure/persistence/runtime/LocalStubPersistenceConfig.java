@@ -71,13 +71,12 @@ public class LocalStubPersistenceConfig {
                 return null;
             }
 
-            public boolean hasDifferentValue(
-                    long userId, String type, String key, String valueJson) {
+            public boolean hasSuppressedSourceMessages(long userId, List<String> sourceMessageIds) {
                 return false;
             }
 
-            public boolean hasSuppressedSourceMessages(long userId, List<String> sourceMessageIds) {
-                return false;
+            public MemorySnapshot findActiveByKey(long userId, String type, String key) {
+                return null;
             }
 
             public void insert(NewMemory memory) {
@@ -105,6 +104,10 @@ public class LocalStubPersistenceConfig {
             }
 
             public int confirmOwned(long userId, long memoryId) {
+                throw unavailable();
+            }
+
+            public int rejectOtherConflicts(long userId, long memoryId) {
                 throw unavailable();
             }
         };
@@ -696,6 +699,14 @@ public class LocalStubPersistenceConfig {
                 return 0;
             }
 
+            public List<OperationAuditRow> operationAuditsForUser(long userId, int limit, int offset) {
+                return List.of();
+            }
+
+            public long countOperationAuditsForUser(long userId) {
+                return 0;
+            }
+
             public List<DlqRow> dlq(Query query) {
                 return List.of();
             }
@@ -778,6 +789,8 @@ public class LocalStubPersistenceConfig {
                                 catalog(datasourceId, "food_log_items", "is_deleted", "bool"),
                                 catalog(datasourceId, "meal_plans", "meal_plan_id", "bigint"),
                                 catalog(datasourceId, "meal_plans", "user_id", "bigint"),
+                                catalog(datasourceId, "meal_plans", "plan_name", "varchar"),
+                                catalog(datasourceId, "meal_plans", "days", "integer"),
                                 catalog(datasourceId, "meal_plans", "status", "varchar"),
                                 catalog(datasourceId, "meal_plans", "updated_at", "timestamptz"),
                                 catalog(datasourceId, "meal_plans", "is_deleted", "bool"),

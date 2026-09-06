@@ -16,7 +16,7 @@ public interface ToolRegistryMapper {
                     + " AS currentVersion,s.version,s.input_schema::text AS"
                     + " inputSchemaJson,s.output_schema::text AS outputSchemaJson,s.permissions::text"
                     + " AS permissionsJson,s.timeout_ms AS"
-                    + " timeoutMs,s.retryable,s.idempotent,s.published_at AS publishedAt FROM"
+                    + " timeoutMs,s.retryable,s.idempotent,s.published_at AS publishedAt,t.revision AS revision FROM"
                     + " tool_registries t LEFT JOIN tool_schema_versions s ON s.tool_id=t.tool_id AND"
                     + " s.version=t.current_version AND s.is_deleted=FALSE WHERE t.is_deleted=FALSE"
                     + " ORDER BY t.name")
@@ -29,7 +29,7 @@ public interface ToolRegistryMapper {
                     + " AS currentVersion,s.version,s.input_schema::text AS"
                     + " inputSchemaJson,s.output_schema::text AS outputSchemaJson,s.permissions::text"
                     + " AS permissionsJson,s.timeout_ms AS"
-                    + " timeoutMs,s.retryable,s.idempotent,s.published_at AS publishedAt FROM"
+                    + " timeoutMs,s.retryable,s.idempotent,s.published_at AS publishedAt,t.revision AS revision FROM"
                     + " tool_registries t JOIN tool_schema_versions s ON s.tool_id=t.tool_id AND"
                     + " s.version=t.current_version AND s.is_deleted=FALSE WHERE t.name=#{name} AND"
                     + " t.is_deleted=FALSE")
@@ -42,7 +42,7 @@ public interface ToolRegistryMapper {
                     + " AS currentVersion,s.version,s.input_schema::text AS"
                     + " inputSchemaJson,s.output_schema::text AS outputSchemaJson,s.permissions::text"
                     + " AS permissionsJson,s.timeout_ms AS"
-                    + " timeoutMs,s.retryable,s.idempotent,s.published_at AS publishedAt FROM"
+                    + " timeoutMs,s.retryable,s.idempotent,s.published_at AS publishedAt,t.revision AS revision FROM"
                     + " tool_registries t JOIN tool_schema_versions s ON s.tool_id=t.tool_id AND"
                     + " s.version=#{version} AND s.is_deleted=FALSE WHERE t.name=#{name} AND"
                     + " t.is_deleted=FALSE")

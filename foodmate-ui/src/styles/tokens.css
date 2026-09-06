@@ -125,4 +125,18 @@
   --fm-shadow-soft: 0 8px 18px rgba(51, 51, 51, 0.05);
   --fm-font: var(--font-ui);
   --fm-font-mono: var(--font-mono);
+
+  /* Workspace Home 与 Agent Chat 的 Figma 主画板共享基准。 */
+  --fm-figma-workspace-bg: #fcfcfc;
+  --fm-figma-workspace-surface: #ffffff;
+  --fm-figma-workspace-border: #f4f6f5;
+  --fm-figma-workspace-control-surface: #f4f6f5;
+  --fm-figma-workspace-sidebar-active: rgba(199, 150, 84, 0.08);
+  --fm-figma-workspace-session-active: rgba(255, 246, 226, 0.2);
+  --fm-figma-workspace-top-nav-active: rgba(199, 150, 84, 0.08);
+  --fm-figma-workspace-sidebar-width: 260px;
+  --fm-figma-workspace-topbar-height: 68px;
+  --fm-figma-workspace-rail-width: 320px;
+  --fm-figma-workspace-wide-rail-width: 340px;
+  --fm-figma-workspace-padding: 24px;
 }

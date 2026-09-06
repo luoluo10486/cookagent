@@ -66,15 +66,16 @@ describe('ProfilePage', () => {
     expect(screen.getByText('早餐奶昔配方')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '下一页' })).toBeInTheDocument();
     expect(screen.getByText('饮食与身体目标')).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: '个人头像' })).toHaveAttribute(
-      'src',
-      '/assets/figma/profile/main-avatar.png',
-    );
+    expect(screen.getByRole('img', { name: '个人头像' })).toHaveAttribute('src', '/assets/avatars/default-male.svg');
     expect(screen.getByRole('button', { name: 'Anddy' }).querySelector('img')).toHaveAttribute(
       'src',
-      '/assets/figma/profile/topbar-avatar.png',
+      '/assets/avatars/default-male.svg',
     );
-    expect(container.querySelector('.profile img')).toHaveAttribute('src', '/assets/figma/profile/sidebar-avatar.png');
+    expect(container.querySelector('.profile img')).toHaveAttribute('src', '/assets/avatars/default-male.svg');
+    expect(container.querySelector('img[src="/assets/figma/workspace/profile/home.svg"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/figma/workspace/profile/topbar-search.svg"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/figma/workspace/profile/notification.svg"]')).toBeInTheDocument();
+    expect(screen.getByText('首席运营')).toBeInTheDocument();
     expect(document.querySelector('[data-name="window-controls"]')).toBeInTheDocument();
   });
 
@@ -90,8 +91,10 @@ describe('ProfilePage', () => {
     expect(screen.getByRole('textbox', { name: '每日热量目标 (千卡)' })).toHaveValue('2500');
     expect(screen.getByRole('textbox', { name: '每日蛋白质目标 (g)' })).toHaveValue('150');
     expect(screen.getByRole('heading', { name: '饮食与身体目标' }).closest('div')).toHaveClass(styles.figmaGoalsCard);
-    expect(screen.queryByText('偏好速览')).not.toBeInTheDocument();
-    expect(screen.queryByText('头像与账号概览')).not.toBeInTheDocument();
+    expect(screen.getByText('偏好速览')).toBeInTheDocument();
+    expect(screen.getByText('头像与账号概览')).toBeInTheDocument();
+    expect(screen.getByText('账号状态')).toBeInTheDocument();
+    expect(screen.getByText('头像与账号概览').closest('div')).toHaveClass(styles.figmaProfileCard);
   });
 
   it('marks the memories page with its Figma-only geometry contract', () => {
@@ -100,21 +103,37 @@ describe('ProfilePage', () => {
     const memoryPage = screen.getByRole('heading', { name: '记忆系统' }).closest('[data-figma-layout]');
 
     expect(memoryPage).toHaveAttribute('data-figma-layout', 'profile-memories');
+    expect(memoryPage?.querySelector('img[src="/assets/figma/workspace/profile/memory-eye.svg"]')).toBeInTheDocument();
+    expect(memoryPage?.querySelector('img[src="/assets/figma/workspace/profile/memory-edit.svg"]')).toBeInTheDocument();
+    expect(
+      memoryPage?.querySelector('img[src="/assets/figma/workspace/profile/memory-trash.svg"]'),
+    ).toBeInTheDocument();
   });
 
-  it('limits the security Figma fixture to the two reference cards', () => {
+  it('renders the Figma memories empty page instead of an overlay', () => {
+    renderPage('/profile?state=memories-empty');
+
+    const memoryPage = screen.getByRole('heading', { name: '暂无长期记忆' }).closest('[data-figma-layout]');
+
+    expect(memoryPage).toHaveAttribute('data-figma-layout', 'profile-memories-empty');
+    expect(screen.getByRole('button', { name: '去会话确认' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: '长期记忆管理' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('renders the complete live Figma security fixture', () => {
     renderPage('/profile?state=security');
 
     const securityPage = screen.getByRole('heading', { name: '修改账号密码' }).closest('[data-figma-layout]');
 
     expect(securityPage).toHaveAttribute('data-figma-layout', 'profile-security');
     expect(securityPage).toHaveClass(styles.figmaSecurityPage);
-    expect(screen.queryByRole('heading', { name: '最近安全活动' })).not.toBeInTheDocument();
-    expect(screen.queryByText('SECURE')).not.toBeInTheDocument();
-    expect(screen.queryByText('2 ACTIVE DEVICES')).not.toBeInTheDocument();
-    expect(screen.queryByText('设备状态在每次登录后更新')).not.toBeInTheDocument();
-    expect(securityPage?.querySelector(`.${styles.securityAccent}`)).not.toBeInTheDocument();
-    expect(securityPage?.querySelector(`.${styles.sessionAccent}`)).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '最近安全活动' })).toBeInTheDocument();
+    expect(screen.getByText('2 ACTIVE DEVICES')).toBeInTheDocument();
+    expect(screen.getByText('设备状态在每次登录后更新')).toBeInTheDocument();
+    expect(securityPage?.querySelector(`.${styles.securityAccent}`)).toBeInTheDocument();
+    expect(securityPage?.querySelector(`.${styles.sessionAccent}`)).toBeInTheDocument();
+    expect(securityPage?.querySelector(`.${styles.activityAccent}`)).toBeInTheDocument();
   });
 
   it('renders the Figma logout confirmation fixture with the target devices', async () => {
@@ -177,6 +196,7 @@ describe('ProfilePage', () => {
     expect(screen.getByText('任务已创建，后台整理完成后提供一次性下载。')).toBeInTheDocument();
     expect(screen.getByText('状态: queued · 预计等待 1-2 分钟 · export_id: exp_20260731_01')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '关闭' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '创建数据导出' }).querySelector('svg')).not.toBeInTheDocument();
     expect(screen.queryByText('状态：queued')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '关闭' }));

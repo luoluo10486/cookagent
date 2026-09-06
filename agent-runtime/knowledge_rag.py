@@ -33,6 +33,7 @@ class RagError(RuntimeError):
 
 PUBLIC_SCOPE = "public_published"
 _WORD = re.compile(r"[A-Za-z0-9_]+|[\u4e00-\u9fff]+")
+_MARKDOWN_HEADING = re.compile(r"^(#{1,6})[ \t]+(.+?)\s*#*\s*$")
 _EMAIL = re.compile(r"(?i)(?<![A-Za-z0-9._%+-])[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}(?![A-Za-z0-9.-])")
 _MOBILE = re.compile(r"(?<!\d)1[3-9]\d{9}(?!\d)")
 _CHINA_ID = re.compile(
@@ -326,28 +327,142 @@ class EmbeddingResult:
     provider_trace_id: str | None = None
 
 
-def chunk_markdown(text: str, document_id: str, version: str, max_chars: int = 900) -> list[KnowledgeChunk]:
+def chunk_markdown(
+    text: str,
+    document_id: str,
+    version: str,
+    max_chars: int = 1000,
+    target_chars: int = 700,
+    overlap_chars: int = 80,
+) -> list[KnowledgeChunk]:
+    """按标题、段落和句子边界生成稳定的公共知识切片。"""
+    if not 1 <= max_chars <= 1000:
+        raise RagError("RAG_CHUNK_LIMIT_INVALID", "chunk hard limit must be between 1 and 1000")
+    if target_chars < 1:
+        raise RagError("RAG_CHUNK_TARGET_INVALID", "chunk target must be positive")
+    if overlap_chars < 0:
+        raise RagError("RAG_CHUNK_OVERLAP_INVALID", "chunk overlap must not be negative")
+    # 兼容旧调用方传入较小的 max_chars，同时始终服从硬上限。
+    target_chars = min(target_chars, max_chars)
+    overlap_chars = min(overlap_chars, max(0, target_chars - 1))
     normalized = text.replace("\r\n", "\n").replace("\r", "\n").strip()
     if not normalized:
         raise RagError("RAG_EMPTY_DOCUMENT", "document contains no indexable text")
-    heading = ""
-    chunks: list[KnowledgeChunk] = []
-    buffer = ""
+
+    sections: list[tuple[str, str]] = []
+    heading_stack: list[tuple[int, str]] = []
+    section_path = ""
+    paragraph: list[str] = []
+
+    def flush_paragraph() -> None:
+        if not paragraph:
+            return
+        content = "\n".join(line.strip() for line in paragraph).strip()
+        paragraph.clear()
+        if content:
+            sections.append((section_path, content))
+
     for line in normalized.split("\n"):
-        if line.startswith("#"):
-            if buffer.strip():
-                chunks.extend(_split_chunk(buffer.strip(), document_id, version, heading, len(chunks), max_chars))
-                buffer = ""
-            heading = line.lstrip("#").strip() or heading
+        heading = _MARKDOWN_HEADING.match(line)
+        if heading:
+            flush_paragraph()
+            level = len(heading.group(1))
+            title = re.sub(r"\s+#+\s*$", "", heading.group(2)).strip()
+            while heading_stack and heading_stack[-1][0] >= level:
+                heading_stack.pop()
+            if title:
+                heading_stack.append((level, title))
+            section_path = " > ".join(title for _, title in heading_stack)
+        elif line.strip():
+            paragraph.append(line.rstrip())
         else:
-            buffer += line + "\n"
-    if buffer.strip():
-        chunks.extend(_split_chunk(buffer.strip(), document_id, version, heading, len(chunks), max_chars))
-    return chunks
+            flush_paragraph()
+    flush_paragraph()
+
+    grouped_sections: list[tuple[str, str]] = []
+    for section, content in sections:
+        if grouped_sections and grouped_sections[-1][0] == section:
+            previous_section, previous_content = grouped_sections[-1]
+            grouped_sections[-1] = (previous_section, f"{previous_content}\n\n{content}")
+        else:
+            grouped_sections.append((section, content))
+
+    emitted: list[tuple[str, str]] = []
+    for section, content in grouped_sections:
+        pieces = _split_long_block(content, target_chars, max_chars)
+        current = ""
+        for piece in pieces:
+            if not current:
+                current = piece
+                continue
+            combined = f"{current}\n\n{piece}"
+            if len(combined) <= target_chars:
+                current = combined
+                continue
+            emitted.append((section, current))
+            overlap = _overlap_tail(current, overlap_chars)
+            candidate = f"{overlap}\n\n{piece}" if overlap else piece
+            current = candidate if len(candidate) <= max_chars else piece
+        if current:
+            emitted.append((section, current))
+
+    return [
+        KnowledgeChunk(
+            _embedding_id(document_id, version, sequence),
+            document_id,
+            version,
+            sequence,
+            section,
+            content,
+        )
+        for sequence, (section, content) in enumerate(emitted)
+    ]
+
+
+def _split_long_block(text: str, target_chars: int, max_chars: int) -> list[str]:
+    """在句末或空白处拆分长段落，最后才使用硬截断。"""
+    if len(text) <= target_chars:
+        return [text]
+    pieces: list[str] = []
+    remaining = text
+    while remaining:
+        limit = min(target_chars, len(remaining), max_chars)
+        if len(remaining) <= max_chars and len(remaining) <= target_chars:
+            pieces.append(remaining.strip())
+            break
+        cut = _preferred_break_position(remaining, limit)
+        piece = remaining[:cut].strip()
+        if not piece:
+            cut = limit
+            piece = remaining[:cut].strip()
+        pieces.append(piece)
+        remaining = remaining[cut:].lstrip()
+    return [piece for piece in pieces if piece]
+
+
+def _preferred_break_position(text: str, limit: int) -> int:
+    """优先在句末断开，避免把一个完整的中文句子拆到两个切片。"""
+    minimum = max(1, int(limit * 0.55))
+    sentence_breaks = "。！？!?；;\n"
+    for index in range(limit - 1, minimum - 1, -1):
+        if text[index] in sentence_breaks:
+            return index + 1
+    for index in range(limit - 1, minimum - 1, -1):
+        if text[index] in "，,、":
+            return index + 1
+    whitespace = text.rfind(" ", minimum, limit)
+    return whitespace + 1 if whitespace >= minimum else limit
+
+
+def _overlap_tail(text: str, overlap_chars: int) -> str:
+    """取得上一切片尾部的有限重叠内容，不跨越章节边界。"""
+    if overlap_chars <= 0:
+        return ""
+    return text[-overlap_chars:].strip()
 
 
 def _split_chunk(text: str, document_id: str, version: str, section: str, offset: int, max_chars: int) -> list[KnowledgeChunk]:
-    parts = [text[index:index + max_chars].strip() for index in range(0, len(text), max_chars)]
+    parts = _split_long_block(text, max_chars, max_chars)
     return [KnowledgeChunk(_embedding_id(document_id, version, offset + index), document_id, version, offset + index, section, part)
             for index, part in enumerate(parts) if part]
 
@@ -378,18 +493,19 @@ class StubIndex:
     def search(self, query: str, scope: str = PUBLIC_SCOPE) -> list[Citation]:
         if scope != PUBLIC_SCOPE:
             raise RagError("RAG_SCOPE_DENIED", "only public_published scope is supported")
-        terms = set(_tokens(query))
         scored = []
         for title, chunk in self._chunks.values():
             if chunk.tenant_id != 0 or chunk.scope != PUBLIC_SCOPE or chunk.visibility != "published" or not chunk.indexed or chunk.deleted or not chunk.current_version:
                 continue
-            score = len(terms.intersection(_tokens(chunk.text)))
+            score = _keyword_score(query, title, chunk.section_path, chunk.text)
             if score:
                 scored.append((score, title, chunk))
         scored.sort(key=lambda entry: (-entry[0], entry[2].embedding_id))
+        candidates = scored[:12]
+        reranked = candidates[:6]
         per_document: dict[str, int] = {}
         citations: list[Citation] = []
-        for _, title, chunk in scored[:12]:
+        for _, title, chunk in reranked:
             if per_document.get(chunk.document_id, 0) >= 2:
                 continue
             per_document[chunk.document_id] = per_document.get(chunk.document_id, 0) + 1
@@ -476,17 +592,18 @@ class RedisStubIndex:
     def search(self, query: str, scope: str = PUBLIC_SCOPE) -> list[Citation]:
         if scope != PUBLIC_SCOPE:
             raise RagError("RAG_SCOPE_DENIED", "only public_published scope is supported")
-        terms = set(_tokens(query))
         ranked = []
         for chunk_id, raw in self.client.hgetall(f"{self.prefix}:chunks").items():
             value = json.loads(raw)
             if value.get("tenant_id") != 0 or value.get("scope") != PUBLIC_SCOPE or value.get("visibility") != "published" or not value.get("indexed") or value.get("deleted") or not value.get("current_version", True):
                 continue
-            score = len(terms.intersection(_tokens(value.get("text", ""))))
+            score = _keyword_score(query, value.get("title", ""), value.get("section_path", ""), value.get("text", ""))
             if score: ranked.append((score, chunk_id, value))
         ranked.sort(key=lambda row: (-row[0], row[1]))
+        candidates = ranked[:12]
+        reranked = candidates[:6]
         result, per_document = [], {}
-        for _, chunk_id, value in ranked[:12]:
+        for _, chunk_id, value in reranked:
             document_id = str(value["document_id"])
             if per_document.get(document_id, 0) >= 2: continue
             per_document[document_id] = per_document.get(document_id, 0) + 1
@@ -499,12 +616,23 @@ def _tokens(value: str) -> list[str]:
     tokens: list[str] = []
     for token in _WORD.findall(value):
         if token and all("\u4e00" <= char <= "\u9fff" for char in token):
-            # Chinese text has no spaces; overlapping bigrams keep short user
-            # queries searchable without introducing a language model dependency.
+            # 中文文本通常没有空格，同时生成单字和重叠二元词，兼顾“钠”与“低盐饮食”等查询。
+            tokens.extend(token[index] for index in range(len(token)))
             tokens.extend(token[index : index + 2] for index in range(len(token) - 1))
         else:
             tokens.append(token.lower())
     return tokens
+
+
+def _keyword_score(query: str, title: str, section_path: str, text: str) -> int:
+    """为标题、章节和正文提供可解释的低成本关键词排序。"""
+    terms = set(_tokens(query))
+    if not terms:
+        return 0
+    title_hits = terms.intersection(_tokens(str(title)))
+    section_hits = terms.intersection(_tokens(str(section_path)))
+    text_hits = terms.intersection(_tokens(str(text)))
+    return len(text_hits) + 3 * len(section_hits) + 4 * len(title_hits)
 
 
 def _snippet(value: str, limit: int = 240) -> str:
@@ -970,7 +1098,7 @@ class MilvusIndex:
             raise RagError("RAG_MILVUS_SEARCH_FAILED", "Milvus search failed") from error
         result: list[Citation] = []
         per_document: dict[str, int] = {}
-        for hit in hits:
+        for hit in hits[:6]:
             entity = hit.get("entity", hit)
             document_id = str(entity.get("document_id"))
             if not document_id or per_document.get(document_id, 0) >= 2:

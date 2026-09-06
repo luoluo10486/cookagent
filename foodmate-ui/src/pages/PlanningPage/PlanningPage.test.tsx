@@ -49,8 +49,8 @@ describe('PlanningPage', () => {
     expect(screen.getByPlaceholderText('搜索会话...')).toBeInTheDocument();
     expect(screen.getByText('每周饮食微调')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '下一页' })).toBeInTheDocument();
-    expect(document.querySelector('img[src="/assets/figma/workspace/home-sidebar-avatar.png"]')).toBeInTheDocument();
-    expect(document.querySelector('img[src="/assets/figma/workspace/home-topbar-avatar.png"]')).toBeInTheDocument();
+    expect(document.querySelectorAll('img[src="/assets/avatars/default-male.svg"]')).toHaveLength(2);
+    expect(document.querySelector('img[src="/assets/figma/workspace/planning/meal-planning.svg"]')).toBeInTheDocument();
     expect(screen.getByLabelText('餐食规划')).toHaveAttribute('data-figma-node-id', '640:974');
   });
 
@@ -83,6 +83,15 @@ describe('PlanningPage', () => {
     renderPage('/planning?state=error');
     await user.click(screen.getByRole('button', { name: '重新加载' }));
     expect(screen.getByRole('heading', { name: '增肌计划 v3' })).toBeInTheDocument();
+  });
+
+  it('keeps the error fixture shell free of session history', () => {
+    renderPage('/planning?state=error');
+
+    expect(screen.getByText('Agent 对话')).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('搜索会话...')).not.toBeInTheDocument();
+    expect(document.querySelector('.sidebar-session-list')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '重新加载' })).toHaveClass('inline-flex');
   });
 
   it('keeps plan list filters and the wizard progression aligned', async () => {

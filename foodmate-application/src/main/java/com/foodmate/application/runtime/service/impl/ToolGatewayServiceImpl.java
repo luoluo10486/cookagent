@@ -583,7 +583,7 @@ public class ToolGatewayServiceImpl implements ToolGatewayService {
         } else if (question.contains("昨天")) {
             from = now.toLocalDate().minusDays(1).atStartOfDay(now.getZone());
             to = from.plusDays(1);
-        } else if (question.contains("今天")) {
+        } else if (question.contains("今天") || question.contains("今日")) {
             from = now.toLocalDate().atStartOfDay(now.getZone());
             to = from.plusDays(1);
         } else {

@@ -16,7 +16,7 @@ import { type KnowledgeRow, canManage } from './AdminShared';
 import type { AdminActionPayload } from './types';
 import {
   changeKnowledgeVisibility,
-  loadAdminDashboard,
+  loadAdminKnowledge,
   loadKnowledgeBatch,
   retryKnowledgeItem,
   streamKnowledgeBatch,
@@ -70,7 +70,15 @@ function documentSize(document: KnowledgeRow) {
   return document.chunks > 500 ? '12.8 MB' : document.chunks ? '4.2 MB' : '890 KB';
 }
 
-function documentStatus(document: KnowledgeRow) {
+function documentStatus(document: KnowledgeRow, figmaFixture: boolean) {
+  if (figmaFixture) {
+    const fixtureLabel = document.status === 'indexed' ? '已索引' : document.status === 'indexing' ? '索引中' : '失败';
+    return (
+      <span className={`${styles.knowledgeStatus} ${styles[`knowledgeStatus${document.status}`] ?? ''}`}>
+        {fixtureLabel}
+      </span>
+    );
+  }
   const visibility = document.visibility;
   const label =
     visibility === 'published'
@@ -91,9 +99,13 @@ function documentStatus(document: KnowledgeRow) {
 
 export function KnowledgeSection({
   onAction,
+  figmaFixture = false,
+  openUploadRequest = 0,
   refreshNonce = 0,
 }: {
   onAction: (payload: AdminActionPayload) => void;
+  figmaFixture?: boolean;
+  openUploadRequest?: number;
   refreshNonce?: number;
 }) {
   const isRealMode = import.meta.env.VITE_AGENT_MODE === 'real';
@@ -113,16 +125,24 @@ export function KnowledgeSection({
   const fileInputId = useId();
 
   useEffect(() => {
+    if (openUploadRequest > 0) {
+      // 顶部批量上传按钮通过请求号通知子组件打开受控 Dialog。
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setUploadVisible(true);
+    }
+  }, [openUploadRequest]);
+
+  useEffect(() => {
     if (!isRealMode) return;
     let active = true;
     // The effect owns the request lifecycle, so loading/error reset belongs to this subscription boundary.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setLoadError('');
-    loadAdminDashboard()
-      .then((dashboard) => {
+    loadAdminKnowledge()
+      .then((result) => {
         if (!active) return;
-        const rows = dashboard.knowledge as KnowledgeRow[];
+        const rows = result.items as KnowledgeRow[];
         setDocuments(rows);
         setSelectedDoc(rows[0]);
       })
@@ -145,10 +165,19 @@ export function KnowledgeSection({
   };
   const selectFiles = (files: FileList | File[]) => {
     const selected = Array.from(files);
-    const valid =
-      selected.length <= 20 &&
-      selected.every((file) => file.size <= 20 * 1024 * 1024 && /\.(pdf|docx|md|txt)$/i.test(file.name));
-    if (!valid) return notify('仅支持至多 20 个 PDF、DOCX、Markdown 或 TXT 文件，单个不超过 20 MB。', 'warning');
+    // Figma fixture 只替换验收展示和对应的选择提示，真实模式继续遵循后端上传契约。
+    const valid = figmaFixture
+      ? selected.every((file) => file.size <= 50 * 1024 * 1024 && /\.(pdf|csv|xlsx|txt)$/i.test(file.name))
+      : selected.length <= 20 &&
+        selected.every((file) => file.size <= 20 * 1024 * 1024 && /\.(pdf|docx|md|txt)$/i.test(file.name));
+    if (!valid) {
+      return notify(
+        figmaFixture
+          ? '仅支持 PDF、CSV、XLSX、TXT 文件，单个不超过 50 MB。'
+          : '仅支持至多 20 个 PDF、DOCX、Markdown 或 TXT 文件，单个不超过 20 MB。',
+        'warning',
+      );
+    }
     setUploadFiles(selected);
     if (selected.length) setUploadVisible(true);
   };
@@ -217,7 +246,10 @@ export function KnowledgeSection({
   const selectedVisibility = selectedDoc?.visibility ?? (selectedDoc?.status === 'indexed' ? 'published' : 'draft');
 
   return (
-    <section className={styles.knowledgeWorkspace} aria-label="知识库文档管理">
+    <section
+      className={`${styles.knowledgeWorkspace} ${figmaFixture ? styles.knowledgeFixtureWorkspace : ''}`}
+      aria-label="知识库文档管理"
+    >
       <div className={styles.knowledgeMainColumn}>
         <label
           className={styles.knowledgeDropZone}
@@ -230,13 +262,17 @@ export function KnowledgeSection({
         >
           <UploadCloud aria-hidden="true" />
           <strong>拖入多个文件，后台异步建索引</strong>
-          <span>最多 20 个文件，单个不超过 20 MB。支持 PDF、DOCX、Markdown、TXT。</span>
+          <span>
+            {figmaFixture
+              ? 'Max file size: 50MB. Allowed formats: PDF, CSV, XLSX, TXT.'
+              : '最多 20 个文件，单个不超过 20 MB。支持 PDF、DOCX、Markdown、TXT。'}
+          </span>
           <input
             id={fileInputId}
             aria-label="选择知识库文件"
             type="file"
             multiple
-            accept=".pdf,.docx,.md,.txt"
+            accept={figmaFixture ? '.pdf,.csv,.xlsx,.txt' : '.pdf,.docx,.md,.txt'}
             onChange={(event: ChangeEvent<HTMLInputElement>) => event.target.files && selectFiles(event.target.files)}
           />
         </label>
@@ -265,7 +301,7 @@ export function KnowledgeSection({
                   <strong>{document.title}</strong>
                 </span>
                 <span>{isRealMode ? '-' : documentSize(document)}</span>
-                <span>{documentStatus(document)}</span>
+                <span>{documentStatus(document, figmaFixture)}</span>
                 <span>{document.chunks} chunks</span>
               </Button>
             ))
@@ -297,7 +333,7 @@ export function KnowledgeSection({
             <ChunkPreview id="chunk_02" score="0.884" text="避免食用酸面包，除非标明为低碳水高纤维小麦淀粉替代品..." />
           </div>
         )}
-        {selectedDoc ? (
+        {selectedDoc && !figmaFixture ? (
           <div className={styles.knowledgeManageActions}>
             {selectedVisibility === 'published' ? (
               <Button

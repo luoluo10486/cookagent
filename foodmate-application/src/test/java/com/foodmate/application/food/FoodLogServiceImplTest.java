@@ -248,6 +248,60 @@ class FoodLogServiceImplTest {
     }
 
     @Test
+    void keepsAmbiguousChineseFoodAsPendingConfirmation() {
+        FoodLogRepository repository = mock(FoodLogRepository.class);
+        when(repository.findNutritionFoodCandidates("鸡胸肉", 12))
+                .thenReturn(List.of(candidate(171477L, 0), candidate(171478L, 0)));
+        when(repository.insertFoodLog(any())).thenReturn(1);
+        when(repository.findOwned(7L, 100L, false)).thenReturn(snapshotWithEmptyItems());
+        FoodLogService service = service(repository, ids(100L, 101L));
+
+        service.create(
+                7L,
+                new FoodLogService.CreateCommand(
+                        null,
+                        null,
+                        MEAL_TIME,
+                        MealType.LUNCH,
+                        null,
+                        "nutrition-ambiguous",
+                        List.of(new FoodLogService.ItemCommand("煮鸡胸肉", new BigDecimal("100"), "g"))));
+
+        var item = org.mockito.ArgumentCaptor.forClass(FoodLogRepository.FoodLogItemWrite.class);
+        verify(repository).insertItem(item.capture());
+        assertEquals("pending_confirmation", item.getValue().nutritionStatus());
+        assertEquals(null, item.getValue().nutritionFoodId());
+    }
+
+    @Test
+    void usesExplicitFoodSelectionForAuthoritativeNutritionSnapshot() {
+        FoodLogRepository repository = mock(FoodLogRepository.class);
+        when(repository.findNutritionFoodById(171477L)).thenReturn(nutritionLookup());
+        when(repository.insertFoodLog(any())).thenReturn(1);
+        when(repository.findOwned(7L, 100L, false)).thenReturn(snapshotWithEmptyItems());
+        FoodLogService service = service(repository, ids(100L, 101L));
+
+        service.create(
+                7L,
+                new FoodLogService.CreateCommand(
+                        null,
+                        null,
+                        MEAL_TIME,
+                        MealType.LUNCH,
+                        null,
+                        "nutrition-selected",
+                        List.of(
+                                new FoodLogService.ItemCommand(
+                                        "鸡胸肉", new BigDecimal("100"), "g", 171477L))));
+
+        var item = org.mockito.ArgumentCaptor.forClass(FoodLogRepository.FoodLogItemWrite.class);
+        verify(repository).insertItem(item.capture());
+        assertEquals("matched", item.getValue().nutritionStatus());
+        assertEquals(171477L, item.getValue().nutritionFoodId());
+        assertEquals(new BigDecimal("165.0000"), item.getValue().caloriesKcal());
+    }
+
+    @Test
     void leavesUnknownOrUnsafeUnitAsPendingWithoutNutritionSnapshot() {
         FoodLogRepository repository = mock(FoodLogRepository.class);
         when(repository.findNutritionFood("rice"))
@@ -576,6 +630,36 @@ class FoodLogServiceImplTest {
 
     private FoodLogService service(FoodLogRepository repository, IdGenerator ids) {
         return new FoodLogServiceImpl(repository, ids, auditService());
+    }
+
+    private FoodLogRepository.NutritionFoodLookup nutritionLookup() {
+        return new FoodLogRepository.NutritionFoodLookup(
+                171477L,
+                "Chicken, broilers or fryers, breast, meat only, cooked, roasted",
+                "g",
+                new BigDecimal("165.0000"),
+                new BigDecimal("31.0200"),
+                new BigDecimal("3.5700"),
+                new BigDecimal("0.0000"),
+                "USDA FoodData Central",
+                "USDA-SR-Legacy-2019-04-01-FoodMate-1 FDC-171477");
+    }
+
+    private FoodLogRepository.NutritionFoodCandidate candidate(long id, int matchRank) {
+        return new FoodLogRepository.NutritionFoodCandidate(
+                id,
+                "Chicken",
+                "鸡胸肉",
+                "meat",
+                "cooked",
+                "g",
+                new BigDecimal("165.0000"),
+                new BigDecimal("31.0200"),
+                new BigDecimal("3.5700"),
+                new BigDecimal("0.0000"),
+                "USDA FoodData Central",
+                "USDA-v1",
+                matchRank);
     }
 
     private OperationAuditService auditService() {

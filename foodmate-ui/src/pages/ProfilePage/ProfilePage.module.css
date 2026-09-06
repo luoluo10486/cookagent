@@ -145,6 +145,10 @@
   text-align: center;
 }
 
+.figmaProfileCard .uploadHint {
+  margin-top: 8px;
+}
+
 .fileName {
   display: block;
   max-width: 100%;
@@ -628,6 +632,8 @@
   height: 124px;
   min-height: 124px;
   border-radius: 16px;
+  border-color: #f4f6f5;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 
 .figmaMemoriesPage .memoryRowPending {
@@ -638,6 +644,55 @@
 .figmaMemoriesPage .memoryGuidance {
   margin-top: 8px;
   border-radius: 12px;
+  border-color: #ebdbb8;
+  background: #fcfaf2;
+}
+
+.figmaMemoriesPage .memoryQuote {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.figmaMemoriesPage .memoryGuidance h2 {
+  color: #333026;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.figmaMemoriesPage .memoryGuidance p {
+  color: #616b63;
+  font-size: 12px;
+}
+
+.figmaMemoriesPage .memoryGuidance p:first-of-type {
+  color: #5c6359;
+  font-size: 13px;
+}
+
+.figmaMemoriesPage .memoryGuidance .guidanceAction {
+  color: #428c4d;
+}
+
+.figmaMemoriesPage .memoryGuidance p:last-of-type {
+  color: #858c85;
+}
+
+.figmaMemoriesPage .confirmButton {
+  color: #333;
+}
+
+.figmaMemoriesEmptyPage .memoryEmpty {
+  margin-top: -15px;
+  margin-right: auto;
+  margin-left: 208px;
+  padding: 28px 32px;
+}
+
+.figmaMemoryIcon {
+  width: 16px;
+  height: 16px;
 }
 
 .memoryIntro {
@@ -663,6 +718,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+.memoryConflictCount {
+  align-self: center;
+  color: #b45309;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .filterGroup {
@@ -936,7 +998,7 @@
 }
 
 .figmaSecurityPage {
-  background: #fff;
+  background: #fcfcfc;
 }
 
 .figmaSecurityCard {
@@ -946,13 +1008,18 @@
 }
 
 .figmaSecurityPage .passwordCard {
-  height: 464px;
-  min-height: 464px;
+  height: 540px;
+  min-height: 540px;
 }
 
 .figmaSecurityPage .sessionCard {
-  height: 378px;
-  min-height: 378px;
+  height: 500px;
+  min-height: 500px;
+}
+
+/* 实时 Figma Security 画板在双卡下方保留安全活动区。 */
+.figmaSecurityPage .activityCard {
+  margin-top: 18px;
 }
 
 .securityAccent,

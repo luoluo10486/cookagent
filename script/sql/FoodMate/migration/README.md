@@ -53,6 +53,12 @@
 
 `V31__m1_4_memory_invalidation_boundary.sql`：为长期记忆保存候选来源消息和删除/更正后的来源抑制标记，使摘要、近期消息和长期记忆 Context 可以共同阻止旧事实再生。迁移不删除或改写既有业务数据；配套校验为 `validation/V31__m1_4_memory_invalidation_boundary_validation.sql`，rollback 为只读前置检查 `rollback/R31__m1_4_memory_invalidation_boundary_precheck.sql`。
 
+`V32__nutrition_catalog_rebuild_contract.sql`：为真实 USDA 营养目录重建补齐来源版本、规范键、食材形态、数据类型和活动记录索引约束；迁移只增加结构，不删除或改写既有业务数据。配套为 `validation/V32__nutrition_catalog_rebuild_contract_validation.sql`、只读回滚前置检查 `rollback/R32__nutrition_catalog_rebuild_contract_precheck.sql`。
+
+V33 不属于 Flyway 迁移，而是人工执行的生成式 seed：`seed/generated/V33__nutrition_usda_catalog_rebuild_seed.sql` 当前包含 1,000 条 USDA 食材和 1,518 条 foodPortion 换算，配套 manifest、validation 和 rollback 前置检查。V33 seed 只用稳定 USDA/FDC 标识幂等更新；淘汰旧生成记录时必须先核对业务引用，只能按确认范围软删除，禁止 `TRUNCATE` 或宽泛删除。实际执行时间、validation 输出和清理范围以 `../EXECUTION_RECORD.md` 为准。
+
+`V34__m2_4_nutrition_match_confirmation.sql`：为食材明细增加 `pending_confirmation` 状态和候选查询索引。候选存在多个生熟/部位形态时不自动猜测，必须由用户选择目录 ID；迁移不改写既有明细。配套校验为 `validation/V34__m2_4_nutrition_match_confirmation_validation.sql`，回滚为只读前置检查 `rollback/R34__m2_4_nutrition_match_confirmation_precheck.sql`。
+
 ## 配套文件矩阵
 
 | 版本 | validation | rollback | 处理边界 |
@@ -68,6 +74,9 @@
 | V29 | 有 | 有（只读前置检查） | M2-1 Embedding 供应商 Trace 关联事实；不删除既有数据 |
 | V30 | 有 | 有（只读前置检查） | 修正 `meal_plan.save_plan` 注册表 Schema；保留 v1 历史行和既有业务数据 |
 | V31 | 有 | 有（只读前置检查） | M1-4 记忆来源和失效边界；不删除既有数据 |
+| V32 | 有 | 有（只读前置检查） | USDA 营养目录重建结构契约；只增加约束和索引 |
+| V33 seed | 有 | 有（只读前置检查） | USDA 食材与 foodPortion 生成种子；按稳定 ID 幂等，淘汰项只允许确认后软删除 |
+| V34 | 有 | 有（只读前置检查） | 营养候选人工确认状态和候选查询索引；不自动选择生熟/部位形态 |
 
 该矩阵描述文件现状，不代表任何迁移已在当前数据库执行。实际执行状态、validation 输出、失败与补偿必须以 `../EXECUTION_RECORD.md` 为准。历史版本若需补充校验，优先新增只读 SQL 文档；若需修复结构，创建更高版本迁移，不原地修改已执行脚本，不执行宽泛删除或 `TRUNCATE`。
 

@@ -252,6 +252,47 @@ class ToolProtocolTests(unittest.TestCase):
         self.assertIn("计算结果：22", answer)
         self.assertIn("20 * 1.1", answer)
 
+    def test_analysis_composer_explains_empty_results_without_inventing_a_value(self):
+        route = DeterministicRouter().route("统计最近7天鸡胸肉出现次数")
+        context = Context(
+            messages=({"message_id": "m-analysis"},),
+            summary=None,
+            memories=(),
+            unresolved_slots=(),
+            sources={
+                "message_id": ("m-analysis",),
+                "summary_id": (),
+                "memory_id": (),
+                "citation_id": (),
+                "invocation_id": ("inv-db",),
+            },
+            tool_results=(
+                {
+                    "tool_name": "database_query",
+                    "status": "succeeded",
+                    "rows": [],
+                    "query_plan": {
+                        "intent": "food_occurrence",
+                        "time_range": {"kind": "relative", "days": "7"},
+                        "metrics": ["occurrence_count"],
+                        "dimensions": ["raw_name"],
+                    },
+                },
+            ),
+            analysis_plan={
+                "intent": "food_occurrence",
+                "time_range": {"kind": "relative", "days": "7"},
+                "metrics": ["occurrence_count"],
+                "dimensions": ["raw_name"],
+            },
+        )
+
+        answer = DeterministicComposer().compose("统计最近7天鸡胸肉出现次数", route, context, "normal")
+
+        self.assertIn("数据为空原因", answer)
+        self.assertIn("没有找到该食材", answer)
+        self.assertNotIn("0 次", answer)
+
     def test_planning_route_builds_validator_proposal_from_authorized_plan(self):
         route = DeterministicRouter().route("计划 1 天的三餐")
         plan = {

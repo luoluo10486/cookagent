@@ -123,6 +123,14 @@
   mask: var(--admin-nav-icon) center / contain no-repeat;
 }
 
+.navFolderIcon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: currentColor;
+  stroke-width: 2;
+}
+
 .navButton:hover,
 .navButtonActive {
   background: rgba(255, 117, 118, 0.05);
@@ -323,6 +331,40 @@
   background: var(--fm-bg-soft) !important;
 }
 
+.knowledgeFixtureTopbar {
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
+/* Figma 详情画板的标题栏左右内边距为 24px，普通管理页继续使用通用壳层值。 */
+.fixtureDetailTopbar {
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
+.knowledgeFixtureUploadButton {
+  min-width: 96px;
+  height: 32px !important;
+  padding: 8px 12px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: #fff1c7 !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 16px !important;
+  box-shadow: none !important;
+}
+
+.knowledgeFixtureUploadButton:hover {
+  background: #ffe9a8 !important;
+}
+
+.knowledgeFixtureUploadButton svg {
+  width: 14px;
+  height: 14px;
+}
+
 .page {
   display: flex;
   flex-direction: column;
@@ -335,6 +377,10 @@
 
 .page::-webkit-scrollbar {
   display: none;
+}
+
+.knowledgeFixturePage {
+  padding: 24px;
 }
 
 .notice {
@@ -1170,6 +1216,7 @@
 
 .overviewTable :global(th) {
   height: 48px;
+  background: #f4f6f5;
   color: #6b7280;
   font-size: 13px;
   font-weight: 700;
@@ -1301,10 +1348,10 @@
   cursor: pointer;
 }
 
-.copyButton svg {
+.copyIcon {
+  display: block;
   width: 14px;
   height: 14px;
-  stroke-width: 1.6;
 }
 
 .copyButton:hover {
@@ -1633,7 +1680,7 @@
 .registryTableCard {
   display: flex;
   flex: 0 0 auto;
-  height: 396px;
+  height: 412px;
   min-width: 0;
   overflow: hidden;
   border: 1px solid #f4f6f5;
@@ -1677,7 +1724,8 @@
 }
 
 .registryTable :global(th) {
-  height: 48px;
+  height: 64px;
+  background: #f4f6f5;
   color: #6b7280;
   font-size: 13px;
   font-weight: 700;
@@ -2101,7 +2149,7 @@
   padding: 16px;
   border: 1px solid #ff7576;
   border-radius: 10px;
-  background: rgba(255, 117, 118, 0.06);
+  background: #fff5f5;
 }
 
 .deletedNoticeTitle {
@@ -2109,7 +2157,7 @@
   align-items: center;
   gap: 6px;
   color: #d67676;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 17px;
 }
 
@@ -2121,9 +2169,9 @@
 
 .deletedNotice p {
   margin: 0;
-  color: #6b7280;
-  font-size: 11px;
-  line-height: 1.6;
+  color: #333333;
+  font-size: 13px;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
@@ -2897,6 +2945,11 @@
   min-height: 0;
 }
 
+/* Figma User Detail fixture 的首行没有额外选中底色，真实列表仍保留选中反馈。 */
+.usersLayoutFigma .usersTableRowSelected {
+  background: #ffffff;
+}
+
 .usersListColumn,
 .usersDetailColumn {
   min-width: 0;
@@ -2975,6 +3028,20 @@
   background: #ffffff;
 }
 
+/* Figma 筛选条需要保证当前值完整显示，不能被通用 Select 的行截断规则压缩。 */
+.usersSelect > span {
+  display: block !important;
+  min-width: 0;
+  overflow: hidden;
+  flex: 1 1 auto;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.usersSelect {
+  font-size: 13px;
+}
+
 .usersSelect select {
   width: 100%;
   min-width: 0;
@@ -3000,15 +3067,17 @@
 .usersDateFilter {
   justify-content: space-between;
   color: #333333;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 16px;
   cursor: pointer;
 }
 
 .usersDateFilter span {
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
 }
 
@@ -3416,7 +3485,7 @@
   flex-direction: column;
   gap: 10px;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 32px;
   padding-top: 20px;
 }
 
@@ -3440,7 +3509,7 @@
   gap: 8px;
   width: 100%;
   height: 220px;
-  margin-top: 29px;
+  margin-top: 17px;
   padding: 14px;
   overflow: hidden;
   border: 1px solid #e3ebe5;
@@ -3734,6 +3803,41 @@
   gap: 20px;
   padding: 20px;
   border-radius: 16px !important;
+}
+
+.knowledgeFixtureWorkspace .knowledgeDropZone {
+  min-height: 128px;
+  gap: 8px;
+  padding: 16px;
+  background: #fffdf8;
+}
+
+.knowledgeFixtureWorkspace .knowledgeDropZone svg {
+  color: #ffedb2;
+}
+
+.knowledgeFixtureWorkspace .knowledgeTableHeader,
+.knowledgeFixtureWorkspace .knowledgeTableRow {
+  grid-template-columns: 120px minmax(0, 246px) 80px 83px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.knowledgeFixtureWorkspace .knowledgeTableHeader {
+  min-height: 40px;
+  padding: 10px 12px;
+}
+
+.knowledgeFixtureWorkspace .knowledgeTableRow {
+  min-height: 48px;
+  padding: 12px;
+}
+
+.knowledgeFixtureWorkspace .knowledgeVectorStats {
+  background: #f8f5ff;
+}
+
+.knowledgeFixtureWorkspace .knowledgeChunk {
+  background: #ffffff;
 }
 .knowledgeInsightsTitle {
   color: #333333;
@@ -5082,6 +5186,19 @@
   border: 1px solid #ffaaa6;
   border-radius: 999px;
   color: #ed706c;
+}
+
+/* Figma 状态画板未展示关闭图标，但保留可访问的关闭操作供键盘用户使用。 */
+.knowledgeFixtureCloseHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .knowledgeFixtureClose:hover {

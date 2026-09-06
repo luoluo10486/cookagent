@@ -55,7 +55,7 @@ type PlanCard = {
   id: string;
   name: string;
   status: string;
-  statusTone: 'active' | 'draft' | 'archived';
+  statusTone: 'active' | 'validated' | 'draft' | 'archived';
   dates: string;
   calories: string;
   protein: string;
@@ -66,8 +66,22 @@ type PlanCard = {
 
 function realPlanCard(plan: MealPlan): PlanCard {
   const archived = plan.deleted;
-  const statusTone = archived ? 'archived' : plan.status === 'draft' ? 'draft' : 'active';
-  const status = archived ? '已归档' : statusTone === 'draft' ? '草稿' : '进行中';
+  const statusTone = archived
+    ? 'archived'
+    : plan.status === 'draft'
+      ? 'draft'
+      : plan.status === 'validated'
+        ? 'validated'
+        : 'active';
+  const status = archived
+    ? '已删除'
+    : plan.status === 'draft'
+      ? '草稿'
+      : plan.status === 'validated'
+        ? '已校验'
+        : plan.status === 'saved'
+          ? '已保存'
+          : `状态：${plan.status || '未知'}`;
   const calorieTarget = plan.constraints.calorie_target;
   const proteinTarget = plan.constraints.protein_target;
   const budget = plan.budget == null ? '未设置' : `${plan.budget}`;
@@ -658,7 +672,7 @@ function PlanListView({
   realPlans?: MealPlan[];
   onOpenPlan?: (mealPlanId: string) => void;
 }) {
-  const [tab, setTab] = useState<'active' | 'draft' | 'archived'>('active');
+  const [tab, setTab] = useState<'active' | 'validated' | 'draft' | 'archived'>('active');
   const planCards: PlanCard[] = realPlans
     ? realPlans.map(realPlanCard)
     : plans.map((plan) => ({ ...plan, id: plan.name }));
@@ -678,11 +692,19 @@ function PlanListView({
         <FlowButton onClick={() => onNavigate('wizard-step1')}>+ 新建膳食计划</FlowButton>
       </header>
       <div className={styles.listTabs} role="tablist" aria-label="计划状态" data-figma-role="planning-list-tabs">
-        {[
-          ['active', '进行中'],
-          ['draft', '草稿箱'],
-          ['archived', '已归档'],
-        ].map(([key, label]) => (
+        {(realPlans
+          ? [
+              ['active', '已保存'],
+              ['validated', '已校验'],
+              ['draft', '草稿箱'],
+              ['archived', '已删除'],
+            ]
+          : [
+              ['active', '进行中'],
+              ['draft', '草稿箱'],
+              ['archived', '已归档'],
+            ]
+        ).map(([key, label]) => (
           <Button
             className={tab === key ? styles.listTabActive : ''}
             variant="ghost"

@@ -53,7 +53,10 @@ public class FoodLogController extends AuthenticatedControllerSupport {
                                 .map(
                                         item ->
                                                 new FoodLogService.ItemCommand(
-                                                        item.rawName(), item.amount(), item.unit()))
+                                                        item.rawName(),
+                                                        item.amount(),
+                                                        item.unit(),
+                                                        item.nutritionFoodId()))
                                 .toList());
         return ok(map(foods.create(user(request).userId(), command)));
     }
@@ -86,7 +89,10 @@ public class FoodLogController extends AuthenticatedControllerSupport {
                                 .map(
                                         item ->
                                                 new FoodLogService.ItemCommand(
-                                                        item.rawName(), item.amount(), item.unit()))
+                                                        item.rawName(),
+                                                        item.amount(),
+                                                        item.unit(),
+                                                        item.nutritionFoodId()))
                                 .toList());
         return ok(map(foods.update(user(request).userId(), foodLogId, revision, command)));
     }

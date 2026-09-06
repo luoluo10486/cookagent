@@ -230,6 +230,10 @@ public interface KnowledgeMapper {
     @Select("SELECT job_id FROM knowledge_import_items WHERE item_id=#{itemId}")
     long jobIdForItem(@Param("itemId") long itemId);
 
+    /** 锁定批次行，避免并发结果回写时批次状态聚合读取到过期快照。 */
+    @Select("SELECT job_id FROM knowledge_import_jobs WHERE job_id=#{jobId} FOR UPDATE")
+    long lockJobForRefresh(@Param("jobId") long jobId);
+
     @Select(
             "SELECT j.job_id AS jobId,j.status AS status,COUNT(i.item_id) AS totalItems,COUNT(i.item_id) FILTER(WHERE i.index_status='indexed') AS indexedItems,COUNT(i.item_id) FILTER(WHERE i.index_status='index_failed') AS failedItems FROM knowledge_import_jobs j LEFT JOIN knowledge_import_items i ON i.job_id=j.job_id WHERE j.job_id=#{jobId} GROUP BY j.job_id")
     KnowledgeRepository.JobView job(long jobId);

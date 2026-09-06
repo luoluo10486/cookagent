@@ -185,6 +185,22 @@ class MilvusIndexTests(TestCase):
 
 
 class RedisStubIndexTests(TestCase):
+    def test_search_covers_section_path_and_no_hit(self):
+        client = _HashRedis()
+        index = RedisStubIndex(client, "test:rag")
+        index.upsert(
+            "WHO nutrition guide",
+            chunk_markdown(
+                "# 健康饮食\n\n## 钠摄入\n\n减少钠摄入有助于健康。",
+                "d1",
+                "v1",
+            ),
+        )
+        index.update_visibility("d1", "published", True, "v1")
+
+        self.assertEqual("d1", index.search("钠摄入")[0].document_id)
+        self.assertEqual([], index.search("zzzxqv-abcmnop"))
+
     def test_reindex_removes_stale_chunks_for_the_same_version(self):
         client = _HashRedis()
         index = RedisStubIndex(client, "test:rag")
@@ -695,6 +711,85 @@ class OpenAICompatibleEmbedderTests(TestCase):
 
 
 class StubIndexTests(TestCase):
+    def test_chunking_preserves_heading_hierarchy_and_stable_overlap(self):
+        text = (
+            "# 饮食基础\n\n"
+            "## 蛋白质\n\n"
+            "蛋白质支持组织维护，豆类、鸡蛋和鱼类都是常见来源。"
+            "选择多样食物有助于保持均衡。\n\n"
+            "备餐时应关注份量和烹饪方式，优先使用少油方法，并记录实际摄入。\n\n"
+            "### 实践建议\n\n"
+            "每次备餐都可以先安排蔬菜，再加入蛋白质来源和适量主食。"
+        )
+
+        chunks = chunk_markdown(
+            text,
+            "chunk-1",
+            "v1",
+            max_chars=100,
+            target_chars=60,
+            overlap_chars=10,
+        )
+        repeated = chunk_markdown(
+            text,
+            "chunk-1",
+            "v1",
+            max_chars=100,
+            target_chars=60,
+            overlap_chars=10,
+        )
+
+        self.assertGreaterEqual(len(chunks), 3)
+        self.assertTrue(all(len(chunk.text) <= 100 for chunk in chunks))
+        self.assertEqual(chunks, repeated)
+        self.assertIn("饮食基础 > 蛋白质", [chunk.section_path for chunk in chunks])
+        self.assertIn("饮食基础 > 蛋白质 > 实践建议", [chunk.section_path for chunk in chunks])
+        same_section = [
+            chunk
+            for index, chunk in enumerate(chunks)
+            if index > 0 and chunk.section_path == chunks[index - 1].section_path
+        ]
+        self.assertTrue(same_section)
+        self.assertTrue(any(chunks[index - 1].text[-10:] in chunks[index].text for index in range(1, len(chunks))))
+
+    def test_keyword_search_covers_title_section_and_no_hit(self):
+        index = StubIndex()
+        index.upsert(
+            "WHO 营养指南",
+            chunk_markdown(
+                "# 健康饮食\n\n## 膳食纤维\n\n蔬菜、豆类和全谷物可以提供膳食纤维。",
+                "doc-1",
+                "v1",
+            ),
+        )
+
+        self.assertEqual("doc-1", index.search("膳食纤维")[0].document_id)
+        self.assertEqual("doc-1", index.search("WHO")[0].document_id)
+        self.assertEqual([], index.search("zzzxqv-abcmnop"))
+
+    def test_fixed_public_query_samples_are_explainable(self):
+        index = StubIndex()
+        samples = {
+            "蛋白质": "doc-protein",
+            "钠": "doc-sodium",
+            "食品安全": "doc-safety",
+            "身体活动": "doc-activity",
+            "膳食纤维": "doc-fiber",
+        }
+        for query, document_id in samples.items():
+            index.upsert(
+                f"公共{query}指南",
+                chunk_markdown(
+                    f"# 公共指南\n\n## {query}\n\n本指南介绍{query}的基础建议。",
+                    document_id,
+                    "v1",
+                ),
+            )
+
+        for query, document_id in samples.items():
+            self.assertEqual(document_id, index.search(query)[0].document_id)
+        self.assertEqual([], index.search("zzzxqv-abcmnop"))
+
     def test_public_filter_citation_limit_and_determinism(self):
         index = StubIndex()
         index.upsert("Nutrition guide", chunk_markdown("# Calories\nProtein and calories are important.\n\nMore protein facts.", "1", "v1", 40))

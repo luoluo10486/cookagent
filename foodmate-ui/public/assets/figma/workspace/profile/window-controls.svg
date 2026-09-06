@@ -1,0 +1,16 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="52" height="12" viewBox="0 0 52 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="window-controls">
+<g id="Ellipse">
+<circle cx="6" cy="6" r="6" fill="#FF7576"/>
+<circle cx="6" cy="6" r="5.75" stroke="#333333" stroke-opacity="0.101961" stroke-width="0.5"/>
+</g>
+<g id="Ellipse_2">
+<circle cx="26" cy="6" r="6" fill="#FFDA93"/>
+<circle cx="26" cy="6" r="5.75" stroke="#333333" stroke-opacity="0.101961" stroke-width="0.5"/>
+</g>
+<g id="Ellipse_3">
+<circle cx="46" cy="6" r="6" fill="#A6D997"/>
+<circle cx="46" cy="6" r="5.75" stroke="#333333" stroke-opacity="0.101961" stroke-width="0.5"/>
+</g>
+</g>
+</svg>

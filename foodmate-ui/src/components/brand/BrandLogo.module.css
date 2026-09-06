@@ -64,7 +64,7 @@
 }
 
 .compact .wordmark {
-  font-size: 18px;
+  font-size: var(--fm-brand-wordmark-size, 18px);
 }
 
 .hero {

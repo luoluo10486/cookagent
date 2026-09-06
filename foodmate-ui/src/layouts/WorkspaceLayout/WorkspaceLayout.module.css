@@ -1,17 +1,22 @@
 .shell {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-columns: var(--fm-figma-workspace-sidebar-width) minmax(0, 1fr);
   width: 100%;
   height: 100dvh;
   overflow: hidden;
-  background: var(--fm-bg);
+  background: var(--fm-figma-workspace-bg);
+}
+
+/* Figma Knowledge 顶栏字标为 20px，不能沿用 compact 默认值。 */
+.knowledgeLayout {
+  --fm-brand-wordmark-size: 20px;
 }
 
 /* Figma fixture 只覆盖设计稿专属的表面颜色。 */
 .figmaFixture {
-  --fm-fixture-sidebar-active-surface: #fdf6ef;
-  --fm-fixture-session-active-surface: #fffdf5;
-  --fm-fixture-top-nav-active-surface: #fffefc;
+  --fm-fixture-sidebar-active-surface: var(--fm-figma-workspace-sidebar-active);
+  --fm-fixture-session-active-surface: var(--fm-figma-workspace-session-active);
+  --fm-fixture-top-nav-active-surface: var(--fm-figma-workspace-top-nav-active);
 }
 
 /* Figma fixture 右侧轨道保持 340px 画板边界，分隔线不额外占用布局宽度。 */
@@ -38,11 +43,32 @@
   height: 12px;
 }
 
+/* Figma fixture 使用导出的 SVG，避免浏览器重新绘制造成图标轮廓差异。 */
+.newButton > img,
+.sideLink > img,
+.sideButton > img,
+.sidebar-session-section-title > img {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.newButton > img {
+  width: 14px;
+  height: 14px;
+}
+
+.sideLink > img,
+.sideButton > img,
+.sidebar-session-section-title > img {
+  width: 16px;
+  height: 16px;
+}
+
 /* Figma 节点 640:428 使用独立的中性导航和会话选中表面。 */
 .designChat {
-  --fm-fixture-sidebar-active-surface: #fbf7f2;
-  --fm-fixture-session-active-surface: #fffcf9;
-  --fm-fixture-top-nav-active-surface: #fffefc;
+  --fm-fixture-sidebar-active-surface: var(--fm-figma-workspace-sidebar-active);
+  --fm-fixture-session-active-surface: var(--fm-figma-workspace-session-active);
+  --fm-fixture-top-nav-active-surface: var(--fm-figma-workspace-top-nav-active);
 }
 
 .figmaFixture .primarySideNav {
@@ -90,6 +116,16 @@
   text-align: center;
 }
 
+/* 状态画板只保留三条会话，列表高度随内容收缩以露出总数提示。 */
+.compactSessionFixture :global(.sidebar-session-list) {
+  height: auto;
+  max-height: none;
+}
+
+.compactSessionFixture :global(.sidebar-session-count) {
+  margin-top: 8px;
+}
+
 .figmaFixture :global(.sidebar-session-pagination) svg {
   width: 8px;
   height: 14px;
@@ -103,11 +139,14 @@
 }
 
 .withRail {
-  grid-template-columns: 260px minmax(0, 1fr) 320px;
+  grid-template-columns: var(--fm-figma-workspace-sidebar-width) minmax(0, 1fr) var(--fm-figma-workspace-rail-width);
 }
 
 .withWideRail {
-  grid-template-columns: 260px minmax(0, 1fr) 340px;
+  grid-template-columns:
+    var(--fm-figma-workspace-sidebar-width)
+    minmax(0, 1fr)
+    var(--fm-figma-workspace-wide-rail-width);
 }
 
 .rightRail {
@@ -115,8 +154,8 @@
   min-height: 0;
   height: 100dvh;
   overflow: hidden;
-  background: var(--fm-surface);
-  border-left: 1px solid var(--fm-border);
+  background: var(--fm-figma-workspace-surface);
+  border-left: 1px solid var(--fm-figma-workspace-border);
 }
 
 .sidebar {
@@ -125,10 +164,10 @@
   gap: 16px;
   min-height: 0;
   height: 100dvh;
-  padding: 24px;
+  padding: var(--fm-figma-workspace-padding);
   overflow: hidden;
-  background: var(--fm-surface);
-  border-right: 1px solid var(--fm-border);
+  background: var(--fm-figma-workspace-surface);
+  border-right: 1px solid var(--fm-figma-workspace-border);
 }
 
 .profileFixture {
@@ -142,8 +181,8 @@
   align-items: center;
   padding: 0 8px;
   border-radius: 6px;
-  background: #f0faf4;
-  color: #48a868;
+  background: var(--fm-color-success-surface);
+  color: var(--fm-color-success-strong);
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
@@ -368,6 +407,13 @@
   background: var(--fm-green);
 }
 
+.statusPill > img {
+  display: block;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+}
+
 .profile {
   display: flex;
   align-items: center;
@@ -433,7 +479,7 @@
 
 .main {
   display: grid;
-  grid-template-rows: 68px minmax(0, 1fr);
+  grid-template-rows: var(--fm-figma-workspace-topbar-height) minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
   height: 100dvh;
@@ -446,16 +492,16 @@
   min-width: 0;
   align-items: center;
   gap: 24px;
-  padding: 0 24px;
-  background: var(--fm-surface);
-  border-bottom: 1px solid var(--fm-border);
+  padding: 0 var(--fm-figma-workspace-padding);
+  background: var(--fm-figma-workspace-surface);
+  border-bottom: 1px solid var(--fm-figma-workspace-border);
 }
 
 .planningListTopbar .iconButton {
   box-sizing: border-box;
-  border: 1px solid #f4f6f5;
+  border: 1px solid var(--fm-figma-workspace-border);
   border-radius: 18px;
-  background: #ffffff;
+  background: var(--fm-figma-workspace-surface);
 }
 
 .topbar > :global(.brand) {
@@ -559,6 +605,16 @@
   transform: translateY(-50%);
 }
 
+.workspaceSearch > img {
+  position: absolute;
+  top: 50%;
+  left: 13px;
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+}
+
 .iconButton,
 .userButton {
   display: inline-flex;
@@ -583,6 +639,12 @@
 .iconButton svg {
   width: 18px;
   height: 18px;
+}
+
+.iconButton > img {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 .userButton {
   gap: 8px;

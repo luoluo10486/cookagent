@@ -28,7 +28,8 @@ import { ResultCard } from '../../components/agent/ResultCard';
 import { ClarificationCard } from '../../components/agent/ClarificationCard';
 import { ConfirmationCard } from '../../components/agent/ConfirmationCard';
 import { ErrorState } from '../../components/common/ErrorState';
-import { DEFAULT_AVATARS, resolveAvatarUrl } from '../../lib/avatar';
+import { AvatarImage } from '../../components/common/AvatarImage';
+import { DEFAULT_AVATARS, FIGMA_CHAT_AVATARS, resolveAvatarUrl } from '../../lib/avatar';
 import { getAuthUser } from '../../services/authService';
 import { useAgentReplay } from '../../services/agentService';
 import { ApiError } from '../../services/apiClient';
@@ -45,9 +46,9 @@ import {
 } from '../../services/agentRunService';
 import styles from './ChatPage.module.css';
 
-const FIGMA_CHAT_SIDEBAR_AVATAR = '/assets/figma/workspace/home-sidebar-avatar.png';
-const FIGMA_CHAT_TOPBAR_AVATAR = '/assets/figma/agent-chat/figma-v2-topbar-avatar.png';
-const FIGMA_CHAT_MESSAGE_AVATAR = '/assets/figma/agent-chat/figma-v2-message-avatar.png';
+const FIGMA_CHAT_SIDEBAR_AVATAR = FIGMA_CHAT_AVATARS.sidebar;
+const FIGMA_CHAT_TOPBAR_AVATAR = FIGMA_CHAT_AVATARS.topbar;
+const FIGMA_CHAT_MESSAGE_AVATAR = FIGMA_CHAT_AVATARS.message;
 
 type ChatMessage = {
   id: string;
@@ -95,8 +96,9 @@ function MessageBubble({
   userAvatarSrc?: string;
 }) {
   const isUser = message.role === 'user';
-  const userAvatar =
-    userAvatarSrc ?? resolveAvatarUrl(getAuthUser().avatarUrl, getAuthUser().gender) ?? DEFAULT_AVATARS.male;
+  const authUser = getAuthUser();
+  // 消息头像也走统一解析，避免历史 Fixture 路径通过组件参数直接渲染。
+  const userAvatar = resolveAvatarUrl(userAvatarSrc ?? authUser.avatarUrl, authUser.gender);
   return (
     <article className={`${styles.message} ${isUser ? styles.user : styles.assistant}`}>
       {isUser ? (
@@ -105,7 +107,7 @@ function MessageBubble({
             <div className={styles.messageBubble}>{message.content}</div>
             <span className={styles.srOnly}>你</span>
             <span className={styles.userAvatar} aria-hidden="true">
-              <img src={userAvatar} alt="" />
+              <AvatarImage avatarUrl={userAvatar} gender={authUser.gender} alt="" />
             </span>
           </div>
           <div className={styles.messageMeta}>Anddy · {formatMessageTime(message.time)} PM</div>
@@ -155,19 +157,23 @@ function TraceRail({ run, designChat = false }: { run: AgentRunView; designChat?
           ) : (
             <div className={styles.traceEmpty}>等待运行事件...</div>
           )}
-          {run.citations.length ? (
-            <div className={styles.citationList}>
-              {run.citations.map((citation) => (
-                <CitationBlock citation={citation} key={citation.id} />
-              ))}
-            </div>
-          ) : null}
         </TabsContent>
         <TabsContent className={styles.traceBody} value="json">
           <pre className={styles.traceJson}>{JSON.stringify(run, null, 2)}</pre>
         </TabsContent>
       </Tabs>
     </aside>
+  );
+}
+
+function CitationList({ citations }: { citations: AgentRunView['citations'] }) {
+  if (!citations.length) return null;
+  return (
+    <div className={styles.citationList} aria-label="知识库引用">
+      {citations.map((citation) => (
+        <CitationBlock citation={citation} key={citation.id} />
+      ))}
+    </div>
   );
 }
 
@@ -216,6 +222,7 @@ type ChatSurfaceProps = {
   profileIdOverride?: string;
   showKnowledgeTopNav?: boolean;
   designChat?: boolean;
+  fixtureVariant?: 'chat';
   pageVariant?: 'completed-citations' | 'figma-default';
   statusForStrip?: AgentDisplayStatus;
   statusVisualState?: 'user-cancelled';
@@ -246,6 +253,7 @@ function ChatSurface({
   profileIdOverride,
   showKnowledgeTopNav,
   designChat,
+  fixtureVariant,
   pageVariant,
   statusForStrip,
   statusVisualState,
@@ -257,6 +265,7 @@ function ChatSurface({
       activeModule="chat"
       avatarSrc={avatarSrc}
       designChat={designChat}
+      fixtureVariant={fixtureVariant}
       displayNameOverride={displayNameOverride}
       profileIdOverride={profileIdOverride}
       pageOverlay={pageOverlay}
@@ -290,6 +299,7 @@ function ChatSurface({
           onChange={onChange}
           onSend={onSend}
           onStop={onStop}
+          fixtureVariant={fixtureVariant}
         />
       </div>
     </WorkspaceLayout>
@@ -447,7 +457,7 @@ function PlanningStatePage() {
         <div className={styles.planningUserLine}>
           <div className={styles.planningUserBubble}>帮我分析这周的蛋白质摄入情况</div>
           <span className={styles.planningUserAvatar} aria-hidden="true">
-            <img src={planningAvatarSrc} alt="" />
+            <AvatarImage avatarUrl={planningAvatarSrc} gender="男" alt="" />
           </span>
         </div>
         <div className={styles.planningMessageMeta}>Anddy · 12:45 PM</div>
@@ -561,7 +571,7 @@ function ToolExecutingStatePage() {
         <div className={styles.executingUserLine}>
           <div className={styles.executingUserBubble}>帮我分析这周的蛋白质摄入情况</div>
           <span className={styles.executingUserAvatar} aria-hidden="true">
-            <img src={executingAvatarSrc} alt="" />
+            <AvatarImage avatarUrl={executingAvatarSrc} gender="男" alt="" />
           </span>
         </div>
         <div className={styles.executingMessageMeta}>Anddy · 12:45 PM</div>
@@ -633,7 +643,7 @@ function AwaitingClarificationStatePage() {
         <div className={styles.awaitingUserLine}>
           <div className={styles.awaitingUserBubble}>记录一下我的午餐</div>
           <span className={styles.awaitingUserAvatar} aria-hidden="true">
-            <img src={awaitingMessageAvatarSrc} alt="" />
+            <AvatarImage avatarUrl={awaitingMessageAvatarSrc} gender="男" alt="" />
           </span>
         </div>
         <div className={styles.awaitingMessageMeta}>Anddy · 12:45 PM</div>
@@ -1636,7 +1646,7 @@ function AgentStatePage({ state }: { state: AgentFixtureState }) {
           </div>
           {fixtureMessageAvatarSrc ? (
             <span className={styles.fixtureUserAvatar} aria-hidden="true">
-              <img src={fixtureMessageAvatarSrc} alt="" />
+              <AvatarImage avatarUrl={fixtureMessageAvatarSrc} gender="男" alt="" />
             </span>
           ) : null}
         </div>
@@ -1694,6 +1704,7 @@ function RealChatPage() {
     setRunStatus('idle');
     setAssistantText('');
     setAssistantMessageId(undefined);
+    setCitations([]);
     setBudgetConfirmation(false);
     setCheckpointAvailable(false);
     setApproval(undefined);
@@ -1707,7 +1718,12 @@ function RealChatPage() {
     setError(undefined);
     loadSessionMessages(sessionId)
       .then((rows) => {
-        if (!cancelled) setMessages(rows.sort((a, b) => a.sequence_no - b.sequence_no));
+        if (cancelled) return;
+        const ordered = rows.sort((a, b) => a.sequence_no - b.sequence_no);
+        setMessages(ordered);
+        // 重新进入历史会话时恢复最近一次 Run，才能回放终态事件和引用。
+        const latestRunId = [...ordered].reverse().find((message) => message.agent_run_id)?.agent_run_id;
+        if (latestRunId) setActiveRunId(String(latestRunId));
       })
       .catch((reason) => {
         if (!cancelled) setError(reason instanceof Error ? reason.message : '消息加载失败');
@@ -1726,6 +1742,9 @@ function RealChatPage() {
 
   useEffect(() => {
     if (!activeRunId) return undefined;
+    const hasPersistedAnswer = messages.some(
+      (message) => message.agent_run_id === activeRunId && message.role === 'assistant',
+    );
     // The stream subscription establishes the queued state before receiving runtime events.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setRunStatus('queued');
@@ -1735,14 +1754,14 @@ function RealChatPage() {
       (eventType, payload) => {
         if (eventType === 'run.answer_stream') {
           setRunStatus('validating');
-          setAssistantText((current) => current + (payload.text ?? ''));
+          if (!hasPersistedAnswer) setAssistantText((current) => current + (payload.text ?? ''));
           return;
         }
         if (eventType === 'run.completed') {
           setRunStatus('completed');
           setCheckpointAvailable(false);
           setApproval(undefined);
-          setAssistantText((current) => payload.answer ?? current);
+          if (!hasPersistedAnswer) setAssistantText((current) => payload.answer ?? current);
           if (sessionId) {
             void loadSessionMessages(sessionId).then((rows) => {
               const assistant = rows.find(
@@ -1816,7 +1835,7 @@ function RealChatPage() {
       stream.close();
       streamRef.current = undefined;
     };
-  }, [activeRunId, sessionId]);
+  }, [activeRunId, messages, sessionId]);
 
   const send = async () => {
     const content = input.trim();
@@ -1909,6 +1928,9 @@ function RealChatPage() {
       ) : null}
       {mappedMessages.map((message) => (
         <MessageBubble key={message.id} message={message}>
+          {message.role === 'assistant' && message.agentRunId === activeRunId && runStatus === 'completed' ? (
+            <CitationList citations={citations} />
+          ) : null}
           {message.role === 'assistant' && message.agentRunId ? (
             <AgentFeedback runId={message.agentRunId} messageId={message.id} />
           ) : null}
@@ -1924,6 +1946,7 @@ function RealChatPage() {
             agentRunId: activeRunId,
           }}
         >
+          {runStatus === 'completed' ? <CitationList citations={citations} /> : null}
           {assistantMessageId && activeRunId ? (
             <AgentFeedback runId={activeRunId} messageId={assistantMessageId} />
           ) : null}
@@ -2031,6 +2054,7 @@ function MockChatPage() {
       input={agent.input}
       running={agent.running}
       designChat={isFigmaFixture}
+      fixtureVariant={isFigmaFixture ? 'chat' : undefined}
       displayNameOverride={isFigmaFixture ? 'Anddy' : undefined}
       profileIdOverride={isFigmaFixture ? '1234567' : undefined}
       showKnowledgeTopNav={!isFigmaFixture}

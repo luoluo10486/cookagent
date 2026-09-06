@@ -1,5 +1,11 @@
 # M2-1 公共知识库与双模式 RAG 实现逻辑
 
+## 当前真实资料基线（2026-09-06）
+
+`script/data/knowledge/public/` 已准备 3 份来自 WHO 中文事实表的公共营养资料快照：健康饮食、减少钠摄入、肥胖和超重。每份资料均保留来源 URL、页面日期、检索日期和文件 SHA-256，`manifest.json` 记录去重与完整性信息；资料校验器和定向业务测试已通过。
+
+这 3 份资料当前只作为待导入的真实数据，不代表已经进入运行中的知识库。manifest 明确标记 `embedding_status=未构建向量`；在获得确认前不调用真实 Embedding、不写入 Milvus/Redis、不通过管理员 API 上传或发布。后续正式导入仍必须经过管理员批次、索引结果回写和显式发布流程。
+
 ## 1. 业务边界
 
 首期知识库只支持管理员维护的公共文档。文档固定使用 `tenant_id=0` 和 `knowledge_scope=public_published`；普通用户只能检索已发布、已索引、当前版本且未删除的内容。私有文档、OCR、表格/PPT、网页抓取和跨租户检索不在本阶段范围内。
@@ -58,6 +64,14 @@
 两个 profile 互斥启用，必须使用独立 collection。集合维度以第一次真实响应为准，不固定假设 1536；当前两个 SiliconFlow 模型实际返回 1024 维。模型切换后必须重新索引文档，禁止把不同维度写入同一 collection。
 
 真实模式缺少 endpoint、API Key、模型、Milvus、预算、价格或价格版本时失败关闭，绝不自动回退到 stub。Embedding 密钥与 Chat 密钥使用不同环境变量，不能相互继承。
+
+### 4.2.1 营养目录向量索引
+
+营养目录不直接混入公共知识文档 collection。`nutrition_foods` 仍是食材名称、营养数值和来源版本的 PostgreSQL 权威表；全量语义索引由 `script/local/index-nutrition-catalog.ps1 -ExecutePaid` 从当前 `approved + official + 未删除` 目录读取，按批次调用 Embedding 并写入独立的 `FOODMATE_RAG_NUTRITION_MILVUS_COLLECTION`。当前 Qwen profile 的实际集合为 `foodmate_nutrition_foods`，每条目录记录生成一个稳定的 `nutr_<sha256>` embedding ID，重复执行使用 upsert，不新增重复向量。
+
+local 模式的营养向量和名称、形态、来源、目录版本等检索 metadata 存在 Milvus；stub 模式使用独立的 `FOODMATE_RAG_NUTRITION_STUB_REDIS_PREFIX`，默认值为 `foodmate:rag:nutrition:stub`。两种模式不混写，切换 Embedding profile 时必须使用新的营养 collection 并重新构建。
+
+Runtime 的内部入口为 `POST /foodmate/internal/v1/nutrition/search`，查询只在营养 collection 中做候选召回，并固定过滤公共、已发布、已索引、当前版本和未删除条件。返回的是 `nutrition_food_id` 等候选信息；Java 写入饮食记录时仍先走 `nutrition_foods` 的标准名/中文名/别名精确匹配，并从 PostgreSQL 回读营养值和单位换算，向量候选不会直接成为营养事实。公共知识问答的 `knowledge_search` 仍只查询普通知识文档 collection，不会因为营养目录建索引而混入两类结果。
 
 Compose 中 Python 服务名为 `agent-runtime`，容器内入口为 `python runtime_server.py`，端口为 `9000`；宿主机默认映射到 `9002`。修改 Python 源码使用：
 

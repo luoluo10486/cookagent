@@ -89,6 +89,21 @@ public class AdminOperationalQueryServiceImpl implements AdminOperationalQuerySe
     }
 
     @Override
+    public Page<OperationAudit> operationAuditsForUser(long userId, int page, int size) {
+        if (userId <= 0) throw new IllegalArgumentException("user id must be positive");
+        int safePage = Math.max(1, Math.min(page, 1_000_000));
+        int safeSize = Math.min(100, Math.max(1, size));
+        int offset = (safePage - 1) * safeSize;
+        return new Page<>(
+                store.operationAuditsForUser(userId, safeSize, offset).stream()
+                        .map(this::operationAudit)
+                        .toList(),
+                store.countOperationAuditsForUser(userId),
+                safePage,
+                safeSize);
+    }
+
+    @Override
     public TraceDetail traceDetail(String traceId) {
         String normalizedTraceId = normalizeTraceId(traceId);
         AdminOperationalQueryRepository.TraceRow summary = store.traceById(normalizedTraceId);

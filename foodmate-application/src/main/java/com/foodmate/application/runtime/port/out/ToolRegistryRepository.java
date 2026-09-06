@@ -28,5 +28,6 @@ public interface ToolRegistryRepository {
             int timeoutMs,
             boolean retryable,
             boolean idempotent,
-            Instant publishedAt) {}
+            Instant publishedAt,
+            long revision) {}
 }

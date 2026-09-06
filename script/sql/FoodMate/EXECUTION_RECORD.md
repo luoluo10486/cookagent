@@ -2069,3 +2069,290 @@
 | 业务写入与终态 | Java 执行生成 `food_log_id=354580501375225856`，查询回读 revision `1`、2 条明细、其中 1 条营养匹配、餐次为 `lunch`；执行后的终态 SSE 为唯一 `run.completed`，并校验返回的饮食记录 ID 与 Java 执行结果一致。 |
 | 数据清理 | 验收脚本默认清理成功：本轮饮食记录软删除、Session 软删除，未执行迁移、truncate、备份恢复、性能压测、组件重启或 ACK/重复投递故障注入。 |
 | 结论 | 真实 SiliconFlow Chat -> `food_log_writer` Proposal -> Java Approval confirm/execute -> PostgreSQL 饮食记录与营养匹配 -> `run.completed`/SSE 的 R2 业务闭环已取得直接证据；拒绝/重复确认等分支继续由既有业务回归覆盖。 |
+
+## D131 M1-5 真实 USDA 营养目录重建（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 数据来源 | 使用 USDA FoodData Central SR Legacy CSV 数据集生成 V33；manifest 记录源压缩包 SHA-256、候选数量、筛选数量、分类分布和版本快照，原始压缩包未提交到仓库。 |
+| 结构与导入 | 已在本地 Docker PostgreSQL `FoodMate` 执行 V32 结构契约和 V33 seed；活动目录为 `1,000` 条 `approved/official` 食材，活动 USDA `foodPortion` 换算为 `1,518` 条。 |
+| 去重与校验 | 活动规范键 `1,000/1,000`、来源食材 ID `1,000/1,000`、食材/单位换算 `1,518/1,518`；非法目录值、重复活动规范键、非法换算值和食材外键不匹配均为 `0`。 |
+| 历史数据边界 | 重新筛选后不再入选的旧生成记录只做软删除，食材 `9` 条、换算 `12` 条；V33 rollback 前置检查暂无饮食明细引用，未执行 `TRUNCATE` 或宽泛删除。 |
+| 代码与测试 | `script/data/nutrition/build_usda_catalog.py` 支持稳定外部 ID、中文别名、食材形态、foodPortion 去重和 SQL 转义；营养目录生成器契约测试 `4 passed`，PowerShell 清理脚本语法检查和 `git diff --check` 通过。 |
+| 运行边界 | 本轮未调用真实 Chat/Embedding、未写入 Milvus、未修改 RAG 发布状态；只清理了本轮可确认的原始压缩包和 Python 缓存，无法确认归属的临时目录保留待人工判断。 |
+| 结论 | 本轮完成真实 USDA 营养目录基线，可供后续饮食匹配使用；营养学人工复核、复合菜配方和生产级目录治理不在本轮完成口径内。 |
+
+## D132 M2-1 官方公共营养资料快照（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 来源 | 选取 WHO 中文事实表《健康饮食》《减少钠摄入》《肥胖和超重》，页面日期分别为 2026-01-26、2026-05-11、2025-12-08；三个来源 URL 均为独立 HTTPS 页面。 |
+| 本地资料 | 新增 `script/data/knowledge/public/` 下 3 份中文 Markdown 资料和 `manifest.json`；每份资料保留来源名称、URL、页面版本、检索日期和 SHA-256，内容标注为官方页面摘要，不冒充 FoodMate 自有医学结论。 |
+| 数据校验 | `validate_public_sources.py` 校验通过：资料数量 `3`、来源 URL 唯一、文件 SHA-256 一致、Front Matter 与 manifest 一致、未发现 API Key/Authorization/测试占位内容或重复正文。 |
+| 业务测试 | 项目 `.venv` 执行 `agent-runtime/.venv/Scripts/python.exe -B -m pytest -q -p no:cacheprovider agent-runtime/tests/test_public_knowledge_manifest.py`：`2 passed`；未生成 Python 缓存。 |
+| Embedding 边界 | manifest 明确记录 `embedding_status=未构建向量`；本轮未上传管理员 API、未调用真实 Embedding、未写入 Redis/Milvus、未发布 RAG 文档，也未改变现有知识库状态。 |
+| 结论 | 公共知识库真实资料准备和来源可追溯校验已完成；待后续确认后，才执行批量上传、真实 Embedding、Milvus 索引和显式发布。 |
+
+## D133 真实业务入口兼容性修复与无付费预检（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 修复范围 | 修正 `real-food-log-e2e.ps1`、`real-meal-plan-e2e.ps1` 和 `real-sql-agent-e2e.ps1` 的 PowerShell 参数调用方式；修复 R2/R3 错误摘要脱敏正则；触及的英文代码注释改为中文。 |
+| 编码兼容 | 三个入口统一保存为 UTF-8 BOM，Windows PowerShell 5.1 和 PowerShell 7 的语法解析均通过。 |
+| 契约测试 | `real-food-log-e2e.tests.ps1`、`real-meal-plan-e2e.tests.ps1`、`real-sql-agent-e2e.tests.ps1` 均通过。 |
+| 无付费预检 | R2、R3、R4 无参数执行均返回 `status=preflight_passed`；Chat 路由为 `cloud_primary/deepseek-ai/DeepSeek-V4-Flash`，R4 的 SQL Planner 为 `local`，价格审计为 `true`；未创建 Run、未登录、未调用付费服务。 |
+| 运行环境 | Docker Compose 配置校验通过；Java、Python Runtime、PostgreSQL、Redis、RocketMQ、MinIO 和 Milvus 当前均为 healthy。 |
+| 数据与安全边界 | 未修改数据库、未上传资料、未构建向量；未输出或提交任何 API Key、密码、Prompt、完整模型响应或临时测试数据。 |
+| 暂缓范围 | 未执行真实付费业务、性能压测、组件重启、ACK/重复投递故障注入、备份恢复、生产操作或发布回滚。 |
+| 结论 | 真实业务入口已具备可执行且跨 PowerShell 版本的预检条件；本轮仅完成工具修复和无付费配置门禁，不将真实云闭环新增标记为完成。 |
+
+## D134 R1 真实云公共知识库 RAG 闭环（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；Docker `foodmate`、`agent-runtime`、PostgreSQL、Redis、RocketMQ、MinIO 和 Milvus 均恢复为 healthy；管理员凭据仅注入当前 PowerShell 进程，未写入 `.env`、日志或本记录。 |
+| 真实配置与费用门禁 | RAG 使用 `local`、OpenAI-compatible `Qwen/Qwen3-Embedding-0.6B` 和独立 Milvus collection；Chat 使用 `cloud_primary/deepseek-ai/DeepSeek-V4-Flash`；固定单场景、累计上限 `5 CNY`、`no_retry=true`、`require_cloud=true`。 |
+| 批次与索引 | 批次 `354708496958099456` 上传 `3` 个隔离文档，3 个条目均索引成功，批次最终状态为 `completed`；Java Index Outbox -> RocketMQ -> Python 解析/真实 Embedding -> Milvus -> Java 结果回写闭环成功。 |
+| 批次 SSE | 批次 SSE 共 `6` 个事件，包含 `3` 个 indexed 状态事件；使用 `Last-Event-ID` 回放得到 `5` 个后续事件，事件 ID 连续可复核且无重复终态。 |
+| 发布与检索 | 显式发布后公共检索返回 `matched`，引用数量 `2`；下线后检索和恢复接口均返回成功，脚本核对了可见性边界。查询摘要仅记录 SHA-256，不保存原文或完整查询。 |
+| AgentRun 与引用 | Run `354708662054293504` 的 SSE 共 `8` 个事件，唯一终态为 `run.completed`，包含 `2` 条安全引用和 `1` 个真实 Chat 模型事件；回放得到 `7` 个后续事件，未出现重复终态。 |
+| 数据清理 | 脚本默认清理成功：本轮 `3` 个文档软删除、会话软删除，错误数量 `0`；审计、Outbox/Inbox 和 SSE 事实按保留约定保留。 |
+| 安全与暂缓范围 | 未输出或记录 API Key、密码、Prompt、完整回答、对象键、对象地址或完整原文；未执行性能压测、组件重启、ACK 丢失/重复投递故障注入、备份恢复、生产操作或发布回滚。 |
+| 结论 | 真实 SiliconFlow Embedding/Chat -> 公共知识库索引与发布 -> AgentRun 检索 -> `run.completed`/SSE 引用的 R1 业务闭环已取得直接证据；生产质量、容量和完整故障矩阵仍按范围后置。 |
+
+## D135 阶段 4 浏览器页面状态核对（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 真实模式页面 | 在本地 Vite `VITE_AGENT_MODE=real` 下登录开发管理员后，`/admin/knowledge` 成功加载真实管理页面并显示空列表；`/chat` 成功加载真实聊天页面并显示空会话状态。空列表与 D134 脚本清理结果一致。 |
+| 隔离页面状态 | 在不连接后端、不调用付费服务的隔离 mock Vite 实例中，实际核对知识库上传成功态、聊天 `completed-with-citations` 引用展示态和 `write-confirmation` 饮食确认态；页面控件、引用标题/片段和确认/取消入口均可见。 |
+| 业务边界 | 本轮只核对页面渲染与状态入口，没有通过浏览器重新上传文档、发布文档或发送新的 AgentRun；不把 fixture 页面状态解释为真实模型或真实数据库证据，后端闭环以 D134、D130、D128 和 D129 为准。 |
+| 安全与清理 | 浏览器只访问本机 `127.0.0.1`；未保存截图、凭据、Prompt、回答或业务原文到仓库，临时 Vite 进程和浏览器页面在本轮结束时关闭。 |
+| 结论 | 真实模式前端壳层与 Java API 的入口一致，R1/R2 关键页面状态具备可演示验证；真实业务数据页面演示不重复消耗付费额度，仍以已有真实 API/SSE 证据作为权威验收。 |
+
+## D136 真实聊天历史 Run 回放与引用去重修复（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 问题 | 真实模式重新进入已有会话时，页面只加载持久化消息，没有恢复最近 `agent_run_id`；即使补订阅 SSE，也会把已持久化的助手回答再渲染一次。 |
+| 修复 | 会话消息按 `sequence_no` 排序后恢复最近 Run；历史 Run 回放继续接收 `run.completed` 的引用和状态，但检测到已有助手消息时不重复渲染答案文本，新 Run 仍保留流式答案显示。 |
+| 业务测试 | `foodmate-ui` 执行 `npm.cmd test -- --run src/pages/ChatPage/ChatPage.real.test.tsx`：`1` 个测试通过；`npm.cmd run typecheck` 和 Prettier 检查均通过。测试使用本地模块桩，不调用 Java API、真实 Chat 或 Embedding。 |
+| 证据边界 | 测试验证历史消息 -> Run 恢复 -> SSE `run.completed` -> 引用展示和答案唯一性；真实云闭环证据仍以 D134、D130、D128、D129 为准。 |
+| 注释与提交 | 新增实现注释使用中文；未混入用户已有 Java、Admin UI、Figma QA 或资源改动。 |
+| 结论 | 前端刷新/重新进入历史会话时可以恢复终态引用，且不会产生重复助手回答；本轮未新增付费请求、数据库写入或临时数据。 |
+
+## D137 RunsTab 定向业务测试复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；使用 `foodmate-ui` 当前项目依赖和 Vitest，不启动后端、Docker 或真实云服务。 |
+| 执行命令 | `cd foodmate-ui; npm.cmd test -- --run src/pages/AdminPage/tabs/RunsTab.test.tsx src/pages/AdminPage/tabs/RunsTab.real.test.tsx` |
+| 测试结果 | 2 个测试文件通过，4/4 个测试通过，退出码 `0`；验证包含 RunsTab 详情加载路径。 |
+| 付费与数据边界 | 未调用 Chat/Embedding，未访问 Java API，未写入 PostgreSQL、Redis、Milvus 或 RocketMQ，未生成测试数据。 |
+| 范围说明 | 本轮只复核此前记录的已知定向失败，不重新运行完整 Vitest 套件；README 和测试策略已同步更新，避免把定向结果误写成完整套件结果。 |
+| 结论 | `RunsTab` 已知定向测试问题当前不可复现且本次验证通过；完整前端测试套件仍需在后续大功能点按计划集中执行。 |
+
+## D138 Docker 应用容器、管理员登录与数据边界复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；使用根目录 `.env` 启动本地 Docker Compose 应用容器。真实密钥、管理员密码和会话令牌未写入本记录。 |
+| 镜像构建 | `docker compose --env-file .env -f docker/compose.yml build foodmate` 返回成功；随后执行 `docker compose --env-file .env -f docker/compose.yml up -d --no-deps foodmate`，只重建应用容器，未重建依赖服务、迁移数据库或清理数据卷。 |
+| readiness | `foodmate` 容器启动后 Docker health 状态为 `healthy`；`/actuator/health/readiness` 返回 HTTP 200，应用日志显示 Java 控制面正常启动并连接 PostgreSQL。 |
+| 管理员登录 | `POST /api/auth/login` 使用 `admin@foodmate.local` 和本地开发密码返回 HTTP 200、`admin` 角色及会话 Cookie；首轮使用驼峰字段得到 `INVALID_ARGUMENT`，按现有 `LoginRequest` 的 `snake_case` 契约改为 `username_or_email` 后通过，未修改业务代码。 |
+| 数据边界 | PostgreSQL 只读复核结果：明确的 `codex_*` 探针账号 `0`；管理员账号 `1` 且 `password_hash` 为 BCrypt；营养目录 `1,009` 条；知识库文档 `3` 条；知识导入批次 `1` 条。未发现营养目录或知识库历史事实被误删。 |
+| 代码与计划 | 中文代码注释门禁已写入《秋招真实业务闭环执行计划》和《M2剩余功能执行计划》；本轮没有新增 Java/Python 业务代码，因此没有进行无关的全仓库注释翻译。 |
+| 暂缓范围 | 未执行性能压测、真实 Agent 流量统计、组件重启矩阵、ACK 丢失/重复投递故障注入、SSE 断线专项、备份恢复、生产操作或发布回滚。 |
+| 结论 | 本轮确认 Docker 应用镜像可构建、容器可启动、管理员认证可用且数据库清理范围受控；该结果只补充本地启动和账号复核证据，不将暂缓的 M1-6 故障/性能内容标记为完成。 |
+
+## D139 G0 前端业务质量门禁复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate\\foodmate-ui`；使用仓库现有 Node 依赖，不启动 Java、Docker 或真实云服务。 |
+| 执行命令 | `npm.cmd run typecheck`；`npm.cmd test -- --run src/pages/ChatPage/ChatPage.test.tsx`；`npm.cmd run build`。 |
+| 测试结果 | `ChatPage.test.tsx` 1 个测试文件、32/32 通过；TypeScript 检查通过；Vite 生产构建成功，2,015 个模块完成转换。 |
+| 计划对照 | G0 要求的 `renderState` 测试装配当前已存在，未发现该计划项仍有代码阻塞；本轮未重复修改用户已有 Admin UI/Figma 改动。 |
+| 数据与费用边界 | 未访问 Java API，未调用 Chat/Embedding，未写入 PostgreSQL、Redis、Milvus 或 RocketMQ，未生成业务测试数据。 |
+| 注释门禁 | 本轮没有修改业务代码；涉及的现有测试注释保持中文，未进行无关的全仓库翻译。 |
+| 结论 | G0 前端业务构建门禁在当前工作区复核通过，可进入 K1/K2 知识索引契约复核；完整 Vitest 套件不作为本轮必要重复测试。 |
+
+## D140 K1/K3 知识索引契约与双模式业务测试复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| Java 业务测试 | `KnowledgeIndexResultMessageProcessorTest`、`KnowledgeOutboxPublisherTest`、`KnowledgeUploadValidationTest`、`KnowledgeServiceImplTest`、`KnowledgeSearchServiceImplTest`、`FlywayV16V17KnowledgeMigrationScriptTest`、`FlywayV28MigrationScriptTest`、`FlywayV29MigrationScriptTest`、`KnowledgeControllerTest`、`KnowledgeSearchControllerTest` 合计 36/36 通过。 |
+| Python 业务测试 | 使用 `agent-runtime\\.venv\\Scripts\\python.exe -B -m pytest -q -p no:cacheprovider tests/test_knowledge_worker.py tests/test_knowledge_rag.py tests/test_runtime_env.py tests/test_docker_compose_contract.py`，79/79 通过，4 个子断言通过；未调用真实云服务。 |
+| 只读数据库校验 | V16、V17、V28、V32、V33 validation 均执行成功；知识状态/重试/重复事实均无非法计数，V33 当前活动目录为 1,000 条食材和 1,518 条换算，非法值为 0。 |
+| 发现的问题 | 首次执行 V29 validation 时，当前本地库尚未应用 V29，旧脚本直接引用不存在的 `provider_trace_id`，导致 SQL 错误；该次失败已保留为本轮修复依据，未修改数据库。 |
+| 修复内容 | V29 validation 和 rollback precheck 先判断列是否存在，再通过 psql `\\gexec` 动态执行对应只读查询；未应用时返回 `provider_trace_migration_status=not_applied`，已应用时继续校验 Trace 长度和记录数。 |
+| 修复验证 | V29 validation 和 rollback precheck 在当前数据库均返回 `not_applied`，不再中止；`FlywayV29MigrationScriptTest` 2/2 通过，`git diff --check` 通过。 |
+| 数据与费用边界 | 未执行迁移、truncate、删除、备份恢复或真实云调用；未写入 PostgreSQL、Redis、Milvus 或 RocketMQ 业务数据。 |
+| 注释门禁 | 新增 SQL 注释使用中文；未翻译与本切片无关的已有注释或用户改动。 |
+| 结论 | K1/K3 的知识索引契约、双模式业务测试和当前数据库只读校验已完成；V29 尚未应用的本地状态被明确区分，不误报为数据损坏。 |
+
+## D141 秋招真实业务闭环计划启动复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行范围 | 按《秋招真实业务闭环执行计划》复核 R1 公共知识库、R2 饮食记录、R3 餐食计划和 R4 只读 SQL Agent 的可执行入口；本轮只做配置预检和业务门禁，不重复消耗付费额度。 |
+| 无付费预检 | `real-rag-e2e.ps1`、`real-food-log-e2e.ps1`、`real-meal-plan-e2e.ps1`、`real-sql-agent-e2e.ps1` 无参数执行均返回 `status=preflight_passed`；路由确认包含真实 Chat `cloud_primary/deepseek-ai/DeepSeek-V4-Flash`、真实 Embedding `openai-compatible/Qwen/Qwen3-Embedding-0.6B` 和已配置 Milvus collection，未登录、未创建 Run、未上传文档、未调用 Chat/Embedding。 |
+| Java 业务门禁 | `mvnw.cmd -pl foodmate-application,foodmate-infra,foodmate-api -am test` 定向执行知识库、Tool Gateway、SQL Guard、饮食记录、餐食计划、审批和 Run/SSE 测试：Application `113/113`、Infrastructure `2/2`、API `9/9`，合计 `124/124`，无失败。 |
+| Python 业务门禁 | 使用项目 `.venv` 执行 RAG Worker、知识检索、Runtime 环境、Compose、模型适配、Runtime Server、SQL Planner、Tool Protocol 和 MQ 测试：`198 passed`、`6` 个子断言通过；使用 `-B -p no:cacheprovider`，未生成 Python 缓存，未调用真实云服务。 |
+| 前端业务门禁 | 管理端、知识库、聊天、引用和相关服务共 `10` 个测试文件、`71/71` 通过；`npm.cmd run typecheck` 通过。未启动真实业务请求，未写入数据库或消息系统。 |
+| 脚本注释门禁 | 付费预检、Embedding profile 切换、Docker Chat smoke 和 Docker Embedding smoke 的自然语言注释已统一为中文；R1/R2/R3/R4 及 Embedding smoke 契约测试 `5/5` 通过，改动已提交为 `de3fec18`。 |
+| 命令修正 | 首次 Python 测试命令错误引用不存在的 `test_recovery_protocol.py`，随后按实际测试清单修正；该问题是命令路径错误，不是业务代码失败。 |
+| 数据与费用边界 | 未执行迁移、truncate、删除、备份恢复、性能压测、组件重启、ACK/重复投递故障注入或真实付费业务；未输出或记录任何 API Key、密码、Prompt、完整回答、原文或对象存储地址。 |
+| 结论 | 当前计划范围内的真实业务实现和业务门禁已有历史直接证据，本轮复核与历史证据一致；下一步不重复付费执行，继续保持性能、故障矩阵、生产部署和备份恢复后置。 |
+
+## D142 全量营养目录真实 Embedding 索引（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 代码与容器 | 新增独立营养目录 Milvus/Redis 索引适配器、Runtime `POST /foodmate/internal/v1/nutrition/search` 和 `script/local/index-nutrition-catalog.ps1`；Python 定向测试 `55 passed`，Docker `agent-runtime` 镜像构建成功并恢复 healthy。 |
+| 数据读取 | 脚本从当前 PostgreSQL `nutrition_foods` 读取 `approved + official + is_deleted=false` 记录，共 `1,000` 条；未修改营养表、未迁移、未清理业务数据。首次运行因误带不存在的 `tenant_id` 条件在读取阶段失败，未产生外部请求；修正后重新执行成功。 |
+| 真实索引 | 使用 `Qwen/Qwen3-Embedding-0.6B`，分 `32` 批写入 Milvus 集合 `foodmate_nutrition_foods`；供应商返回累计 `113,538` tokens；Milvus 复核得到 `1,000` 个实体和 `1,000` 个唯一 `nutrition_food_id`。稳定 `nutr_<sha256>` ID 支持重复 upsert。 |
+| 真实检索 | Runtime 对“鸡胸肉”执行一次真实 Embedding + Milvus 查询，返回对应 `nutrition_food_id=171474` 的鸡胸肉候选及其他 raw/cooked 形态候选；查询固定过滤营养目录的公共、已发布、已索引、当前版本和未删除 metadata。 |
+| 权威边界 | PostgreSQL 继续保存和提供标准名称、营养数值、来源版本及单位换算；饮食记录写入仍使用 Java 精确 SQL 匹配，向量检索只作为独立候选入口，不直接替代营养事实。公共知识 `knowledge_search` 继续查询普通知识 collection。 |
+| 数据与费用边界 | 本轮产生真实 Embedding 供应商请求并写入 Milvus；未调用 Chat，未写入 PostgreSQL/Redis/RocketMQ 业务事实，未输出或记录 API Key、向量正文或完整查询。性能压测、组件重启、ACK/重复投递故障注入、备份恢复和生产操作继续后置。 |
+| 结论 | 全量营养目录已完成真实向量构建并取得 Milvus 数量和查询证据；营养精确匹配业务保持不变，后续如需将语义候选用于未知食材自动匹配，仍需单独增加 Java 置信度门槛和人工确认策略。 |
+
+## D143 本地工具注册表与 RAG 测试事实清理（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；Docker PostgreSQL、Redis、Milvus 均运行；未执行迁移、truncate、备份恢复或生产操作。 |
+| 工具注册表 | 执行 `cleanup-local-tool-registry.ps1` dry-run：正式工具 `7` 条，活动正式工具 `7` 条，`e2e_tool_*` 注册 `0` 条，工具调用引用 `0` 条；未修改正式工具定义。 |
+| 本地业务数据 | 复核 `reset-local-business-data.ps1` 的保留范围：营养目录活动数据 `1,000` 条，单位换算 `1,518` 条；用户账户、模型配置、SQL Catalog 和正式工具保留。此前本地业务清理已生成 PostgreSQL 逻辑备份，未执行额外宽泛删除。 |
+| RAG 清理入口 | 新增 `maintenance/cleanup-local-rag-indexes.ps1`，要求 PostgreSQL 活动知识文档和切片均为 `0`，并以确认短语启用删除；只处理当前公共知识集合、三个明确命名的 `codex` 测试集合和 stub `foodmate:rag:stub:chunks`。 |
+| 实际命令 | `cleanup-local-rag-indexes.ps1` dry-run；`cleanup-local-rag-indexes.ps1 -Execute -Confirmation CLEAN_LOCAL_RAG_INDEXES`；执行后再次 dry-run 复核。Redis 索引从 `9` 条降为 `0`；公共 Milvus 实际可查询记录为 `0`。 |
+| Milvus 校验 | 首轮执行后 Milvus `get_collection_stats` 仍显示旧的 `7/29`，但直接查询已无记录；脚本随后改为 `query_iterator` 实际计数并重新复核为 `0`，不把 eventual consistency 的旧统计误报为残留。营养集合 `foodmate_nutrition_foods` 执行前后均为 `1,000` 条，未被清理。 |
+| 文档 | 更新工具注册与执行链路说明、本地开发指南、SQL README；补充工具用途、注册表入口、执行事实入口、清理命令和营养索引保护边界。 |
+| 缓存与安全 | 维护脚本使用 `agent-runtime\\.venv` 的 `python -B`，未向仓库写入 API Key、密码、向量正文或业务原文；项目级 Python 缓存按收尾步骤清理，`.venv` 依赖缓存不纳入删除范围。 |
+| 结论 | 当前 PostgreSQL 正式工具和参考数据可用，公共知识测试索引事实已清空，营养向量保持完整；后续重新导入公共知识时仍需走批次上传、索引、显式发布流程。 |
+
+## D144 K1 正式公共营养资料 local-stub 业务闭环（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行范围 | 使用 WHO 中文公共营养资料快照建立正式公共知识库基线；执行批量上传、异步索引、显式发布、公共检索和批次 SSE 回放，不调用真实 Embedding，不写入 Milvus。 |
+| 资料与可追溯性 | `script/data/knowledge/public/` 共 `9` 份 Markdown 资料；`manifest.json` 为每份资料记录来源 URL、版本、检索日期和 SHA-256，来源为世界卫生组织公开事实表，未发现重复、测试占位或敏感信息。 |
+| 批次与 PostgreSQL | 批次 `354847677655027712` 使用 `stub` 模式，`9/9` 条目 `indexed`，每条尝试次数为 `1`，批次为 `completed`；9 个文档均为 `visibility=published`、`status=indexed`、`current_version=true`、未逻辑删除，共 `58` 个有效 chunk。 |
+| Outbox 与审计 | 索引 Outbox `9/9` 为 `published`，可见性 Outbox `9/9` 为 `published`；统一审计包含批次创建成功事实 `1` 条和文档发布成功事实 `9` 条，未保存资料原文、对象地址或密钥。 |
+| Redis stub 索引 | `foodmate:rag:stub:chunks` 共 `58` 条，覆盖 `9` 个文档；所有条目的 metadata 均为 `published/indexed/current_version`，删除标记为 `false`，与 PostgreSQL chunk 数一致。 |
+| 公共检索 | 代表性健康饮食、钠摄入、食品安全和身体活动查询均返回最多 `4` 条受限引用；完全随机 ASCII 查询返回 `0` 条，证明无命中不会返回无关文档。 |
+| 批次 SSE | 读取到 `18` 个持久化事件，包含 `knowledge.index.indexed` 和 `knowledge.batch.progress`；以首事件 ID 回放得到 `17` 个后续事件，未返回旧游标事件，事件 ID 无重复。 |
+| 代码修复 | 为批次状态聚合增加批次行锁，避免并发条目结果回写时读取过期聚合快照；Application 受影响测试 `5` 项、Infrastructure 受影响测试 `6` 项均通过。 |
+| 数据与费用边界 | 本轮只使用 Docker 中现有 Java、Python Runtime、PostgreSQL、Redis 和 RocketMQ；未改迁移、未清理既有数据、未调用付费 Chat/Embedding、未执行性能压测、依赖重启或故障注入。 |
+| 结论 | K1 的正式公共资料准备、批量导入、local-stub 索引、发布可见性、公共检索和批次 SSE 业务证据已完成；真实 Embedding/Milvus 索引、性能与生产可靠性继续按计划后置。 |
+
+## D145 K2 知识切分与检索质量业务收口（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 切分策略 | `chunk_markdown` 支持完整 Markdown 标题层级和 `section_path`；同章节段落优先合并，长段落优先在句末、标点或空白处拆分，默认目标 `700` 字符、硬上限 `1000` 字符、重叠 `80` 字符。 |
+| 稳定性 | 保留 `document_id + version + sequence` 的稳定 `embedding_id`；旧调用方传入较小 `max_chars` 时会自动收敛目标和重叠，不突破硬上限。 |
+| 检索策略 | stub/Redis stub 同时使用标题、章节和正文关键词；候选最多 `12` 条、重排最多 `6` 条、最终最多 `4` 条且每文档最多 `2` 条。Milvus 继续使用公共 ACL、发布、索引、当前版本和未删除过滤。 |
+| 中文检索 | tokenizer 同时生成中文单字和重叠二元词；固定业务样例覆盖蛋白质、钠、食品安全、身体活动、膳食纤维和随机无命中查询。 |
+| 业务测试 | `agent-runtime\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider agent-runtime/tests/test_knowledge_rag.py agent-runtime/tests/test_knowledge_worker.py`：`70 passed`、`4` 个子断言通过。 |
+| 数据边界 | 未重建 D144 正式批次，因此当前 PostgreSQL/Redis 的 `58` 个 chunk 仍是 K1 索引快照；后续新索引任务使用 K2 策略。本轮未调用真实 Embedding、未写入 Milvus、未执行性能或故障测试。 |
+| 结论 | K2 的切分、中文关键词检索、标题/章节命中、稳定 ID 和引用数量边界已完成业务门禁；真实向量质量和历史数据重索引不在本轮执行范围。 |
+
+## D146 K3 结构化记忆与上下文业务收口（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；使用项目 `agent-runtime\\.venv`、Java 21 和仓库现有 Maven Wrapper；未调用真实 Chat/Embedding。 |
+| Python 实现 | `generate_memory_candidates` 支持喜欢、不喜欢/忌口、预算、烹饪能力、用餐时间和回答偏好，候选只保存短结构化值与用户消息 ID；一次性请求、完整计划、营养目标和高影响健康事实不生成候选。ContextBuilder 增加意图类型白名单、确认状态过滤、同 key 去重和最多 8 条限制。 |
+| Java 实现 | `MemoryRepository` 增加同 key 活动记录查询和冲突收敛；PostgreSQL 适配器在事务中使用 advisory lock，相同 JSON 幂等跳过，不同 JSON 写入 `conflict`；确认或手动修改后同 key 其他活动值转为 `rejected`。手动修改先校验 JSON 对象和长期记忆安全边界。 |
+| Java 业务测试 | `mvnw.cmd -pl foodmate-application,foodmate-infra -am test -Dtest=MemoryCandidateServiceImplTest,SessionSummaryServiceImplTest,AgentRunCommandServiceImplTest -Dsurefire.failIfNoSpecifiedTests=false`：`16/16` 通过。 |
+| Python 业务测试 | `agent-runtime\\.venv\\Scripts\\python.exe -B -m pytest -q -p no:cacheprovider agent-runtime/tests/test_memory_context.py agent-runtime/tests/test_runtime_server.py`：`57 passed`；未生成 Python 缓存。 |
+| 编译与检查 | `mvnw.cmd -pl foodmate-application,foodmate-infra -am -DskipTests compile` 成功；`git diff --check` 通过；local-stub 的 `MemoryRepository` 适配器已同步编译通过。 |
+| PostgreSQL 只读检查 | 在运行中的 `foodmate-postgres` / `FoodMate` 执行 `findActiveByKey` 对应 SQL（advisory lock、删除/拒绝/过期过滤、`FOR UPDATE`）成功，返回 `0 rows`；未修改业务数据。 |
+| 数据边界 | 未执行迁移、truncate、删除、备份恢复、Docker 重启或故障注入；未修改现有数据库、Redis、Milvus、RocketMQ 数据。 |
+| 结论 | K3 结构化候选、同 key 幂等/冲突、用户修改删除后的失效边界、摘要与上下文白名单已完成业务门禁；性能、可靠性矩阵和生产治理继续后置。 |
+
+## D147 K4 营养候选确认与权威匹配收尾（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；Java 21；本地 Docker PostgreSQL `foodmate-postgres` / 数据库 `FoodMate`；未调用真实 Chat/Embedding。 |
+| 实现范围 | 新增 `GET /api/nutrition-foods/search` 候选查询；中文烹饪前缀归一化；饮食记录 create/update 支持显式 `nutrition_food_id`；多候选不自动猜测并保存为 `pending_confirmation`；V34 迁移、validation 和 rollback precheck 完成。 |
+| Java 业务测试 | `mvnw.cmd -pl foodmate-application,foodmate-infra,foodmate-api -am test -Dtest=FoodLogServiceImplTest,NutritionFoodServiceImplTest,FlywayV34MigrationScriptTest,NutritionFoodControllerTest -Dsurefire.failIfNoSpecifiedTests=false`：Application `19/19`、Infrastructure `2/2`、API `1/1`，无失败。 |
+| Java 格式检查 | 对本轮涉及的 17 个 Java 源码/测试文件执行 `spotless:check -DspotlessFiles=...`：通过。全模块 Spotless 复核仍被既有 12 个未涉及文件的格式问题阻断，首个报告为 `UserAccountServiceImpl.java`；未运行 `spotless:apply`，未改动这些文件。 |
+| PostgreSQL validation | 使用 `docker exec foodmate-postgres psql` 执行 V34 validation：状态约束包含 `pending_confirmation`；`pending_confirmation_rows=0`；`invalid_catalog_candidate_rows=0`；`missing_candidate_lookup_index=0`。修正 validation 的索引计数语义后重新执行通过。 |
+| 回滚前置检查 | 执行 R34 只读检查：`pending_confirmation_rows=0`，返回 `ready_for_manual_review: no pending_confirmation rows remain`；未执行回滚。 |
+| 业务行为证据 | 实际查询“鸡胸肉”返回多个 USDA 生熟/部位候选；显式目录 ID 才会计算营养快照，歧义和无安全换算路径不写入推断营养值。 |
+| 数据边界 | V34 已在本地库执行；本轮未清理、truncate、备份恢复或修改既有饮食数据，未启动付费服务、未执行性能压测、组件重启或故障注入。 |
+| 结论 | K4 营养候选确认业务切片完成并具备 Java/API/数据库校验证据；复合菜关系、人工营养学复核、性能、可靠性和生产治理继续按计划后置。 |
+
+## D148 K5 SQL Agent 饮食分析业务覆盖（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；Python 使用项目 `agent-runtime\\.venv`；Java 使用仓库 Maven Wrapper 和 Java 21；未启动或重启 Docker 依赖。 |
+| 实现范围 | SQL Planner 新增今日热量、近 7 天蛋白质、指定食材出现次数、餐食计划生命周期完成度和待确认购物清单查询；早餐、午餐、晚餐条件会传入食材次数统计。 |
+| 安全与业务边界 | Python 只生成结构化只读计划；Java 继续执行允许意图、Schema、当前用户范围、软删除、JSqlParser AST、LIMIT、超时和 SQL 专用审计。计划/清单读取不触发写入确认，生成和保存计划仍走原有确认流程。 |
+| 澄清与空态 | 缺少时间范围或食材名称时返回稳定澄清；营养字段超出当前白名单时失败关闭；空结果说明对应数据为空原因，不输出伪造数值或原始 SQL。 |
+| Python 业务测试 | `agent-runtime\\.venv\\Scripts\\python.exe -B -m pytest -q -p no:cacheprovider tests\\test_sql_planner.py tests\\test_runtime_server.py tests\\test_tool_protocol.py`：`87 passed`。 |
+| Java 业务测试 | `mvnw.cmd -pl foodmate-application -am test "-Dtest=SqlQueryPlanValidatorTest,JSqlParserQueryGuardTest" "-Dsurefire.failIfNoSpecifiedTests=false"`：`12/12` 通过，`BUILD SUCCESS`。 |
+| 变更检查 | `git diff --check` 通过；未生成 Python 字节码缓存，未暂存 `.env`、密钥或无关用户改动。 |
+| 数据与费用边界 | 本轮未写入 PostgreSQL、Redis、Milvus 或 RocketMQ 业务数据，未调用真实付费 Chat/Embedding，未执行性能压测、组件重启、ACK/重复投递故障注入、SSE 故障恢复、备份恢复或生产验证。 |
+| 结论 | K5 核心饮食分析的理解 -> 澄清/规划 -> Java 只读校验 -> 结果安全说明业务切片完成；真实环境运行、性能和可靠性门禁仍按计划后置。 |
+
+## D149 K6 工具注册表真实接口收口（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 实现范围 | Java 工具注册表查询增加 `tool_registries.revision`，统一响应返回当前版本、输入/输出 Schema、权限、超时、重试、幂等和 `revision`；管理端真实模式改用 `GET /api/admin/tools/registry`。 |
+| 启停一致性 | 管理端启停从同一注册表响应读取 `revision`，提交确认摘要和 `Idempotency-Key`；成功后使用服务端返回的新 `revision` 更新本地行，避免后续写操作使用过期版本。 |
+| Java 业务验证 | `mvnw.cmd -pl foodmate-api,foodmate-application,foodmate-infra -am test "-Dtest=ToolRegistryControllerTest,ToolRegistryServiceTest,ToolPolicyGatewayServiceTest" "-Dsurefire.failIfNoSpecifiedTests=false"`：应用层 `13/13`、API `1/1` 通过，`BUILD SUCCESS`。 |
+| 前端业务验证 | `npm.cmd test -- --run src/services/adminToolRegistry.test.ts src/services/adminModelGovernance.test.ts`：`6/6` 通过；真实接口无 dashboard fallback 的映射契约已覆盖。 |
+| 数据与边界 | 未执行迁移、写库、Docker 重启、性能压测、故障注入或真实付费调用；未修改工具注册数据。 |
+| 结论 | K6 工具注册表的真实读取、Schema 展示和启停版本一致性已完成；管理端知识库/运行审计等页面的真实字段核对继续在后续大点集中处理。 |
+
+## D150 K6 知识库管理查询真实接口收口（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；`foodmate-ui` 使用项目 `node_modules`；未启动或重启 Docker 依赖。 |
+| 列表接口 | 管理端知识库真实模式从 `/api/admin/dashboard` 切换为 `/api/admin/queries/knowledge?page=1&size=100`，使用后端统一分页查询的 `items/total/page/size` 响应。 |
+| 业务链路 | 批次上传仍使用 `/api/admin/knowledge-documents/upload-batches`；详情、SSE、失败条目重试、发布、下线、恢复和软删除接口保持真实路径，未引入第二套状态来源。 |
+| 前端状态 | 真实模式支持加载中、空列表、接口失败和重试；批次详情继续由详情接口和 SSE 回读，不能通过 dashboard 旧快照覆盖。 |
+| 前端业务验证 | `npm.cmd run test -- --run src/pages/AdminPage/tabs/KnowledgeTab.real.test.tsx src/pages/AdminPage/tabs/KnowledgeTab.test.tsx`：`4/4` 通过；`npm.cmd run typecheck`：通过；`git diff --check`：通过。 |
+| 数据与费用边界 | 未修改 PostgreSQL、Redis、Milvus、RocketMQ 数据，未调用真实付费 Chat/Embedding，未执行性能测试、组件重启、故障注入、备份恢复或生产操作。 |
+| 结论 | K6 知识库列表已与后端真实分页契约对齐；用户详情真实查询、K7 页面业务状态和最终集中回归继续后置。 |
+
+## D151 K6 管理员用户详情真实读取（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行环境 | Windows 工作区 `D:\\develop\\FoodMate`；Java 21、Maven Wrapper 和 `foodmate-ui` 项目依赖可用；未启动或重启 Docker 依赖。 |
+| 后端接口 | 新增 `GET /api/admin/users/{id}/detail`，返回脱敏资料、登录会话、业务会话分页和用户主体相关操作审计摘要。 |
+| 数据边界 | 操作历史只读取 `operator_id=用户 ID` 或 `target_type='user' AND target_id=用户 ID` 的记录；不返回密码、令牌、完整参数或业务原文。 |
+| 前端接入 | 用户详情由真实用户选择触发独立接口请求；资料、饮食画像、登录会话、业务会话和历史 Tab 支持真实数据、加载中、失败和无记录状态；重置凭证仍明确未接入。 |
+| Java 业务验证 | `mvnw.cmd -pl foodmate-application,foodmate-infra,foodmate-api -am test "-Dtest=AdminOperationalQueryServiceImplTest,AdminUserControllerRbacTest" "-Dsurefire.failIfNoSpecifiedTests=false"`：应用层 `8/8`、API `3/3` 通过，`BUILD SUCCESS`。 |
+| 前端业务验证 | `npm.cmd run test -- --run src/pages/AdminPage/tabs/UsersTab.test.tsx src/services/adminToolRegistry.test.ts`：`5/5` 通过；`npm.cmd run typecheck`：通过。 |
+| 格式与边界 | 本轮 8 个 Java 文件分别执行 Spotless `check`，均通过；`git diff --check` 通过；未修改数据库数据，未调用真实付费 Chat/Embedding，未执行性能、重启、故障注入或生产操作。 |
+| 结论 | 管理端用户详情不再依赖 mock 会话/历史空态，已与真实后端查询契约对齐；K7 其他页面体验和最终集中回归继续后置。 |
+
+## D152 G0 前端真实业务状态集中复核（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 执行范围 | 在保留 `foodmate-ui/src/pages/HomePage/HomePage.tsx` 用户未提交改动的前提下，集中复核管理端真实查询状态、知识库批次、聊天引用和既有用户业务页面；未修改 PostgreSQL、Redis、Milvus、RocketMQ 或 `.env`。 |
+| 前端测试 | `cd foodmate-ui; npm.cmd test -- --maxWorkers=1`：`43` 个测试文件、`264/264` 测试通过。单 worker 用于避免本机并发资源争用导致的 5 秒超时，不代表吞吐或性能结论。 |
+| 前端构建 | `cd foodmate-ui; npm.cmd run build`：TypeScript 检查通过，Vite 转换 `2015` 个模块并成功生成生产构建。 |
+| 真实模式收口 | 工具注册表、工具调用、用户详情、知识库批次、运行治理使用真实接口；加载中、空数据、错误和重试状态均不回退到 fixture。聊天页消费 `run.completed.citations`，批次进度和 SSE 继续支持恢复。 |
+| 业务边界 | M2-1/M2-2/M2-3 继续以业务正确性作为完成口径；性能压测、长稳、依赖重启、ACK 丢失、重复投递、生产容量、备份恢复、Kubernetes 和发布回滚不在本轮。 |
+| 结论 | 前端当前业务门禁通过，已与后端真实查询/写入契约对齐；下一阶段若继续开发，应优先处理用户明确的新业务范围，而不是重复开展同一页面验证。 |
+
+## D153 管理端真实数据源边界修正（2026-09-06）
+
+| 项目 | 结果 |
+|---|---|
+| 问题 | 发现管理概览在真实接口返回前无条件使用 Figma fixture 初始 state，可能在加载瞬间展示假数据；管理页统一审计回调也会在真实模式修改前端 fixture 数组。 |
+| 修正 | 概览页 real 模式以空指标/空列表/零总数起步；管理操作成功或失败后仅 fixture 模式追加本地样例审计，real 模式完全以服务端审计和刷新结果为准。 |
+| 业务验证 | `cd foodmate-ui; npm.cmd test -- --maxWorkers=1 --run src/pages/AdminPage/AdminPage.test.tsx src/pages/AdminPage/tabs/ToolsTab.real.test.tsx src/pages/AdminPage/tabs/UsersTab.test.tsx`：3 个测试文件、`32/32` 通过；`npm.cmd run typecheck` 通过。 |
+| 数据边界 | 未修改 PostgreSQL、Redis、Milvus、RocketMQ、`.env` 或任何用户已有 Figma QA 文件；未增加测试数据。 |
+| 结论 | 管理端 real 模式的页面事实来源统一为服务端接口，fixture 仅保留给显式设计预览/测试状态。 |

@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
                     "preference",
                     "constraint",
                     "routine",
-                    "plan",
                     "cooking_skill",
                     "budget_habit",
                     "time_habit",
@@ -55,7 +55,11 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
                     "周食谱",
                     "食谱计划",
                     "个人资料",
-                    "营养目标");
+                    "营养目标",
+                    "一次性请求",
+                    "临时请求",
+                    "今天",
+                    "本周");
     private static final List<String> HIGH_IMPACT_TERMS =
             List.of(
                     "allerg",
@@ -70,7 +74,14 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
                     "诊断",
                     "处方",
                     "药物",
-                    "病史");
+                    "病史",
+                    "血糖",
+                    "糖尿病",
+                    "高血压",
+                    "肾病",
+                    "blood sugar",
+                    "diabetes",
+                    "hypertension");
     private final MemoryRepository store;
     private final IdGenerator ids;
     private final SessionSummaryService summaries;
@@ -104,6 +115,8 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
         if (userId == null) return;
         try {
             boolean persisted = false;
+            int deduplicated = 0;
+            int conflicts = 0;
             for (MemoryCandidate candidate : candidates) {
                 List<String> sourceMessageIds = sourceMessageIds(candidate);
                 if (!allowed(userId, candidate, sourceMessageIds)) continue;
@@ -117,7 +130,12 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
                         || confidence.signum() < 0
                         || confidence.compareTo(BigDecimal.ONE) > 0) continue;
                 String candidateJson = json(candidate.memoryValue());
-                boolean conflict = store.hasDifferentValue(userId, type, key, candidateJson);
+                MemoryRepository.MemorySnapshot current = store.findActiveByKey(userId, type, key);
+                if (current != null && sameJson(current.memoryValue(), candidateJson)) {
+                    deduplicated++;
+                    continue;
+                }
+                boolean conflict = current != null;
                 store.insert(
                         new MemoryRepository.NewMemory(
                                 ids.nextId(),
@@ -131,9 +149,12 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
                                 conflict ? "conflict" : "confirmed",
                                 sourceMessageIdsJson(sourceMessageIds)));
                 persisted = true;
+                if (conflict) conflicts++;
             }
             if (persisted) {
                 summaries.invalidateForUser(userId);
+            }
+            if (persisted || deduplicated > 0) {
                 record(
                         userId,
                         "memory",
@@ -141,7 +162,10 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
                         "memory.candidate.persist",
                         "success",
                         null,
-                        Map.of("candidate_count", candidates.size()));
+                        Map.of(
+                                "candidate_count", candidates.size(),
+                                "deduplicated_count", deduplicated,
+                                "conflict_count", conflicts));
             }
         } catch (RuntimeException exception) {
             failure(userId, "memory", Long.toString(runId), "memory.candidate.persist", exception);
@@ -162,11 +186,12 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
     @Override
     public MemoryView update(long userId, long memoryId, String memoryValue, String scope) {
         try {
-            requireOwned(userId, memoryId);
+            MemoryRepository.MemorySnapshot current = requireOwned(userId, memoryId);
             int changed =
                     store.updateOwned(
-                            userId, memoryId, memoryValue == null ? "{}" : memoryValue, scope);
+                            userId, memoryId, normalizeManualValue(current, memoryValue), scope);
             if (changed != 1) throw new IllegalArgumentException("memory not found");
+            store.rejectOtherConflicts(userId, memoryId);
             summaries.invalidateForUser(userId);
             record(
                     userId,
@@ -211,7 +236,9 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
     public MemoryView confirm(long userId, long memoryId) {
         try {
             requireOwned(userId, memoryId);
-            store.confirmOwned(userId, memoryId);
+            int changed = store.confirmOwned(userId, memoryId);
+            if (changed != 1) throw new IllegalArgumentException("memory not found");
+            store.rejectOtherConflicts(userId, memoryId);
             summaries.invalidateForUser(userId);
             record(
                     userId,
@@ -272,10 +299,12 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
         return view(memory);
     }
 
-    private void requireOwned(long userId, long memoryId) {
-        if (!store.existsOwned(userId, memoryId)) {
+    private MemoryRepository.MemorySnapshot requireOwned(long userId, long memoryId) {
+        MemoryRepository.MemorySnapshot memory = store.findOwned(userId, memoryId);
+        if (memory == null) {
             throw new IllegalArgumentException("memory not found");
         }
+        return memory;
     }
 
     private boolean allowed(long userId, MemoryCandidate candidate, List<String> sourceMessageIds) {
@@ -292,6 +321,37 @@ public class MemoryCandidateServiceImpl implements MemoryCandidateService {
                 && !containsAny(searchable, RESERVED_ENTITY_TERMS)
                 && !containsAny(searchable, HIGH_IMPACT_TERMS)
                 && !store.hasSuppressedSourceMessages(userId, sourceMessageIds);
+    }
+
+    private String normalizeManualValue(
+            MemoryRepository.MemorySnapshot current, String memoryValue) {
+        String raw = memoryValue == null ? "{}" : memoryValue;
+        try {
+            JsonNode value = mapper.readTree(raw);
+            if (value == null || !value.isObject()) {
+                throw new IllegalArgumentException("memory value must be a JSON object");
+            }
+            String normalized = mapper.writeValueAsString(value);
+            String searchable =
+                    (current.memoryType() + " " + current.memoryKey() + " " + normalized)
+                            .toLowerCase(Locale.ROOT);
+            if (containsAny(searchable, RESERVED_ENTITY_TERMS)
+                    || containsAny(searchable, HIGH_IMPACT_TERMS)) {
+                throw new IllegalArgumentException(
+                        "memory value is not eligible for long-term memory");
+            }
+            return normalized;
+        } catch (JsonProcessingException exception) {
+            throw new IllegalArgumentException("memory value must be valid JSON", exception);
+        }
+    }
+
+    private boolean sameJson(String left, String right) {
+        try {
+            return mapper.readTree(left).equals(mapper.readTree(right));
+        } catch (JsonProcessingException exception) {
+            return Objects.equals(left, right);
+        }
     }
 
     private static List<String> sourceMessageIds(MemoryCandidate candidate) {

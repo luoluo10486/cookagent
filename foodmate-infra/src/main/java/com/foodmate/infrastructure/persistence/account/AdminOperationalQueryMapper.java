@@ -335,6 +335,21 @@ public interface AdminOperationalQueryMapper {
     long countOperationAudits(@Param("q") Query query);
 
     @Select(
+            "SELECT operator_id,action,target_type,target_id,result,request_id,trace_id,created_at"
+                    + " FROM operation_audits WHERE is_deleted=FALSE AND (operator_id=#{userId} OR"
+                    + " (target_type='user' AND target_id=CAST(#{userId} AS TEXT))) ORDER BY"
+                    + " created_at DESC,operation_audit_id DESC LIMIT #{limit} OFFSET #{offset}")
+    List<OperationAuditRow> operationAuditsForUser(
+            @Param("userId") long userId,
+            @Param("limit") int limit,
+            @Param("offset") int offset);
+
+    @Select(
+            "SELECT COUNT(*) FROM operation_audits WHERE is_deleted=FALSE AND (operator_id=#{userId}"
+                    + " OR (target_type='user' AND target_id=CAST(#{userId} AS TEXT)))")
+    long countOperationAuditsForUser(@Param("userId") long userId);
+
+    @Select(
             "<script>SELECT dlq_id,consumer_group,source_topic,mq_message_id AS message_id,run_id,"
                     + "dispatch_id,event_id,attempt,reconsume_times,error_code,reconciliation_state,"
                     + "first_seen_at,reconciled_at FROM runtime_message_dlq WHERE 1=1<if test='q.text != null"

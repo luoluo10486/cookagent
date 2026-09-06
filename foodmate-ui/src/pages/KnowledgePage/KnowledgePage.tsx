@@ -239,6 +239,8 @@ export function KnowledgePage() {
       sidebarAvatarSrc={isFigmaFixture ? FIGMA_KNOWLEDGE_AVATARS.sidebar : undefined}
       topAvatarSrc={isFigmaFixture ? FIGMA_KNOWLEDGE_AVATARS.topbar : undefined}
       showWindowControls={isFigmaFixture}
+      // Knowledge 画板使用独立导出的 Figma 壳层资产，真实模式仍使用 Lucide fallback。
+      fixtureVariant={isFigmaFixture ? 'knowledge' : undefined}
       sidebarFixture={isFigmaFixture ? { currentPage: 1, sessions: figmaSidebarSessions } : undefined}
       topbarShowMarkLetter={!isFigmaFixture}
       pageOverlay={

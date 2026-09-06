@@ -61,8 +61,9 @@ describe('Admin user details', () => {
     renderUsers();
 
     const search = await screen.findByRole('textbox', { name: '搜索用户名、ID或邮箱' });
-    expect(screen.getByRole('combobox', { name: '角色筛选' })).toBeInTheDocument();
-    expect(screen.getByRole('combobox', { name: '状态筛选' })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: '角色筛选' })).toHaveTextContent('角色：全部');
+    expect(screen.getByRole('combobox', { name: '状态筛选' })).toHaveTextContent('状态：活跃');
+    expect(screen.getByRole('button', { name: '注册时间筛选' })).toHaveTextContent('Registered: Last 30 Days');
 
     await user.type(search, 'sarah');
     expect(screen.getByRole('row', { name: /usr_112b9/ })).toBeInTheDocument();
@@ -75,5 +76,14 @@ describe('Admin user details', () => {
     await user.click(screen.getByRole('button', { name: '重置筛选' }));
     expect(search).toHaveValue('');
     expect(screen.getByRole('row', { name: /usr_889d4/ })).toBeInTheDocument();
+  });
+
+  it('uses the male default avatar when a fixture user has no gender or avatar', async () => {
+    const user = userEvent.setup();
+    renderUsers();
+
+    await user.click(await screen.findByRole('row', { name: /usr_112b9/ }));
+
+    expect(document.querySelector('.userDetailAvatar img')).toHaveAttribute('src', '/assets/avatars/default-male.svg');
   });
 });

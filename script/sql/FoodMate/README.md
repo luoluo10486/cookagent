@@ -4,7 +4,7 @@
 
 1. 在目标库确认数据库名、账号、PostgreSQL 版本和当前脚本版本。
 2. 按 `baseline/` 中的基线脚本完成空环境初始化；已有环境不得重复执行基线。
-3. 按版本号顺序执行 `migration/` 中的增量脚本，从 V2 到当前最高版本 V30。
+3. 按版本号顺序执行 `migration/` 中的增量脚本，从 V2 到当前最高版本 V33。
 4. 对具备配套校验的迁移，完成后执行同名 `validation/` 脚本并保存只读结果；历史迁移的配套状态以 `migration/README.md` 的矩阵为准。
 5. 需要测试数据时，最后按需执行 `seed/`，并执行对应 seed validation。
 
@@ -34,6 +34,14 @@
 每轮执行都要在 `EXECUTION_RECORD.md` 追加记录：时间和时区、环境、数据库版本、脚本版本、实际命令、validation 结果、保留数据范围、失败与补偿、执行人以及是否清理了本轮随机测试数据。未实际执行的迁移或联调不得写成已完成。
 
 当前版本说明：V16-V17 为 M2-1 公共知识库，V18-V20 和 V30 为 M2-2/M2-3 工具和管理契约，V21-V22 为模型治理，V23 为管理员导出任务，V24-V25 为 DLQ 重放和保留治理，V26 为 M1-4 结构化 Agent 反馈，V27 为 M3 清理执行对账事实，V28 为 M2-1 索引重试 Outbox 事实修正，V29 为 M2-1 Embedding 供应商 Trace 关联事实。详见 `migration/README.md` 及各版本配套 validation/rollback 文件。
+
+本地维护脚本：
+
+- `maintenance/cleanup-local-tool-registry.ps1`：删除无引用的 `e2e_tool_*` 注册残留并重放七个正式工具种子。
+- `maintenance/reset-local-business-data.ps1`：备份后清理本地业务/运行时测试事实，保留账号、参考数据和正式工具，并可重建 USDA 营养目录。
+- `maintenance/cleanup-local-rag-indexes.ps1`：在 PostgreSQL 没有活动知识文档和切片时，清理公共知识 Milvus/Redis 外部索引；营养 Milvus 集合只做保护性校验。
+
+维护脚本默认只做 dry-run；执行删除前必须使用脚本要求的确认短语，并把实际输出、备份文件和保护范围追加到 `EXECUTION_RECORD.md`。
 
 ## 历史迁移配套状态
 

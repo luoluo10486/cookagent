@@ -17,6 +17,7 @@ if ($scriptText -notmatch 'run.model_usage|configured cloud Chat provider/model'
 if ($scriptText -notmatch '/disable|/restore|/delete') { throw "R1 script must assert document visibility lifecycle" }
 if ($scriptText -notmatch 'Last-Event-ID') { throw "R1 script must exercise SSE replay" }
 if ($scriptText -notmatch 'document cleanup failed|session cleanup failed') { throw "R1 script must retain cleanup failure evidence" }
+if ($scriptText -notmatch 'return ,\$multipart') { throw "R1 script must preserve multipart content as one HttpContent" }
 if ($scriptText -match '(?i)Start-Job|ForEach-Object.*parallel|WarmupSeconds|SteadySeconds') { throw "R1 script must stay a bounded business-path check" }
 
 Write-Output "real_rag_e2e_contract=passed"

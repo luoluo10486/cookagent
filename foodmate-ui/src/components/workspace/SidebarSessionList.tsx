@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { FigmaWorkspaceAsset, type WorkspaceFixtureVariant } from './FigmaWorkspaceAsset';
 import type { SessionSummary } from '../../types/session';
 import styles from './SidebarSessionList.module.css';
 
@@ -15,14 +16,20 @@ type SidebarSessionListProps = {
   sessions: SessionSummary[];
   onAction?: (action: SessionAction, session: SessionSummary) => void;
   currentPage?: number;
+  sessionCountLabel?: string;
+  hidePagination?: boolean;
   showHistory?: boolean;
+  fixtureVariant?: WorkspaceFixtureVariant;
 };
 
 export function SidebarSessionList({
   sessions,
   onAction,
   currentPage = 1,
+  sessionCountLabel,
+  hidePagination = false,
   showHistory = true,
+  fixtureVariant,
 }: SidebarSessionListProps) {
   return (
     <section className={`${styles.section} sidebar-session-section`}>
@@ -32,7 +39,11 @@ export function SidebarSessionList({
         }
         to="/chat"
       >
-        <MessageCircle aria-hidden="true" />
+        {fixtureVariant ? (
+          <FigmaWorkspaceAsset variant={fixtureVariant} name="agentChat" />
+        ) : (
+          <MessageCircle aria-hidden="true" />
+        )}
         <span>Agent 对话</span>
       </NavLink>
       {showHistory ? (
@@ -46,7 +57,15 @@ export function SidebarSessionList({
                   key={session.id}
                 >
                   <NavLink className={styles.itemLink} to={`/chat/${session.id}`}>
-                    <span className={styles.dot} aria-hidden="true" />
+                    {fixtureVariant ? (
+                      <FigmaWorkspaceAsset
+                        className={styles.figmaSessionDot}
+                        variant={fixtureVariant}
+                        name={session.active ? 'sessionDotActive' : 'sessionDotDefault'}
+                      />
+                    ) : (
+                      <span className={styles.dot} aria-hidden="true" />
+                    )}
                     <span className={styles.title}>{session.title}</span>
                     <span className={styles.meta}>{session.subtitle}</span>
                   </NavLink>
@@ -84,15 +103,40 @@ export function SidebarSessionList({
               );
             })}
           </div>
-          <div className={`${styles.pagination} sidebar-session-pagination`} aria-label="会话分页">
-            <Button variant="ghost" size="icon" aria-label="上一页" disabled type="button">
-              <ChevronLeft aria-hidden="true" />
-            </Button>
-            <span>{currentPage} / 3</span>
-            <Button variant="ghost" size="icon" aria-label="下一页" type="button">
-              <ChevronRight aria-hidden="true" />
-            </Button>
-          </div>
+          {sessionCountLabel ? (
+            <p className={`${styles.sessionCount} sidebar-session-count`}>{sessionCountLabel}</p>
+          ) : null}
+          {!hidePagination ? (
+            <div className={`${styles.pagination} sidebar-session-pagination`} aria-label="会话分页">
+              <Button variant="ghost" size="icon" aria-label="上一页" disabled type="button">
+                {fixtureVariant === 'diet-records' ? (
+                  <FigmaWorkspaceAsset
+                    className={styles.paginationGlyphAsset}
+                    variant={fixtureVariant}
+                    name="chevronLeft"
+                  />
+                ) : fixtureVariant ? (
+                  <span className={styles.paginationGlyph}>{'<'}</span>
+                ) : (
+                  <ChevronLeft aria-hidden="true" />
+                )}
+              </Button>
+              <span>{currentPage} / 3</span>
+              <Button variant="ghost" size="icon" aria-label="下一页" type="button">
+                {fixtureVariant === 'diet-records' ? (
+                  <FigmaWorkspaceAsset
+                    className={styles.paginationGlyphAsset}
+                    variant={fixtureVariant}
+                    name="chevronRight"
+                  />
+                ) : fixtureVariant ? (
+                  <span className={styles.paginationGlyph}>{'>'}</span>
+                ) : (
+                  <ChevronRight aria-hidden="true" />
+                )}
+              </Button>
+            </div>
+          ) : null}
         </>
       ) : null}
     </section>

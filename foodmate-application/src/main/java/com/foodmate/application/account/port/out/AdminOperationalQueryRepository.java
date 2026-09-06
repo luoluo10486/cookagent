@@ -50,6 +50,10 @@ public interface AdminOperationalQueryRepository {
 
     long countOperationAudits(Query query);
 
+    List<OperationAuditRow> operationAuditsForUser(long userId, int limit, int offset);
+
+    long countOperationAuditsForUser(long userId);
+
     List<DlqRow> dlq(Query query);
 
     long countDlq(Query query);

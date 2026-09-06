@@ -17,7 +17,14 @@ public final class SqlQueryPlanValidator {
                     "planner_mode",
                     "planner_version");
     private static final Set<String> ALLOWED_INTENTS =
-            Set.of("nutrition_summary", "meal_plan", "shopping_list", "nutrition_food");
+            Set.of(
+                    "nutrition_summary",
+                    "food_occurrence",
+                    "meal_plan_completion",
+                    "shopping_list_missing",
+                    "meal_plan",
+                    "shopping_list",
+                    "nutrition_food");
     private static final Set<String> ALLOWED_MODES = Set.of("stub", "local");
 
     private SqlQueryPlanValidator() {}
@@ -46,9 +53,14 @@ public final class SqlQueryPlanValidator {
         JsonNode timeRange = plan.get("time_range");
         if (timeRange != null && !timeRange.isNull()) {
             if (!timeRange.isObject()
-                    || timeRange.size() > 3
+                    || timeRange.size() > 4
                     || !"relative".equals(timeRange.path("kind").asText())
                     || !isBoundedDays(timeRange.path("days"))) return "TOOL_INPUT_INVALID";
+            if (timeRange.has("label")
+                    && (!timeRange.path("label").isTextual()
+                            || !Set.of("today", "yesterday")
+                                    .contains(timeRange.path("label").textValue())))
+                return "TOOL_INPUT_INVALID";
         }
         return null;
     }

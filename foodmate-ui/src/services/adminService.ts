@@ -109,6 +109,26 @@ type AdminToolResponse = {
   last_called_at: string;
   revision?: number;
 };
+type AdminToolRegistryResponse = {
+  tool_id: number;
+  name: string;
+  display_name: string;
+  description: string;
+  category: string;
+  risk_level: string;
+  availability_scope: string;
+  status: string;
+  current_version: string;
+  version: string;
+  input_schema: unknown;
+  output_schema: unknown;
+  permissions: unknown;
+  timeout_ms: number;
+  retryable: boolean;
+  idempotent: boolean;
+  published_at: string | null;
+  revision: number;
+};
 type AdminUsageResponse = {
   provider: string;
   model: string;
@@ -230,6 +250,16 @@ export type AdminToolRow = {
   timeoutMs?: string;
   retryPolicy?: string;
   failedRate?: string;
+  displayName?: string;
+  description?: string;
+  category?: string;
+  currentVersion?: string;
+  inputSchema?: unknown;
+  outputSchema?: unknown;
+  permissions?: unknown;
+  retryable?: boolean;
+  idempotent?: boolean;
+  publishedAt?: string;
 };
 export type AdminToolRegistryRow = AdminToolRow & {
   timeoutMs: string;
@@ -290,6 +320,21 @@ export type AdminOperationAuditRow = {
 
 const text = (value: string | number | null | undefined) => (value == null ? '-' : String(value));
 const numeric = (value: number | string | null | undefined) => (value == null ? 0 : Number(value));
+
+function normalizeKnowledgeRow(row: AdminKnowledgeResponse, index: number): AdminKnowledgeRow {
+  return {
+    key: `knowledge-${row.document_id ?? index}`,
+    documentId: text(row.document_id),
+    title: row.title,
+    status: row.status,
+    visibility: row.visibility || 'draft',
+    chunks: row.chunks ?? 0,
+    owner: row.owner,
+    source: row.source,
+    indexProgress: row.index_progress,
+    updatedAt: text(row.updated_at),
+  };
+}
 
 function normalizeDashboard(data: AdminDashboardResponse): AdminDashboard {
   return {
@@ -375,18 +420,7 @@ function normalizeDashboard(data: AdminDashboardResponse): AdminDashboard {
       latencyMs: row.latency_ms ?? 0,
       status: row.status,
     })),
-    knowledge: data.knowledge.map((row, index) => ({
-      key: `knowledge-${row.document_id ?? index}`,
-      documentId: text(row.document_id),
-      title: row.title,
-      status: row.status,
-      visibility: row.visibility || 'draft',
-      chunks: row.chunks ?? 0,
-      owner: row.owner,
-      source: row.source,
-      indexProgress: row.index_progress,
-      updatedAt: text(row.updated_at),
-    })),
+    knowledge: data.knowledge.map(normalizeKnowledgeRow),
     deleted: data.deleted.map((row, index) => ({
       key: `deleted-${row.resource_id ?? index}`,
       resourceType: row.resource_type,
@@ -422,6 +456,40 @@ function normalizeDashboard(data: AdminDashboardResponse): AdminDashboard {
 export async function loadAdminDashboard(): Promise<AdminDashboard> {
   if (import.meta.env.VITE_AGENT_MODE !== 'real') throw new Error('Real admin API is disabled');
   return normalizeDashboard(await apiRequest<AdminDashboardResponse>('/api/admin/dashboard'));
+}
+
+function normalizeToolRegistryRow(row: AdminToolRegistryResponse): AdminToolRegistryRow {
+  return {
+    key: `tool-registry-${row.tool_id}`,
+    name: row.name,
+    version: row.version || row.current_version,
+    risk: row.risk_level,
+    status: row.status,
+    scope: row.availability_scope,
+    owner: row.category,
+    schema: JSON.stringify(row.input_schema) ?? '-',
+    lastCalledAt: '-',
+    revision: row.revision,
+    timeoutMs: String(row.timeout_ms),
+    retryPolicy: row.retryable ? '可重试' : '不可重试',
+    failedRate: '-',
+    displayName: row.display_name,
+    description: row.description,
+    category: row.category,
+    currentVersion: row.current_version,
+    inputSchema: row.input_schema,
+    outputSchema: row.output_schema,
+    permissions: row.permissions,
+    retryable: row.retryable,
+    idempotent: row.idempotent,
+    publishedAt: row.published_at ?? undefined,
+  };
+}
+
+export async function loadAdminToolRegistry(): Promise<AdminToolRegistryRow[]> {
+  if (import.meta.env.VITE_AGENT_MODE !== 'real') throw new Error('Real admin API is disabled');
+  const response = await apiRequest<{ tools: AdminToolRegistryResponse[] }>('/api/admin/tools/registry');
+  return response.tools.map(normalizeToolRegistryRow);
 }
 
 type AdminOperationalQueryResponse<T> = {
@@ -529,6 +597,25 @@ export async function loadAdminQuery<T>(resource: string, params: AdminQueryPara
   return apiRequest<AdminOperationalQueryResponse<T>>(`/api/admin/queries/${resource}?${search.toString()}`);
 }
 
+/** 管理端知识库使用专用分页查询，避免把 dashboard 概览当成明细数据源。 */
+export async function loadAdminKnowledge(params: AdminQueryParams = {}): Promise<{
+  items: AdminKnowledgeRow[];
+  total: number;
+  page: number;
+  size: number;
+}> {
+  const data = await loadAdminQuery<AdminKnowledgeResponse>('knowledge', {
+    size: 100,
+    ...params,
+  });
+  return {
+    items: data.items.map(normalizeKnowledgeRow),
+    total: data.total,
+    page: data.page,
+    size: data.size,
+  };
+}
+
 export async function loadAdminTraceDetail(traceId: string): Promise<AdminTraceDetail> {
   if (import.meta.env.VITE_AGENT_MODE !== 'real') throw new Error('Real admin API is disabled');
   return apiRequest<AdminTraceDetail>(`/api/admin/queries/traces/${encodeURIComponent(traceId)}`);
@@ -633,6 +720,62 @@ export type AdminUserRow = {
   revision?: number;
 };
 
+export type AdminUserDetail = {
+  profile: {
+    user_id: number;
+    display_name?: string;
+    gender?: string;
+    birthday?: string;
+    height_cm?: number;
+    weight_kg?: number;
+    activity_level?: string;
+    diet_goal?: string;
+    calorie_target?: number;
+    protein_target?: number;
+    allergens?: string;
+    dislikes?: string;
+    preferred_units?: string;
+  } | null;
+  login_sessions: Array<{
+    auth_session_id: number;
+    device_id?: string;
+    user_agent?: string;
+    ip_address?: string;
+    expires_at?: string;
+    last_seen_at?: string;
+    created_at?: string;
+    revoked_at?: string;
+  }>;
+  business_sessions: {
+    items: Array<{
+      session_id: number;
+      user_id: number;
+      title: string;
+      mode: string;
+      status: string;
+      last_message_at?: string;
+    }>;
+    total: number;
+    page: number;
+    size: number;
+  };
+  operation_history: {
+    items: Array<{
+      operator_id: number | null;
+      action: string;
+      target_type: string;
+      target_id: string;
+      result: string;
+      request_id: string;
+      trace_id: string;
+      created_at?: string;
+    }>;
+    total: number;
+    page: number;
+    size: number;
+  };
+};
+
 type AdminUserResponse = {
   user_id: number;
   username: string;
@@ -686,6 +829,11 @@ export async function loadAdminUsers(): Promise<AdminUserRow[]> {
     createdAt: user.created_at ?? '-',
     revision: user.revision ?? 1,
   }));
+}
+
+export async function loadAdminUserDetail(userId: string): Promise<AdminUserDetail> {
+  if (import.meta.env.VITE_AGENT_MODE !== 'real') throw new Error('Real admin API is disabled');
+  return apiRequest<AdminUserDetail>(`/api/admin/users/${encodeURIComponent(userId)}/detail`);
 }
 
 async function adminWrite<T>(path: string, method: string, payload?: object, idempotencyPrefix?: string): Promise<T> {

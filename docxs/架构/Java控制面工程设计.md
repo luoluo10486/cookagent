@@ -1,6 +1,6 @@
 # FoodMate Java 业务控制面工程骨架与跨语言边界设计
 
-> M1-5 当前实现口径（2026-09-02）：Java application 已编排手工记录创建/查询/编辑/删除/恢复、分析、餐食计划完整资源生命周期和 `meal_plan.save_plan` Agent 提案共享的业务用例；`food_log_writer` 的 create/update/delete/restore 已接入 Proposal/Confirm/Execute，复用同一 `FoodLogService` 并回填资源 ID，且已通过真实 PostgreSQL HTTP/RocketMQ 各 11/11 跨进程回归，覆盖 rejected/failed/superseded、revision 冲突、幂等重放和 foodPortions 换算分支。计划生命周期已通过本地 PostgreSQL HTTP 回归，覆盖幂等重放、revision 冲突、购物清单失效和恢复。infra 负责 `food_logs`、`food_log_items`、营养目录、计划和 `approval_requests` 持久化；api 只做 HTTP 参数转换。当前仍本地优先，营养目录已有 60 条 approved 食材 seed、60 条 approved USDA foodPortion 换算规则和 75 条精确质量换算；V8 seed/validation 已验证，更广泛 Tool/SQL、生产部署与备份恢复不属于本轮。
+> M1-5 当前实现口径（2026-09-06）：Java application 已编排手工记录创建/查询/编辑/删除/恢复、分析、餐食计划完整资源生命周期和 `meal_plan.save_plan` Agent 提案共享的业务用例；`food_log_writer` 的 create/update/delete/restore 已接入 Proposal/Confirm/Execute，复用同一 `FoodLogService` 并回填资源 ID，且已通过真实 PostgreSQL HTTP/RocketMQ 各 11/11 跨进程回归，覆盖 rejected/failed/superseded、revision 冲突、幂等重放和 foodPortions 换算分支。计划生命周期已通过本地 PostgreSQL HTTP 回归，覆盖幂等重放、revision 冲突、购物清单失效和恢复。infra 负责 `food_logs`、`food_log_items`、营养目录、计划和 `approval_requests` 持久化；api 只做 HTTP 参数转换。当前仍本地优先，营养目录已有 1,000 条 approved/official USDA 食材和 1,518 条 approved USDA foodPortion 换算，V32/V33 seed/validation 已验证，更广泛 Tool/SQL、生产部署与备份恢复不属于本轮。
 
 版本：v1.2
 维护基线：2026-07-25

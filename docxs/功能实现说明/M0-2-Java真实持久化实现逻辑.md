@@ -29,7 +29,7 @@
 - Controller 校验必填字段、邮箱格式和密码长度。
 - Controller 调用 `UserAccountService.register/login`。
 - JDBC 可用时，Service 检查用户名或邮箱是否重复。
-- Service 使用 PBKDF2-HMAC-SHA256 生成密码哈希。
+- Service 对新密码使用 BCrypt 生成哈希；登录校验同时兼容历史 PBKDF2-HMAC-SHA256 哈希，避免升级时强制重置账号。
 - Service 将用户数据写入 `users`。
 - 注册时额外初始化 `user_profiles`。
 - 密码明文不写入数据库。

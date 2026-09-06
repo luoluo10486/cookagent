@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [string]$JavaBaseUrl = "http://127.0.0.1:8080",
     [int]$RunTimeoutSeconds = 180,
@@ -79,9 +79,9 @@ function Get-SafeSummary([object]$ErrorRecord) {
     $message = if ($null -ne $exception) { [string]$exception.Message } else { "unknown error" }
     if (-not [string]::IsNullOrWhiteSpace($AdminPassword)) { $message = $message.Replace($AdminPassword, "[redacted]") }
     if (-not [string]::IsNullOrWhiteSpace($AdminUsername)) { $message = $message.Replace($AdminUsername, "[redacted]") }
-    $message = [regex]::Replace($message, "(?i)(api[_ -]?key|authorization|bearer|password|token)s*[:=]s*S+", '$1=[redacted]')
-    $message = [regex]::Replace($message, "(?i)https?://[^s]+", "[url]")
-    $message = [regex]::Replace($message, "s+", " ").Trim()
+    $message = [regex]::Replace($message, '(?i)(api[_ -]?key|authorization|bearer|password|token)s*[:=]\s*\S+', '$1=[redacted]')
+    $message = [regex]::Replace($message, '(?i)https?://\S+', "[url]")
+    $message = [regex]::Replace($message, '\s+', " ").Trim()
     if ([string]::IsNullOrWhiteSpace($message)) { $message = "unknown error" }
     if ($message.Length -gt 256) { $message = $message.Substring(0, 256) }
     return $message
@@ -166,7 +166,7 @@ function Invoke-Login([object]$ApiContext) {
     if ([string]::IsNullOrWhiteSpace($AdminUsername) -or [string]::IsNullOrWhiteSpace($AdminPassword)) {
         throw "FOODMATE_E2E_ADMIN_USERNAME and FOODMATE_E2E_ADMIN_PASSWORD are required with -ExecutePaid"
     }
-    [void](Invoke-Api $ApiContext "POST" "$JavaBaseUrl/api/auth/login" @{ username_or_email = $AdminUsername; password = $AdminPassword })
+    [void](Invoke-Api -ApiContext $ApiContext -Method "POST" -Url "$JavaBaseUrl/api/auth/login" -Payload (@{ username_or_email = $AdminUsername; password = $AdminPassword }))
     return Get-Csrf $ApiContext
 }
 
@@ -407,7 +407,7 @@ try {
         $context = New-ApiContext
         $csrf = Invoke-Login $context
         $prompt = "请记录我今天午餐吃了熟米饭150克和鸡胸肉120克，时间按今天中午处理；请提取为饮食记录候选，生成后等待我确认，不要假装已经保存。"
-        $runResponse = Invoke-Api $context "POST" "$JavaBaseUrl/api/chat/runs" @{ prompt = $prompt } $null @{ "X-CSRF-Token" = $csrf }
+        $runResponse = Invoke-Api -ApiContext $context -Method "POST" -Url "$JavaBaseUrl/api/chat/runs" -Payload (@{ prompt = $prompt }) -Headers (@{ "X-CSRF-Token" = $csrf })
         $runData = Get-Field $runResponse @("data")
         $report.run_id = [string](Get-Field $runData @("run_id", "runId"))
         $sessionId = [string](Get-Field $runData @("session_id", "sessionId"))
@@ -435,10 +435,10 @@ try {
         if ([string](Get-Field $approvalData @("operation")) -ne "create" -or [string](Get-Field $approvalData @("resource_type", "resourceType")) -ne "food_log") { throw "food log approval contract is invalid" }
         $report.approval = [ordered]@{ status_before_confirm = [string](Get-Field $approvalData @("status")); operation = [string](Get-Field $approvalData @("operation")); resource_type = [string](Get-Field $approvalData @("resource_type", "resourceType")) }
 
-        $confirmed = Invoke-Api $context "POST" "$JavaBaseUrl/api/approvals/$($report.approval_request_id)/confirm" $parameters $null @{ "X-CSRF-Token" = $csrf }
+        $confirmed = Invoke-Api -ApiContext $context -Method "POST" -Url "$JavaBaseUrl/api/approvals/$($report.approval_request_id)/confirm" -Payload $parameters -Headers (@{ "X-CSRF-Token" = $csrf })
         $confirmedData = Get-Field $confirmed @("data")
         if ([string](Get-Field $confirmedData @("status")) -ne "confirmed") { throw "food log approval confirmation did not succeed" }
-        $executed = Invoke-Api $context "POST" "$JavaBaseUrl/api/approvals/$($report.approval_request_id)/execute" $parameters $null @{ "X-CSRF-Token" = $csrf }
+        $executed = Invoke-Api -ApiContext $context -Method "POST" -Url "$JavaBaseUrl/api/approvals/$($report.approval_request_id)/execute" -Payload $parameters -Headers (@{ "X-CSRF-Token" = $csrf })
         $executedData = Get-Field $executed @("data")
         if ([string](Get-Field $executedData @("status")) -ne "executed") { throw "food log approval execution did not succeed" }
         $foodLogId = [string](Get-Field $executedData @("resource_id", "resourceId"))
@@ -475,13 +475,13 @@ try {
         if (-not [string]::IsNullOrWhiteSpace([string]$foodLogId) -and $null -ne $csrfForCleanup -and $null -ne $foodLogRevision) {
             try {
                 $cleanupKey = "codex-r2-food-log-cleanup-" + [guid]::NewGuid().ToString("N")
-                [void](Invoke-Api $context "DELETE" "$JavaBaseUrl/api/food-logs/$foodLogId`?revision=$foodLogRevision" $null $null @{ "X-CSRF-Token" = $csrfForCleanup; "Idempotency-Key" = $cleanupKey })
+                [void](Invoke-Api -ApiContext $context -Method "DELETE" -Url "$JavaBaseUrl/api/food-logs/$foodLogId`?revision=$foodLogRevision" -Headers (@{ "X-CSRF-Token" = $csrfForCleanup; "Idempotency-Key" = $cleanupKey }))
                 $report.cleanup.food_log_deleted = $true
             } catch { Add-CleanupError "food log cleanup failed" }
         }
         if (-not [string]::IsNullOrWhiteSpace([string]$sessionId) -and $null -ne $csrfForCleanup) {
             try {
-                [void](Invoke-Api $context "DELETE" "$JavaBaseUrl/api/sessions/$sessionId" $null $null @{ "X-CSRF-Token" = $csrfForCleanup })
+                [void](Invoke-Api -ApiContext $context -Method "DELETE" -Url "$JavaBaseUrl/api/sessions/$sessionId" -Headers (@{ "X-CSRF-Token" = $csrfForCleanup }))
                 $report.cleanup.session_soft_deleted = $true
             } catch { Add-CleanupError "session cleanup failed" }
         }

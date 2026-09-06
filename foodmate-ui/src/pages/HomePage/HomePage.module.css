@@ -7,12 +7,26 @@
 }
 
 /* Home Figma fixture 的内部尺寸只作用于设计稿复核，不改变真实首页的交互尺寸。 */
+.figmaHomePage {
+  /* 设计稿中的工作区表面集中映射到共享 Figma Token，避免页面各自漂移。 */
+  --fm-fixture-home-bg: var(--fm-figma-workspace-bg);
+  --fm-fixture-home-surface: var(--fm-figma-workspace-surface);
+  --fm-fixture-home-border: var(--fm-figma-workspace-border);
+  --fm-fixture-home-control-surface: var(--fm-figma-workspace-control-surface);
+  background: var(--fm-fixture-home-bg);
+}
+
 .figmaHomePage .taskComposer {
   grid-template-columns: 20px minmax(0, 1fr) 40px;
+  height: 80px;
+  min-height: 80px;
   gap: 16px;
   padding: 20px;
+  box-sizing: border-box;
+  border-color: var(--fm-fixture-home-border);
   border-radius: 100px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  background: var(--fm-fixture-home-surface);
+  box-shadow: 0 4px 6px rgba(51, 51, 51, 0.04);
 }
 
 .figmaHomePage .attachmentButton {
@@ -41,7 +55,14 @@
   height: 16px;
 }
 
+.figmaHomePage .sendButton > img {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
 .figmaHomePage .quickButton {
+  height: 36px;
   width: 100px;
   min-width: 100px;
   justify-content: center;
@@ -84,6 +105,32 @@
   line-height: 1;
 }
 
+.figmaMetricRing {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.figmaActivityDot,
+.figmaArrow {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.figmaActivityDot {
+  width: 10px;
+  height: 10px;
+}
+
+.figmaArrow {
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+}
+
 .figmaHomePage .progress {
   width: 56px;
   height: 56px;
@@ -91,6 +138,34 @@
 
 .figmaHomePage .progress::after {
   inset: 8px;
+}
+
+.figmaHomePage .metricCard {
+  height: 88px;
+  box-sizing: border-box;
+  border-color: var(--fm-fixture-home-border);
+  border-radius: 16px;
+  background: var(--fm-fixture-home-surface);
+}
+
+.figmaHomePage .panel {
+  border-color: var(--fm-fixture-home-border);
+  border-radius: 20px;
+  background: var(--fm-fixture-home-surface);
+}
+
+.figmaHomePage .sessionCard,
+.figmaHomePage .pendingCard {
+  background: var(--fm-fixture-home-control-surface);
+}
+
+.figmaHomePage .statusPanel {
+  min-height: 150px;
+  height: 150px;
+  box-sizing: border-box;
+  border-color: #e3ede3;
+  border-radius: 14px;
+  background: #fcfcfa;
 }
 
 .intro {
@@ -115,7 +190,7 @@
   line-height: 17px;
 }
 
-.environment {
+.introEnvironment {
   margin-top: 26px;
   padding: 5px 10px;
   border-radius: 999px;
@@ -319,6 +394,14 @@
   place-items: center;
   border-radius: 50%;
   background: conic-gradient(var(--progress-color) calc(var(--progress) * 1%), var(--progress-track) 0);
+}
+
+.figmaHomePage .progress {
+  background: var(--progress-track);
+}
+
+.figmaHomePage .progress::after {
+  display: none;
 }
 
 .progress::after {
@@ -552,7 +635,7 @@
   .intro h1 {
     font-size: 25px;
   }
-  .environment {
+  .introEnvironment {
     margin-top: 12px;
   }
   .taskComposer {
@@ -800,5 +883,282 @@
   .homeStateMetricSkeletons,
   .homeStateGridSkeletons {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Home 状态画板使用固定的 Figma 几何，保证骨架和状态卡不会随内容抖动。 */
+.figmaHomePage .homeStatePanel {
+  box-sizing: border-box;
+  height: calc(100dvh - 336px);
+  min-height: 360px;
+}
+
+.figmaHomePage .homeStateCenteredContent {
+  box-sizing: border-box;
+  min-height: 100%;
+}
+
+.figmaHomePage .homeStateEmpty .homeStateIcon {
+  width: 160px;
+  height: 160px;
+}
+
+.figmaHomePage .homeStateEmpty .homeStateIcon svg {
+  width: 64px;
+  height: 64px;
+}
+
+.figmaHomePage .homeStateError .homeStateIcon {
+  width: 80px;
+  height: 80px;
+}
+
+.figmaHomePage .homeStateAction {
+  min-height: 42px;
+  height: 42px;
+  padding-inline: 28px;
+  border: 0;
+  border-radius: 22px;
+  background: #ff9400;
+}
+
+.figmaHomePage .homeStateAction:hover {
+  background: #f08300;
+}
+
+.figmaHomePage .homeStateError {
+  border-color: #ff625d;
+}
+
+/* Loading 画板的骨架尺寸与 Figma 中的快捷入口、指标卡和双栏面板逐项对应。 */
+.figmaHomePage .homeStateLoading {
+  height: auto;
+  min-height: 470px;
+  margin-top: 32px;
+  padding: 0;
+}
+
+.figmaHomePage .homeStateSkeletonChips {
+  grid-template-columns: 100px 110px 120px 100px 100px;
+  gap: 8px;
+  margin-top: 0;
+}
+
+.figmaHomePage .homeStateSkeletonChips span {
+  height: 36px;
+  border-radius: 18px;
+  background: #eeeeef;
+}
+
+.figmaHomePage .homeStateMetricSkeletons {
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.figmaHomePage .homeStateMetricSkeletons span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 88px;
+  padding: 16px;
+  box-sizing: border-box;
+  border-color: #e4e4e4;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.figmaHomePage .homeStateMetricSkeletons span > div {
+  display: grid;
+  gap: 8px;
+}
+
+.figmaHomePage .homeStateMetricSkeletons span > div > i {
+  display: block;
+  width: 48px;
+  height: 16px;
+  border-radius: 4px;
+  background: #eeeeef;
+}
+
+.figmaHomePage .homeStateMetricSkeletons span > div > i + i {
+  width: 80px;
+  height: 28px;
+}
+
+.figmaHomePage .homeStateMetricSkeletons span > b {
+  display: block;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #eeeeef;
+}
+
+.figmaHomePage .homeStateGridSkeletons {
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.figmaHomePage .homeStateGridSkeletons > span {
+  display: grid;
+  height: 288px;
+  align-content: start;
+  gap: 12px;
+  padding: 24px;
+  box-sizing: border-box;
+  border-color: #e4e4e4;
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.figmaHomePage .homeStateGridSkeletons > span:nth-child(2) {
+  height: 216px;
+}
+
+.figmaHomePage .homeStateGridSkeletons i {
+  display: block;
+  height: 60px;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.figmaHomePage .homeStateGridSkeletons i::before,
+.figmaHomePage .homeStateGridSkeletons i::after {
+  display: block;
+  height: 10px;
+  border-radius: 5px;
+  background: #eeeeef;
+  content: '';
+}
+
+.figmaHomePage .homeStateGridSkeletons i::before {
+  width: 150px;
+  margin: 18px 0 8px 38px;
+}
+
+.figmaHomePage .homeStateGridSkeletons i::after {
+  width: 80px;
+  margin-left: 38px;
+}
+
+/* Input States 画板保留底部说明面板，并将三个输入器状态作为独立的可访问控件展示。 */
+.figmaHomePage .inputStatesPanel {
+  height: 160px;
+  min-height: 160px;
+  margin-top: 24px;
+  padding: 16px 24px;
+  border-color: #d6ead9;
+  border-radius: 14px;
+  background: #fcfffc;
+}
+
+.figmaHomePage .inputStatesPanel + .statusPanel {
+  margin-top: 0;
+}
+
+.inputStateCards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.inputStateCard {
+  display: flex;
+  min-width: 0;
+  height: 82px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  box-sizing: border-box;
+  border: 1px solid #dce6df;
+  border-radius: 12px;
+  background: #f5f8f5;
+}
+
+.inputStateCard:nth-child(2) {
+  background: #e9f7e4;
+}
+
+.inputStateCard:nth-child(3) {
+  background: #fff0df;
+}
+
+.inputStateCard > div {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.inputStateCard strong,
+.inputStateCard span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inputStateCard strong {
+  color: var(--fm-ink);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.inputStateCard > div > span {
+  color: var(--fm-muted);
+  font-size: 11px;
+}
+
+.inputStateControl {
+  min-width: 34px;
+  height: 28px;
+  min-height: 28px;
+  padding: 0;
+  color: #8a968e;
+  font-size: 11px;
+  box-shadow: none;
+}
+
+.inputStateReady {
+  color: #6ca365;
+}
+
+.inputStateRunning {
+  color: #e17b4f;
+}
+
+@media (max-width: 760px) {
+  .figmaHomePage .homeStatePanel {
+    height: auto;
+    min-height: 520px;
+  }
+
+  .figmaHomePage .homeStateLoading {
+    min-height: 420px;
+  }
+
+  .figmaHomePage .homeStateSkeletonChips,
+  .figmaHomePage .homeStateMetricSkeletons,
+  .figmaHomePage .homeStateGridSkeletons,
+  .inputStateCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .figmaHomePage .homeStateSkeletonChips span {
+    width: auto;
+  }
+
+  .figmaHomePage .homeStateGridSkeletons > span:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+
+  .figmaHomePage .inputStatesPanel {
+    height: auto;
+    min-height: 286px;
+  }
+
+  .inputStateCard:nth-child(3) {
+    grid-column: 1 / -1;
   }
 }

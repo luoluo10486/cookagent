@@ -34,8 +34,10 @@ import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { FigmaWorkspaceAsset } from '@/components/workspace/FigmaWorkspaceAsset';
+import { AvatarImage } from '@/components/common/AvatarImage';
 import { cn } from '@/lib/utils';
-import { FIGMA_PROFILE_AVATARS, getDefaultAvatarForGender } from '@/lib/avatar';
+import { FIGMA_PROFILE_AVATARS, resolveAvatarUrl } from '@/lib/avatar';
 import { getAuthUser, logout } from '@/services/authService';
 import {
   changePassword,
@@ -81,7 +83,7 @@ type Memory = {
   source: string;
   relativeTime: string;
   content: string;
-  status: 'confirmed' | 'pending';
+  status: 'confirmed' | 'pending' | 'conflict';
 };
 
 const memoryTypeLabels: Record<string, string> = {
@@ -277,21 +279,6 @@ function getProfileFixtureState(value: string | null): ProfileFixtureState | und
 }
 
 function ProfileFixtureOverlay({ state, onDismiss }: { state: ProfileFixtureState; onDismiss: () => void }) {
-  if (state === 'memories-empty') {
-    return (
-      <div className={styles.fixturePanel}>
-        <div className={styles.fixturePanelCard}>
-          <span>MEMORY / EMPTY</span>
-          <h2>暂无长期记忆</h2>
-          <p>当你在 Agent 会话中确认一条偏好后，它会出现在这里。临时偏好不会自动保存。</p>
-          <Button type="button" onClick={onDismiss}>
-            去会话确认
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   const isError = state.includes('failed');
   const isSuccess = state.includes('success');
   const title =
@@ -782,20 +769,22 @@ function BasicTab({
 
   if (loading) return <div className={styles.loadingPanel}>正在加载个人资料...</div>;
 
-  const avatarSource = avatarPreview || (!figmaFixture ? getDefaultAvatarForGender(profileForm.gender) : undefined);
+  // 头像统一经过运行时资源解析，避免历史 Figma 人物素材绕过默认资源策略。
+  const avatarSource = resolveAvatarUrl(avatarPreview, profileForm.gender);
 
   return (
     <div className={styles.basicLayout}>
       <div className={styles.basicLeft}>
-        <Card className={styles.profileCard}>
-          {!figmaFixture ? <p className={styles.overline}>头像与账号概览</p> : null}
+        <Card className={cn(styles.profileCard, figmaFixture && styles.figmaProfileCard)}>
+          <p className={styles.overline}>头像与账号概览</p>
           <div className={styles.avatarShell}>
             <div className={styles.avatarRing}>
-              {avatarSource ? (
-                <img className={styles.avatarImage} src={avatarSource} alt="个人头像" />
-              ) : (
-                <span>{authUser.displayName.slice(0, 1)}</span>
-              )}
+              <AvatarImage
+                className={styles.avatarImage}
+                avatarUrl={avatarSource}
+                gender={profileForm.gender}
+                alt="个人头像"
+              />
             </div>
           </div>
           <div className={styles.avatarActions}>
@@ -833,26 +822,22 @@ function BasicTab({
               </span>
             </div>
           ) : null}
-          {!figmaFixture ? (
-            <>
-              <div className={cn(styles.avatarSummary, styles.summaryStatus)}>
-                <span>账号状态</span>
-                <strong>{statusLabel(authUser.status)}</strong>
-              </div>
-              <div className={cn(styles.avatarSummary, styles.summaryLogin)}>
-                <span>最近登录</span>
-                <strong>{realMode ? authUser.lastLoginAt : '今天 09:42'}</strong>
-              </div>
-              <div className={cn(styles.avatarSummary, styles.summaryUnits)}>
-                <span>常用单位</span>
-                <strong>公制</strong>
-              </div>
-              <div className={cn(styles.avatarSummary, styles.summaryTimezone)}>
-                <span>时区</span>
-                <strong>UTC+08:00</strong>
-              </div>
-            </>
-          ) : null}
+          <div className={cn(styles.avatarSummary, styles.summaryStatus)}>
+            <span>账号状态</span>
+            <strong>{statusLabel(authUser.status)}</strong>
+          </div>
+          <div className={cn(styles.avatarSummary, styles.summaryLogin)}>
+            <span>最近登录</span>
+            <strong>{realMode ? authUser.lastLoginAt : '今天 09:42'}</strong>
+          </div>
+          <div className={cn(styles.avatarSummary, styles.summaryUnits)}>
+            <span>常用单位</span>
+            <strong>公制</strong>
+          </div>
+          <div className={cn(styles.avatarSummary, styles.summaryTimezone)}>
+            <span>时区</span>
+            <strong>UTC+08:00</strong>
+          </div>
         </Card>
 
         <Card className={styles.profileCard + ' ' + styles.credentialCard}>
@@ -864,7 +849,10 @@ function BasicTab({
             </div>
             <div>
               <span>角色</span>
-              <StatusChip tone="orange">{roleLabel(authUser.role)}</StatusChip>
+              <StatusChip tone="orange">
+                {/* Figma Basic 的示例角色文案仅覆盖 fixture 展示，不改变真实权限角色。 */}
+                {roleLabel(figmaFixture ? 'admin' : authUser.role)}
+              </StatusChip>
             </div>
             <div>
               <span>邮箱地址</span>
@@ -877,22 +865,20 @@ function BasicTab({
           </div>
         </Card>
 
-        {!figmaFixture ? (
-          <Card className={styles.profileCard + ' ' + styles.preferenceCard}>
-            <h2>偏好速览</h2>
-            <p>用于生成更贴合你的饮食建议</p>
-            <div className={styles.preferenceGrid}>
-              <SummaryTile label="常用餐型" value="三餐 + 加餐" />
-              <SummaryTile label="当前目标" value={profileForm.dietGoal || '精益增肌'} />
-              <SummaryTile
-                label="已记录过敏原"
-                value={profileForm.allergens.length ? profileForm.allergens.join(' · ') : '暂无'}
-                tone="red"
-              />
-              <SummaryTile label="最近更新" value="今天 12:45" tone="green" />
-            </div>
-          </Card>
-        ) : null}
+        <Card className={styles.profileCard + ' ' + styles.preferenceCard}>
+          <h2>偏好速览</h2>
+          <p>用于生成更贴合你的饮食建议</p>
+          <div className={styles.preferenceGrid}>
+            <SummaryTile label="常用餐型" value="三餐 + 加餐" />
+            <SummaryTile label="当前目标" value={profileForm.dietGoal || '精益增肌'} />
+            <SummaryTile
+              label="已记录过敏原"
+              value={profileForm.allergens.length ? profileForm.allergens.join(' · ') : '暂无'}
+              tone="red"
+            />
+            <SummaryTile label="最近更新" value="今天 12:45" tone="green" />
+          </div>
+        </Card>
       </div>
 
       <Card className={cn(styles.goalsCard, figmaFixture && styles.figmaGoalsCard)}>
@@ -1127,9 +1113,15 @@ function SummaryTile({
   );
 }
 
-function MemoriesTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
+function MemoriesTab({
+  figmaFixture = false,
+  emptyFixture = false,
+}: {
+  figmaFixture?: boolean;
+  emptyFixture?: boolean;
+}) {
   const navigate = useNavigate();
-  const [memories, setMemories] = useState(memorySeed);
+  const [memories, setMemories] = useState(emptyFixture ? [] : memorySeed);
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed'>('all');
   const [category, setCategory] = useState('全部分类');
   const [deleting, setDeleting] = useState<Memory>();
@@ -1151,8 +1143,12 @@ function MemoriesTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
 
   return (
     <div
-      className={cn(styles.memoryPage, figmaFixture && styles.figmaMemoriesPage)}
-      data-figma-layout={figmaFixture ? 'profile-memories' : undefined}
+      className={cn(
+        styles.memoryPage,
+        figmaFixture && styles.figmaMemoriesPage,
+        emptyFixture && styles.figmaMemoriesEmptyPage,
+      )}
+      data-figma-layout={figmaFixture ? (emptyFixture ? 'profile-memories-empty' : 'profile-memories') : undefined}
     >
       <Card className={styles.memoryIntro}>
         <h1>记忆系统</h1>
@@ -1204,6 +1200,7 @@ function MemoriesTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
             <MemoryRow
               key={memory.id}
               memory={memory}
+              figmaFixture={figmaFixture}
               onConfirm={() =>
                 setMemories((items) =>
                   items.map((item) => (item.id === memory.id ? { ...item, status: 'confirmed' } : item)),
@@ -1226,14 +1223,16 @@ function MemoriesTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
           </Button>
         </Card>
       )}
-      <Card className={styles.memoryGuidance}>
-        <h2>长期记忆管理</h2>
-        <p>仅在你明确确认后，才会保存为长期记忆；会话中的临时偏好不会自动写入。</p>
-        <p>每条记忆展示：类别 · 创建时间 · 更新时间 · 最近使用时间 · 来源会话</p>
-        <p>支持类别：忌口 · 过敏原 · 目标 · 单位 · 常用餐型；来源会话可追溯且可撤回。</p>
-        <p className={styles.guidanceAction}>操作：编辑 · 删除并二次确认 · 查看来源会话 · 取消保存</p>
-        <p>无记忆时显示空态：去会话中确认一条偏好，或清除全部记忆。</p>
-      </Card>
+      {!emptyFixture ? (
+        <Card className={styles.memoryGuidance}>
+          <h2>长期记忆管理</h2>
+          <p>仅在你明确确认后，才会保存为长期记忆；会话中的临时偏好不会自动写入。</p>
+          <p>每条记忆展示：类别 · 创建时间 · 更新时间 · 最近使用时间 · 来源会话</p>
+          <p>支持类别：忌口 · 过敏原 · 目标 · 单位 · 常用餐型；来源会话可追溯且可撤回。</p>
+          <p className={styles.guidanceAction}>操作：编辑 · 删除并二次确认 · 查看来源会话 · 取消保存</p>
+          <p>无记忆时显示空态：去会话中确认一条偏好，或清除全部记忆。</p>
+        </Card>
+      ) : null}
       <Dialog open={Boolean(deleting)} onOpenChange={(open) => !open && setDeleting(undefined)}>
         <DialogContent className={styles.dialogContent}>
           <DialogHeader>
@@ -1296,20 +1295,23 @@ function MemoriesTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
 
 function MemoryRow({
   memory,
+  figmaFixture = false,
   onConfirm,
   onEdit,
   onDelete,
   onSource,
 }: {
   memory: Memory;
+  figmaFixture?: boolean;
   onConfirm: () => void;
   onEdit: () => void;
   onDelete: () => void;
   onSource: () => void;
 }) {
-  const isPending = memory.status === 'pending';
+  const needsAction = memory.status !== 'confirmed';
+  const isConflict = memory.status === 'conflict';
   return (
-    <Card className={cn(styles.memoryRow, isPending && styles.memoryRowPending)}>
+    <Card className={cn(styles.memoryRow, needsAction && styles.memoryRowPending)}>
       <div className={styles.memoryAccent} />
       <div className={styles.memoryContent}>
         <div className={styles.memoryMeta}>
@@ -1317,23 +1319,37 @@ function MemoryRow({
           <span>{memory.source}</span>
         </div>
         <p className={styles.memoryQuote}>"{memory.content}"</p>
-        <StatusChip tone={isPending ? 'orange' : 'green'}>{isPending ? '待确认' : '已确认'}</StatusChip>
+        <StatusChip tone={isConflict ? 'red' : needsAction ? 'orange' : 'green'}>
+          {isConflict ? '存在冲突' : needsAction ? '待确认' : '已确认'}
+        </StatusChip>
       </div>
       <span className={styles.memoryTime}>{memory.relativeTime}</span>
       <div className={styles.memoryActions}>
-        {isPending ? (
+        {needsAction ? (
           <Button className={styles.confirmButton} type="button" size="sm" onClick={onConfirm}>
-            确认记忆
+            {isConflict ? '确认并替换' : '确认记忆'}
           </Button>
         ) : null}
         <IconAction label="查看来源会话" onClick={onSource}>
-          <Eye aria-hidden="true" />
+          {figmaFixture ? (
+            <FigmaWorkspaceAsset variant="profile" name="memoryView" className={styles.figmaMemoryIcon} />
+          ) : (
+            <Eye aria-hidden="true" />
+          )}
         </IconAction>
         <IconAction label="编辑记忆" onClick={onEdit}>
-          <Edit3 aria-hidden="true" />
+          {figmaFixture ? (
+            <FigmaWorkspaceAsset variant="profile" name="memoryEdit" className={styles.figmaMemoryIcon} />
+          ) : (
+            <Edit3 aria-hidden="true" />
+          )}
         </IconAction>
         <IconAction label="删除记忆" danger onClick={onDelete}>
-          <Trash2 aria-hidden="true" />
+          {figmaFixture ? (
+            <FigmaWorkspaceAsset variant="profile" name="memoryDelete" className={styles.figmaMemoryIcon} />
+          ) : (
+            <Trash2 aria-hidden="true" />
+          )}
         </IconAction>
       </div>
     </Card>
@@ -1435,7 +1451,7 @@ function SecurityTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
     >
       <div className={styles.securityTopGrid}>
         <Card className={cn(styles.securityCard, styles.passwordCard, figmaFixture && styles.figmaSecurityCard)}>
-          {!figmaFixture ? <div className={styles.securityAccent} /> : null}
+          <div className={styles.securityAccent} />
           <h1>修改账号密码</h1>
           <form className={styles.passwordForm} onSubmit={submitPassword}>
             <Field label="当前密码">
@@ -1504,7 +1520,7 @@ function SecurityTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
         </Card>
 
         <Card className={cn(styles.securityCard, styles.sessionCard, figmaFixture && styles.figmaSecurityCard)}>
-          {!figmaFixture ? <div className={styles.sessionAccent} /> : null}
+          <div className={styles.sessionAccent} />
           <div className={styles.securityCardHeader}>
             <h1>活跃工作区会话</h1>
             <Button
@@ -1525,41 +1541,35 @@ function SecurityTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
               ))}
             </div>
           )}
-          {!figmaFixture ? (
-            <>
-              <StatusChip tone="blue">{Math.max(0, sessions.length - 1)} ACTIVE DEVICES</StatusChip>
-              <p className={styles.securityHint}>设备状态在每次登录后更新</p>
-            </>
-          ) : null}
+          <StatusChip tone="blue">{Math.max(0, sessions.length - 1)} ACTIVE DEVICES</StatusChip>
+          <p className={styles.securityHint}>设备状态在每次登录后更新</p>
         </Card>
       </div>
-      {!figmaFixture ? (
-        <Card className={styles.activityCard}>
-          <div className={styles.activityAccent} />
-          <div className={styles.activityHeader}>
-            <div>
-              <h2>最近安全活动</h2>
-              <p>查看最近的登录、密码和设备状态变化</p>
-            </div>
-            <Button type="button" className={styles.textLink} variant="ghost">
-              查看登录历史 &gt;
-            </Button>
+      <Card className={styles.activityCard}>
+        <div className={styles.activityAccent} />
+        <div className={styles.activityHeader}>
+          <div>
+            <h2>最近安全活动</h2>
+            <p>查看最近的登录、密码和设备状态变化</p>
           </div>
-          <div className={styles.activityList}>
-            <ActivityRow dot="green" title="密码更新" detail="今天 09:42 · 当前设备" status="已完成" />
-            <ActivityRow dot="blue" title="新设备登录" detail="iPhone 15 Pro · 3月12日" status="已验证" />
-            <ActivityRow
-              dot="green"
-              title="设备会话检查"
-              detail={`已检查 ${sessions.length} 台设备，未发现异常`}
-              status="正常"
-            />
-          </div>
-          <p className={styles.securityHint}>
-            设备详情包含创建时间 / 过期时间 / 当前状态；单设备退出需确认，退出全部设备时保留当前会话并二次确认。
-          </p>
-        </Card>
-      ) : null}
+          <Button type="button" className={styles.textLink} variant="ghost">
+            查看登录历史 &gt;
+          </Button>
+        </div>
+        <div className={styles.activityList}>
+          <ActivityRow dot="green" title="密码更新" detail="今天 09:42 · 当前设备" status="已完成" />
+          <ActivityRow dot="blue" title="新设备登录" detail="iPhone 15 Pro · 3月12日" status="已验证" />
+          <ActivityRow
+            dot="green"
+            title="设备会话检查"
+            detail={`已检查 ${sessions.length} 台设备，未发现异常`}
+            status="正常"
+          />
+        </div>
+        <p className={styles.securityHint}>
+          设备详情包含创建时间 / 过期时间 / 当前状态；单设备退出需确认，退出全部设备时保留当前会话并二次确认。
+        </p>
+      </Card>
       <Dialog open={Boolean(logoutTarget)} onOpenChange={(open) => !open && setLogoutTarget(undefined)}>
         <DialogContent className={styles.dialogContent}>
           <DialogHeader>
@@ -1636,7 +1646,7 @@ function ActivityRow({
   );
 }
 
-function PrivacyTab() {
+function PrivacyTab({ figmaFixture = false }: { figmaFixture?: boolean }) {
   const realMode = import.meta.env.VITE_AGENT_MODE === 'real';
   const [exportRows, setExportRows] = useState(exportSeed);
   const [exportJobId, setExportJobId] = useState<number>();
@@ -1755,7 +1765,7 @@ function PrivacyTab() {
             onClick={() => void createExport()}
             disabled={exportStatus === 'queued' || exportStatus === 'running'}
           >
-            <Download aria-hidden="true" /> 创建数据导出
+            {!figmaFixture ? <Download aria-hidden="true" /> : null} 创建数据导出
           </Button>
         </div>
         {exportStatus && exportStatus !== 'completed' ? (
@@ -1799,7 +1809,7 @@ function PrivacyTab() {
                     type="button"
                     onClick={() => void downloadExport(row)}
                   >
-                    <Download aria-hidden="true" />
+                    {!figmaFixture ? <Download aria-hidden="true" /> : null}
                     下载归档
                   </Button>
                 ) : row.status === 'expired' ? (
@@ -1809,7 +1819,7 @@ function PrivacyTab() {
                     type="button"
                     onClick={() => void createExport()}
                   >
-                    <RefreshCw aria-hidden="true" />
+                    {!figmaFixture ? <RefreshCw aria-hidden="true" /> : null}
                     重新创建
                   </Button>
                 ) : row.status === 'failed' ? (
@@ -1819,7 +1829,7 @@ function PrivacyTab() {
                     type="button"
                     onClick={() => void createExport()}
                   >
-                    <RefreshCw aria-hidden="true" />
+                    {!figmaFixture ? <RefreshCw aria-hidden="true" /> : null}
                     重新创建
                   </Button>
                 ) : (
@@ -1923,9 +1933,18 @@ function RealMemoriesTab() {
   const navigate = useNavigate();
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'attention' | 'confirmed'>('all');
   const [deleting, setDeleting] = useState<Memory>();
   const [editing, setEditing] = useState<Memory>();
   const [editValue, setEditValue] = useState('');
+
+  const attentionCount = memories.filter((memory) => memory.status !== 'confirmed').length;
+  const conflictCount = memories.filter((memory) => memory.status === 'conflict').length;
+  const confirmedCount = memories.filter((memory) => memory.status === 'confirmed').length;
+  const visibleMemories = memories.filter(
+    (memory) =>
+      filter === 'all' || (filter === 'confirmed' ? memory.status === 'confirmed' : memory.status !== 'confirmed'),
+  );
 
   const refresh = () => {
     setLoading(true);
@@ -1958,15 +1977,36 @@ function RealMemoriesTab() {
         <p>FoodMate 会将你在 Agent 对话中明确确认的偏好、限制和饮食模式保存为长期记忆。</p>
       </Card>
       <div className={styles.memoryToolbar}>
-        <strong>实时数据</strong>
+        <div className={styles.filterGroup} role="tablist" aria-label="真实记忆状态">
+          {(
+            [
+              ['all', `全部 (${memories.length})`],
+              ['attention', `待处理 (${attentionCount})`],
+              ['confirmed', `已确认 (${confirmedCount})`],
+            ] as const
+          ).map(([value, label]) => (
+            <Button
+              key={value}
+              className={cn(styles.filterButton, filter === value && styles.filterButtonActive)}
+              variant="ghost"
+              type="button"
+              role="tab"
+              aria-selected={filter === value}
+              onClick={() => setFilter(value)}
+            >
+              {label}
+            </Button>
+          ))}
+          {conflictCount > 0 ? <span className={styles.memoryConflictCount}>含 {conflictCount} 条冲突</span> : null}
+        </div>
         <Button variant="outline" size="sm" type="button" onClick={() => void refresh()} disabled={loading}>
           <RefreshCw aria-hidden="true" /> 刷新
         </Button>
       </div>
       {loading ? <Card className={styles.memoryEmpty}>正在加载记忆...</Card> : null}
-      {!loading && memories.length ? (
+      {!loading && visibleMemories.length ? (
         <div className={styles.memoryList}>
-          {memories.map((memory) => (
+          {visibleMemories.map((memory) => (
             <MemoryRow
               key={memory.id}
               memory={memory}
@@ -1981,14 +2021,16 @@ function RealMemoriesTab() {
           ))}
         </div>
       ) : null}
-      {!loading && !memories.length ? (
+      {!loading && !visibleMemories.length ? (
         <Card className={styles.memoryEmpty}>
           <div className={styles.emptyEyebrow}>MEMORY / EMPTY</div>
-          <h2>暂无长期记忆</h2>
-          <p>在 Agent 对话中确认一条偏好后，它会显示在这里。</p>
-          <Button className={styles.saveButton} type="button" onClick={() => navigate('/chat')}>
-            前往对话
-          </Button>
+          <h2>{memories.length ? '没有匹配的记忆' : '暂无长期记忆'}</h2>
+          <p>{memories.length ? '当前状态筛选没有返回记录。' : '在 Agent 对话中确认一条偏好后，它会显示在这里。'}</p>
+          {!memories.length ? (
+            <Button className={styles.saveButton} type="button" onClick={() => navigate('/chat')}>
+              前往对话
+            </Button>
+          ) : null}
         </Card>
       ) : null}
       <Card className={styles.memoryGuidance}>
@@ -2074,7 +2116,8 @@ function toMemory(item: MemoryRecord): Memory {
     source: item.source || 'Agent 对话',
     relativeTime: memoryRelativeTime(updatedAt),
     content,
-    status: confirmationStatus === 'confirmed' ? 'confirmed' : 'pending',
+    status:
+      confirmationStatus === 'conflict' ? 'conflict' : confirmationStatus === 'confirmed' ? 'confirmed' : 'pending',
   };
 }
 
@@ -2107,17 +2150,20 @@ export function ProfilePage() {
       topAvatarSrc={isFigmaFixture ? FIGMA_PROFILE_AVATARS.topbar : undefined}
       topbarShowMarkLetter={!isFigmaFixture}
       showWindowControls={isFigmaFixture}
+      // Profile 画板使用独立导出的壳层资源，真实模式继续使用 Lucide fallback。
+      fixtureVariant={isFigmaFixture ? 'profile' : undefined}
       sidebarFixture={
         isFigmaFixture
           ? {
               currentPage: 1,
               sessions: figmaSidebarSessions,
-              showTopStatus: true,
             }
           : undefined
       }
       pageOverlay={
-        fixtureState ? <ProfileFixtureOverlay state={fixtureState} onDismiss={() => navigate('/profile')} /> : null
+        fixtureState && fixtureState !== 'memories-empty' ? (
+          <ProfileFixtureOverlay state={fixtureState} onDismiss={() => navigate('/profile')} />
+        ) : null
       }
     >
       <div className={cn(styles.page, 'fm-enter')}>
@@ -2133,11 +2179,11 @@ export function ProfilePage() {
           realMode ? (
             <RealMemoriesTab />
           ) : (
-            <MemoriesTab figmaFixture={isFigmaFixture} />
+            <MemoriesTab figmaFixture={isFigmaFixture} emptyFixture={fixtureState === 'memories-empty'} />
           )
         ) : null}
         {activeTab === 'security' ? <SecurityTab figmaFixture={securityFigmaFixture} /> : null}
-        {activeTab === 'privacy' ? <PrivacyTab /> : null}
+        {activeTab === 'privacy' ? <PrivacyTab figmaFixture={isFigmaFixture} /> : null}
       </div>
     </WorkspaceLayout>
   );

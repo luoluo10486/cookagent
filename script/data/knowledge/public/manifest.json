@@ -1,0 +1,98 @@
+{
+  "dataset": "FoodMate public nutrition knowledge",
+  "dataset_version": "2026-09-06",
+  "purpose": "公共知识库业务验收与本地 RAG 资料基线",
+  "embedding_status": "未构建向量",
+  "documents": [
+    {
+      "file": "who-healthy-diet-zh.md",
+      "title": "健康饮食",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/healthy-diet",
+      "source_version": "2026-01-26",
+      "retrieved_at": "2026-09-06",
+      "sha256": "578a92f83164ff6d73298b8c19c980810b2d80efb8f4d47ef029b948eb954e0e",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    },
+    {
+      "file": "who-food-safety-zh.md",
+      "title": "食品安全",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/food-safety",
+      "source_version": "2026-09-06-snapshot",
+      "retrieved_at": "2026-09-06",
+      "sha256": "d1178c920eb33eb4896d8f4c7b9742486c932e737ab0f26398a58ec6f7ab7b9c",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    },
+    {
+      "file": "who-salt-reduction-zh.md",
+      "title": "减少钠摄入",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/salt-reduction",
+      "source_version": "2026-05-11",
+      "retrieved_at": "2026-09-06",
+      "sha256": "595dd41aab7195b1dc20bebb555f2a127381976e9e7fed1467e6c9a869387f00",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    },
+    {
+      "file": "who-obesity-overweight-zh.md",
+      "title": "肥胖和超重",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/obesity-and-overweight",
+      "source_version": "2025-12-08",
+      "retrieved_at": "2026-09-06",
+      "sha256": "1a8dd29479110c9b6678004b8e47fb777ec589052aafdd0f0a03a613d5a29fb2",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    },
+    {
+      "file": "who-physical-activity-zh.md",
+      "title": "身体活动",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/physical-activity",
+      "source_version": "2026-09-06-snapshot",
+      "retrieved_at": "2026-09-06",
+      "sha256": "e444f2b4b71095f4c5c8a771c0137f4530a9b9494da42427f4713e3a5c3d5258",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    },
+    {
+      "file": "who-infant-young-child-feeding-zh.md",
+      "title": "婴幼儿喂养",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/infant-and-young-child-feeding",
+      "source_version": "2026-09-06-snapshot",
+      "retrieved_at": "2026-09-06",
+      "sha256": "907bc2b2d5bcd039a49639dedcac577dae803affe3d9ae15cc00d01b9b56f079",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    },
+    {
+      "file": "who-sugars-dental-caries-zh.md",
+      "title": "糖与龋齿",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/sugars-and-dental-caries",
+      "source_version": "2026-09-06-snapshot",
+      "retrieved_at": "2026-09-06",
+      "sha256": "fe5fbc1a2d6fb1c8d2524716940bd396125f40585f53c2b375f249fe02c22a79",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    },
+    {
+      "file": "who-trans-fat-zh.md",
+      "title": "反式脂肪",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/trans-fat",
+      "source_version": "2026-09-06-snapshot",
+      "retrieved_at": "2026-09-06",
+      "sha256": "8cd21d2880e90f302bfa9425dca82b18bec048fbb77e48baca955573ce2f1aef",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    },
+    {
+      "file": "who-malnutrition-zh.md",
+      "title": "营养不良",
+      "source_name": "世界卫生组织",
+      "source_url": "https://www.who.int/zh/news-room/fact-sheets/detail/malnutrition",
+      "source_version": "2026-09-06-snapshot",
+      "retrieved_at": "2026-09-06",
+      "sha256": "821fd84b01b637f2dd61b7f9fca2925361733bf22460aada8f1396ff5cf0c38d",
+      "license_notice": "保留官方来源链接，仅用于个人项目本地知识库；不代表世界卫生组织认可 FoodMate。"
+    }
+  ]
+}

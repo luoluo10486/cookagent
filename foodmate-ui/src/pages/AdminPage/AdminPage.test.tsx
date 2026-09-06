@@ -80,6 +80,13 @@ describe('AdminPage overview', () => {
     ).toBe(true);
   });
 
+  it('uses the registered default avatar and the registered overview copy asset', () => {
+    renderAdmin('/admin?state=overview');
+
+    expect(document.querySelector('.userAvatar img')).toHaveAttribute('src', '/assets/avatars/default-male.svg');
+    expect(document.querySelectorAll('[data-figma-asset="admin-overview-copy"]')).toHaveLength(6);
+  });
+
   it('uses the registered Figma filter icons while preserving shadcn Select behavior', () => {
     renderAdmin();
 
@@ -133,6 +140,17 @@ describe('AdminPage overview', () => {
     expect(screen.getByRole('link', { name: '操作审计' })).toHaveAttribute('aria-current', 'page');
   });
 
+  it('keeps visual QA query parameters out of admin navigation matching', () => {
+    const { unmount } = renderAdmin('/admin/usage?visual-qa=1');
+
+    expect(screen.getByRole('link', { name: '模型用量' })).toHaveAttribute('aria-current', 'page');
+
+    unmount();
+    renderAdmin('/admin?view=audit&visual-qa=1');
+
+    expect(screen.getByRole('link', { name: '操作审计' })).toHaveAttribute('aria-current', 'page');
+  });
+
   it('maps admin visual fixture query states to their real sections', () => {
     let view = renderAdmin('/admin?state=tool-registry');
     expect(screen.getByText('已注册工具')).toBeInTheDocument();
@@ -156,7 +174,21 @@ describe('AdminPage overview', () => {
     view.unmount();
   });
 
-  it('uses the Figma user-detail close affordance and gender avatar fallback', () => {
+  it('matches the Figma knowledge fixture navigation and default table state', () => {
+    renderAdmin('/admin?state=knowledge-upload-success');
+
+    expect(screen.getByRole('link', { name: '工具调用与 SQL' })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'SQL 审计' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Trace' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: '工具注册表' })).not.toBeInTheDocument();
+    expect(screen.getByText('已索引')).toBeInTheDocument();
+    expect(screen.getByText('索引中')).toBeInTheDocument();
+    expect(screen.getByText('失败')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '下线文档' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '删除文档' })).not.toBeInTheDocument();
+  });
+
+  it('uses the Figma user-detail close affordance and registered default avatar', () => {
     renderAdmin('/admin?state=user-detail');
 
     const closeButton = screen.getByRole('button', { name: '关闭用户详情' });
@@ -253,6 +285,7 @@ describe('AdminPage knowledge upload fixtures', () => {
     expect(screen.getByRole('dialog', { name: '批量任务已提交' })).toBeInTheDocument();
     expect(screen.getByText('3 个文件 · nutrient_reference.xlsx 等')).toBeInTheDocument();
     expect(screen.getByText('上传中 · 64% · 可离开页面，完成后自动开始索引')).toBeInTheDocument();
+    expect(screen.getByText('Max file size: 50MB. Allowed formats: PDF, CSV, XLSX, TXT.')).toBeInTheDocument();
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '64');
     expect(screen.getByRole('link', { name: '查看任务进度' })).toBeInTheDocument();
   });
@@ -297,12 +330,18 @@ describe('AdminPage knowledge upload fixtures', () => {
     expect(screen.getByRole('button', { name: '重新选择文件' })).toBeInTheDocument();
   });
 
-  it('returns to the normal knowledge page after upload success', () => {
+  it('returns to the normal knowledge page after upload success', async () => {
+    const user = userEvent.setup();
     renderAdmin('/admin?state=knowledge-upload-success');
 
     expect(screen.getByRole('link', { name: '知识库管理' })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('button', { name: '批量上传' })).toBeInTheDocument();
+    expect(screen.getByText('Max file size: 50MB. Allowed formats: PDF, CSV, XLSX, TXT.')).toBeInTheDocument();
     expect(screen.getByText('USDA_Keto_Ingredient_Guidelines.pdf')).toBeInTheDocument();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: '批量上传' }));
+    expect(screen.getByRole('dialog', { name: '上传知识库文档' })).toBeInTheDocument();
   });
 });
 
